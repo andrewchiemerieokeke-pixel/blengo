@@ -1,0 +1,14 @@
+{% extends 'home.html' %}
+
+{% block content %}
+<div class="success-container" style="max-width: 600px; margin: 50px auto; text-align: center;">
+    <div class="success-card" style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,119,255,0.1);">
+        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #4CAF50, #45a049); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px;">
+            <i class="fas fa-check-circle" style="font-size: 40px; color: white;"></i>
+        </div>
+        <h1 style="font-size: 2rem; font-weight: 700; color: #2e7d32; margin-bottom: 15px;">Success!</h1>
+        <p style="color: var(--text-medium); font-size: 1.1rem; margin-bottom: 25px;">{{ message }}</p>
+        <a href="{% url 'login' %}" class="btn" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple)); color: white; border-radius: 40px; text-decoration: none; font-weight: 600;">Return to Login</a>
+    </div>
+</div>
+{% endblock %}

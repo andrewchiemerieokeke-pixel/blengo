@@ -1,0 +1,1373 @@
+{% extends 'home.html' %}
+
+{% block content %}
+<style>
+    .dashboard-container {
+        padding: 30px 20px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .dashboard-header {
+        margin-bottom: 40px;
+    }
+
+    .dashboard-title {
+        font-weight: 800;
+        font-size: 2.5rem;
+        color: var(--text-dark);
+        margin-bottom: 15px;
+        background: linear-gradient(90deg, var(--neon-blue), var(--accent-purple));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .package-details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        margin-top: 30px;
+    }
+
+    .package-card {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0 8px 32px rgba(0, 119, 255, 0.1);
+        border: 1px solid rgba(0, 119, 255, 0.1);
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .package-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 119, 255, 0.15);
+        border-color: rgba(0, 119, 255, 0.2);
+    }
+
+    .package-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 6px;
+        height: 100%;
+        background: linear-gradient(to bottom, var(--neon-blue), var(--accent-purple));
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(0, 119, 255, 0.1);
+    }
+
+    .package-name {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .package-price {
+        background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple));
+        color: white;
+        padding: 8px 18px;
+        border-radius: 12px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        display: inline-block;
+        box-shadow: 0 4px 15px rgba(0, 119, 255, 0.2);
+    }
+
+    .info-container {
+        margin-bottom: 20px;
+        flex-grow: 1;
+    }
+
+    .info-label {
+        font-size: 0.9rem;
+        color: var(--text-medium);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .info-content {
+        color: var(--text-medium);
+        font-size: 0.95rem;
+        line-height: 1.5;
+        background: rgba(0, 119, 255, 0.03);
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 3px solid var(--accent-blue);
+    }
+
+    .status-badge {
+        background: linear-gradient(135deg, #4CAF50, #45a049);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+    }
+
+    .status-badge.warning {
+        background: linear-gradient(135deg, #ff9800, #ff5722);
+    }
+
+    .status-badge.blue {
+        background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple));
+    }
+
+    .package-details {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin: 20px 0;
+    }
+
+    .detail-item {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 119, 255, 0.1);
+    }
+
+    .detail-label {
+        font-size: 0.8rem;
+        color: var(--text-medium);
+        font-weight: 600;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .detail-value {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-dark);
+    }
+
+    /* Payout Design */
+    .payout-container {
+        background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), rgba(255, 87, 34, 0.1));
+        padding: 20px;
+        border-radius: 15px;
+        border: 2px solid rgba(255, 152, 0, 0.2);
+        margin: 20px 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .payout-container.blue {
+        background: linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(25, 118, 210, 0.1));
+        border-color: rgba(33, 150, 243, 0.2);
+    }
+
+    .payout-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+    .payout-label {
+        font-size: 0.9rem;
+        color: var(--text-medium);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .payout-label .icon {
+        font-size: 1.2rem;
+    }
+
+    .payout-label.warning .icon {
+        color: #ff9800;
+    }
+
+    .payout-label.blue .icon {
+        color: #2196F3;
+    }
+
+    .payout-amount {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #ff9800;
+        text-shadow: 0 2px 4px rgba(255, 152, 0, 0.2);
+    }
+
+    .payout-amount.blue {
+        color: #2196F3;
+        text-shadow: 0 2px 4px rgba(33, 150, 243, 0.2);
+    }
+
+    .payout-description {
+        color: var(--text-medium);
+        font-size: 0.9rem;
+        line-height: 1.4;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 8px;
+        border-left: 3px solid #ff9800;
+    }
+
+    .payout-description.blue {
+        border-left-color: #2196F3;
+    }
+
+    .payout-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: linear-gradient(135deg, #ff9800, #ff5722);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
+    }
+
+    .payout-badge.blue {
+        background: linear-gradient(135deg, #2196F3, #1976D2);
+        box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+    }
+
+    /* Payment Rules Container */
+    .rules-container {
+        background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.05));
+        padding: 20px;
+        border-radius: 15px;
+        border: 2px solid #dc3545;
+        margin: 20px 0;
+    }
+
+    .rules-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 15px;
+    }
+
+    .rules-icon {
+        font-size: 1.5rem;
+        color: #dc3545;
+    }
+
+    .rules-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #dc3545;
+        margin: 0;
+    }
+
+    .rules-section {
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(220, 53, 69, 0.2);
+    }
+
+    .rules-section:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    .section-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .section-title .icon {
+        color: #dc3545;
+    }
+
+    .rules-list {
+        list-style-type: none;
+        padding-left: 0;
+        margin: 0;
+    }
+
+    .rules-list li {
+        padding: 8px 0;
+        padding-left: 25px;
+        position: relative;
+        color: #666;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    .rules-list li:before {
+        content: '•';
+        position: absolute;
+        left: 10px;
+        color: #dc3545;
+        font-size: 1.2rem;
+    }
+
+    /* Payment Schedule Table */
+    .payment-schedule {
+        background: white;
+        border-radius: 10px;
+        border: 2px solid rgba(220, 53, 69, 0.2);
+        margin: 15px 0;
+        overflow: hidden;
+    }
+
+    .schedule-header {
+        background: linear-gradient(135deg, #dc3545, #c82333);
+        color: white;
+        padding: 12px 15px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .schedule-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .schedule-table th {
+        background: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+        font-weight: 600;
+        font-size: 0.85rem;
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid rgba(220, 53, 69, 0.2);
+    }
+
+    .schedule-table td {
+        padding: 10px;
+        text-align: center;
+        font-size: 0.85rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .schedule-table tr:nth-child(even) {
+        background: rgba(220, 53, 69, 0.05);
+    }
+
+    .schedule-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .payment-number {
+        font-weight: 600;
+        color: #dc3545;
+    }
+
+    .payment-days {
+        font-weight: 500;
+        color: #333;
+    }
+
+    .payment-amount {
+        font-weight: 600;
+        color: #28a745;
+    }
+
+    .referral-requirement {
+        background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.05));
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 4px solid #ffc107;
+        margin-top: 15px;
+    }
+
+    .referral-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #856404;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .referral-title .icon {
+        color: #ffc107;
+    }
+
+    .referral-text {
+        color: #856404;
+        font-size: 0.85rem;
+        line-height: 1.4;
+        margin: 0;
+    }
+
+    .progress-container {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        border: 1px solid rgba(0, 119, 255, 0.1);
+        margin: 20px 0;
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .progress-label {
+        font-size: 0.9rem;
+        color: var(--text-medium);
+        font-weight: 600;
+    }
+
+    .progress-percentage {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent-blue);
+    }
+
+    .progress-bar {
+        height: 10px;
+        background: rgba(0, 119, 255, 0.1);
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--neon-blue), var(--accent-purple));
+        border-radius: 5px;
+        transition: width 0.6s ease;
+    }
+
+    .view-package-btn {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple));
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 119, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        text-decoration: none;
+        margin-top: auto;
+    }
+
+    .view-package-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 119, 255, 0.3);
+        color: white;
+    }
+
+    .view-package-btn.warning {
+        background: linear-gradient(135deg, #ff9800, #ff5722);
+    }
+
+    .view-package-btn.blue {
+        background: linear-gradient(135deg, #2196F3, #1976D2);
+    }
+
+    .empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        color: rgba(0, 119, 255, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .empty-title {
+        font-size: 1.8rem;
+        color: var(--text-medium);
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    .empty-text {
+        color: var(--text-medium);
+        font-size: 1rem;
+        max-width: 500px;
+        margin: 0 auto 30px;
+    }
+
+    .back-btn {
+        background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple));
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 4px 15px rgba(0, 119, 255, 0.2);
+        transition: all 0.3s ease;
+        margin-bottom: 30px;
+    }
+
+    .back-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 119, 255, 0.3);
+        color: white;
+    }
+
+    /* Alert styling */
+    .alert-custom {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        border: 1px solid;
+        padding: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .alert-success-custom {
+        border-color: rgba(76, 175, 80, 0.3);
+        background: rgba(76, 175, 80, 0.08);
+    }
+
+    .alert-error-custom {
+        border-color: rgba(220, 53, 69, 0.3);
+        background: rgba(220, 53, 69, 0.08);
+    }
+
+    .alert-info-custom {
+        border-color: rgba(0, 119, 255, 0.3);
+        background: rgba(0, 119, 255, 0.08);
+    }
+
+    /* Image Upload Section */
+    .image-upload-container {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0, 119, 255, 0.1);
+        border: 1px solid rgba(0, 119, 255, 0.1);
+        margin-top: 30px;
+    }
+
+    .upload-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(0, 119, 255, 0.1);
+    }
+
+    .upload-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .upload-count {
+        background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple));
+        color: white;
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    /* Animation */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .package-card {
+        animation: fadeInUp 0.5s ease-out;
+        animation-fill-mode: both;
+    }
+
+    @media (max-width: 768px) {
+        .package-details-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .dashboard-title {
+            font-size: 2rem;
+        }
+        
+        .package-card {
+            padding: 20px;
+        }
+        
+        .package-details {
+            grid-template-columns: 1fr;
+        }
+        
+        .payout-amount {
+            font-size: 1.5rem;
+        }
+        
+        .upload-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        /* Schedule table responsive */
+        .schedule-table {
+            display: block;
+            overflow-x: auto;
+        }
+        
+        .schedule-table th,
+        .schedule-table td {
+            min-width: 100px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .dashboard-container {
+            padding: 20px 15px;
+        }
+        
+        .dashboard-title {
+            font-size: 1.8rem;
+        }
+        
+        .package-name {
+            font-size: 1.2rem;
+        }
+        
+        .payout-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .schedule-table th,
+        .schedule-table td {
+            padding: 8px 5px;
+            font-size: 0.8rem;
+        }
+    }
+</style>
+
+<div class="dashboard-container">
+    <!-- Back Button -->
+    <a href="{% url 'my-purchases' %}" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Back to Packages
+    </a>
+
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">Package Details</h1>
+    </div>
+
+    <!-- Display Django messages -->
+    {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+                <div class="alert-custom {% if message.tags == 'success' %}alert-success-custom{% elif message.tags == 'error' %}alert-error-custom{% else %}alert-info-custom{% endif %}">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            {% if message.tags == 'success' %}
+                                <i class="fas fa-check-circle" style="color: #4CAF50; font-size: 1.2rem;"></i>
+                            {% elif message.tags == 'error' %}
+                                <i class="fas fa-exclamation-circle" style="color: var(--danger-red); font-size: 1.2rem;"></i>
+                            {% else %}
+                                <i class="fas fa-info-circle" style="color: var(--accent-blue); font-size: 1.2rem;"></i>
+                            {% endif %}
+                            <span style="font-weight: 500;">{{ message }}</span>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="package-details-grid">
+        <!-- Main Package Card -->
+        <div class="package-card">
+            <!-- Card header with package name and price -->
+            <div class="card-header">
+                <h3 class="package-name">
+                    {% if is_roi %}
+                        <i class="fas fa-bolt"></i>
+                    {% elif is_fast_track %}
+                        <i class="fas fa-gem"></i>
+                    {% else %}
+                        <i class="fas fa-box"></i>
+                    {% endif %}
+                    {{ purchase.thrift.thriftname }}
+                </h3>
+                <div class="package-price">
+                    ₦{{ purchase.total_price|floatformat:2 }}
+                </div>
+            </div>
+            
+            <!-- Package status -->
+            <div style="margin-bottom: 20px;">
+                <span class="status-badge {% if is_roi %}warning{% elif is_fast_track %}blue{% endif %}">
+                    <i class="fas fa-check-circle"></i>
+                    Active
+                </span>
+                <span style="font-size: 0.9rem; color: var(--text-medium); margin-left: 10px;">
+                    <i class="far fa-calendar"></i>
+                    {{ purchase.datepurchased|date:"M d, Y" }}
+                </span>
+            </div>
+            
+            <!-- Package description -->
+            <div class="info-container">
+                <div class="info-label">
+                    <i class="fas fa-info-circle"></i>
+                    Package Information
+                </div>
+                <div class="info-content">
+                    {% if is_roi %}
+                        ROI Package: 12 monthly payments of ₦6,000
+                    {% elif is_fast_track %}
+                        Fast Track: 6 monthly payments of ₦6,000
+                    {% else %}
+                        {{ purchase.thrift.thriftdescription|truncatewords:30 }}
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Payout Design -->
+            {% if is_roi %}
+            <div class="payout-container">
+                <span class="payout-badge">Total Payout</span>
+                <div class="payout-header">
+                    <div class="payout-label warning">
+                        <i class="fas fa-money-bill-trend-up icon"></i>
+                        Expected Payout
+                    </div>
+                    <div class="payout-amount">
+                        ₦144,000
+                    </div>
+                </div>
+                <div class="payout-description">
+                    <i class="fas fa-calendar-check me-2"></i>
+                    You will receive ₦144,000 after 1 year of consistent monthly payments.
+                    That's a total return of ₦72,000 on your ₦72,000 investment!
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if is_fast_track %}
+            <div class="payout-container blue">
+                <span class="payout-badge blue">Total Payout</span>
+                <div class="payout-header">
+                    <div class="payout-label blue">
+                        <i class="fas fa-rocket icon"></i>
+                        Expected Payout
+                    </div>
+                    <div class="payout-amount blue">
+                        ₦54,000
+                    </div>
+                </div>
+                <div class="payout-description blue">
+                    <i class="fas fa-calendar-check me-2"></i>
+                    You will receive ₦54,000 after 6 months of consistent monthly payments.
+                    That's a total return of ₦18,000 on your ₦36,000 investment!
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Package details -->
+            <div class="package-details">
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="fas fa-money-bill-wave"></i>
+                        Investment
+                    </div>
+                    <div class="detail-value">
+                        ₦{{ purchase.total_price|floatformat:2 }}
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="fas fa-calendar-alt"></i>
+                        Purchase Date
+                    </div>
+                    <div class="detail-value">
+                        {{ purchase.datepurchased|date:"M d, Y" }}
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="fas fa-tag"></i>
+                        Package Type
+                    </div>
+                    <div class="detail-value">
+                        {% if is_roi %}
+                            <span style="color: #ff9800;">ROI</span>
+                        {% elif is_fast_track %}
+                            <span style="color: #2196F3;">Fast Track</span>
+                        {% else %}
+                            <span style="color: var(--accent-blue);">Standard</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="fas fa-receipt"></i>
+                        Receipts
+                    </div>
+                    <div class="detail-value">
+                        {% with purchase.images.all.count as image_count %}
+                            {% if is_roi %}
+                                {{ image_count }}/12
+                            {% elif is_fast_track %}
+                                {{ image_count }}/6
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress bar for ROI/Fast Track packages -->
+            {% if is_roi or is_fast_track %}
+            <div class="progress-container">
+                <div class="progress-header">
+                    <div class="progress-label">Receipt Upload Progress</div>
+                    <div class="progress-percentage">
+                        {% with purchase.images.all.count as image_count %}
+                            {% if is_roi %}
+                                {% widthratio image_count 12 100 %}%
+                            {% else %}
+                                {% widthratio image_count 6 100 %}%
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 
+                        {% with purchase.images.all.count as image_count %}
+                            {% if is_roi %}
+                                {% widthratio image_count 12 100 %}%
+                            {% else %}
+                                {% widthratio image_count 6 100 %}%
+                            {% endif %}
+                        {% endwith %}">
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Rules Container -->
+        {% if is_roi or is_fast_track %}
+        <div class="package-card">
+            <div class="rules-container">
+                <div class="rules-header">
+                    <i class="fas fa-exclamation-triangle rules-icon"></i>
+                    <h2 class="rules-title">INVESTMENT RULES (MUST OBEY)</h2>
+                </div>
+                
+                <!-- 30-Day Payment Rule -->
+                <div class="rules-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-calendar-check icon"></i>
+                        30-Day Payment Schedule
+                    </h3>
+                    <ul class="rules-list">
+                        <li>Strictly follow this 30-day payment schedule from your purchase date</li>
+                        <li>Each ₦6,000 payment must be made within its designated 30-day period</li>
+                        {% if is_roi %}
+                            <li>Total duration: 12 months (360 days)</li>
+                        {% else %}
+                            <li>Total duration: 6 months (180 days)</li>
+                        {% endif %}
+                        <li>Late payments may affect your returns</li>
+                        <li>Calculate from purchase date: <strong>{{ purchase.datepurchased|date:"M d, Y" }}</strong></li>
+                    </ul>
+                    
+                    <!-- Payment Schedule Table -->
+                    <div class="payment-schedule">
+                        <div class="schedule-header">
+                            <i class="fas fa-calendar-alt"></i>
+                            DETAILED PAYMENT SCHEDULE
+                        </div>
+                        <table class="schedule-table">
+                            <thead>
+                                <tr>
+                                    <th>Payment #</th>
+                                    <th>Day Range</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if is_roi %}
+                                    <!-- ROI Package: 12 payments -->
+                                    <tr>
+                                        <td class="payment-number">1st Payment</td>
+                                        <td class="payment-days">Day 1-30</td>
+                                        <td class="payment-amount">₦6,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="payment-number">2nd Payment</td>
+                                        <td class="payment-days">Day 31-60</td>
+                                        <td class="payment-amount">₦6,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="payment-number">3rd Payment</td>
+                                        <td class="payment-days">Day 61-90</td>
+                                        <td class="payment-amount">₦6,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="payment-number">4th Payment</td>
+                                        <td class="payment-days">Day 91-120</td>
+                                        <td class="payment-amount">₦6,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="payment-number">5th Payment</td>
+                                        <td class="payment-days">Day 121-150</td>
+                                        <td class="payment-amount">₦6,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="payment-number">6th Payment</td>
+                                        <td class="payment-days">Day 151-180</td>
+                                        <td class="payment-amount">₦6,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="payment-number">7th Payment</td>
+                                        <td class="payment-days">Day 181-210</td>
+                                        <td class="payment-amount">₦6,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="payment-number">8th Payment</td>
+                                        <td class="payment-days">Day 211-240</td>
+                                        <td class="payment-amount">₦6,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="payment-number">9th Payment</td>
+                                        <td class="payment-days">Day 241-270</td>
+                                        <td class="payment-amount">₦6,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="payment-number">10th Payment</td>
+                                        <td class="payment-days">Day 271-300</td>
+                                        <td class="payment-amount">₦6,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="payment-number">11th Payment</td>
+                                        <td class="payment-days">Day 301-330</td>
+                                        <td class="payment-amount">₦6,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="payment-number">12th Payment</td>
+                                        <td class="payment-days">Day 331-360</td>
+                                        <td class="payment-amount">₦6,000</td>
+                                    </tr>
+                                {% else %}
+                                    <!-- Fast Track Package: 6 payments -->
+                                    <tr>
+                                        <td class="payment-number">1st Payment</td>
+                                        <td class="payment-days">Day 1-30</td>
+                                        <td class="payment-amount">₦6,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="payment-number">2nd Payment</td>
+                                        <td class="payment-days">Day 31-60</td>
+                                        <td class="payment-amount">₦6,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="payment-number">3rd Payment</td>
+                                        <td class="payment-days">Day 61-90</td>
+                                        <td class="payment-amount">₦6,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="payment-number">4th Payment</td>
+                                        <td class="payment-days">Day 91-120</td>
+                                        <td class="payment-amount">₦6,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="payment-number">5th Payment</td>
+                                        <td class="payment-days">Day 121-150</td>
+                                        <td class="payment-amount">₦6,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="payment-number">6th Payment</td>
+                                        <td class="payment-days">Day 151-180</td>
+                                        <td class="payment-amount">₦6,000</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div style="background: rgba(255, 193, 7, 0.1); padding: 10px; border-radius: 8px; margin-top: 15px; border-left: 3px solid #ffc107;">
+                        <p style="margin: 0; font-size: 0.85rem; color: #856404;">
+                            <i class="fas fa-clock me-2"></i>
+                            <strong>IMPORTANT:</strong> Each payment must be made within its specified 30-day window. 
+                            Late payments may affect your eligibility for returns.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Referral Requirement Rule -->
+                <div class="rules-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-users icon"></i>
+                        Referral Requirement for Cashout
+                    </h3>
+                    <ul class="rules-list">
+                        <li>You must refer at least 1 person to the same investment package</li>
+                        <li>Your referral must complete their investment before you can cash out</li>
+                        
+                        <div class="referral-requirement">
+                            <div class="referral-title">
+                                <i class="fas fa-user-check icon"></i>
+                                MINIMUM REFERRAL PAYMENT REQUIREMENT
+                            </div>
+                            <p class="referral-text">
+                                {% if is_roi %}
+                                    <strong>ROI Package:</strong> Your referral must have completed at least 11 months of payments<br>
+                                    <strong>Fast Track Package:</strong> Your referral must have completed at least 5 months of payments
+                                {% else %}
+                                    <strong>Fast Track Package:</strong> Your referral must have completed at least 5 months of payments<br>
+                                    <strong>ROI Package:</strong> Your referral must have completed at least 11 months of payments
+                                {% endif %}
+                            </p>
+                        </div>
+                        
+                        <li>You will be notified when your referral meets the requirement</li>
+                        <li>Cashout requests can only be processed after referral verification</li>
+                    </ul>
+                </div>
+                
+                <!-- Receipt Upload Rule -->
+                <div class="rules-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-file-upload icon"></i>
+                        Receipt Upload Rules
+                    </h3>
+                    <ul class="rules-list">
+                        <li>Upload proof of each ₦6,000 monthly payment</li>
+                        <li>Receipts must be clear and readable</li>
+                        <li>Include payment month in caption (e.g., "First Month", "Second Month")</li>
+                        <li>Maximum file size: 5MB per receipt</li>
+                        <li>Allowed formats: JPG, PNG, GIF, WebP</li>
+                    </ul>
+                </div>
+                
+                <!-- General Rules -->
+                <div class="rules-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-clipboard-check icon"></i>
+                        General Requirements
+                    </h3>
+                    <ul class="rules-list">
+                        <li>Complete all monthly payments according to schedule</li>
+                        <li>Ensure all uploaded receipts are valid and verifiable</li>
+                        <li>Maintain active account status throughout investment period</li>
+                        <li>Contact support for any payment issues immediately</li>
+                        <li>Failure to comply may result in delayed or forfeited returns</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Image Upload Section -->
+    {% if is_roi or is_fast_track %}
+    <div class="image-upload-container">
+        <div class="upload-header">
+            <h3 class="upload-title">
+                <i class="fas fa-images"></i>
+                Payment Receipts Upload
+            </h3>
+            <span class="upload-count">
+                {{ purchase.images_uploaded }}/{{ purchase.max_images_allowed }}
+            </span>
+        </div>
+        
+        <!-- Upload Form -->
+        {% if purchase.can_upload_more %}
+        <div style="margin-bottom: 30px;">
+            <form method="POST" enctype="multipart/form-data" id="imageUploadForm" class="upload-form">
+                {% csrf_token %}
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                    <div>
+                        <label for="package_image" class="form-label">
+                            <i class="fas fa-image me-2"></i>
+                            Select Receipt Image <span class="text-danger">*</span>
+                        </label>
+                        <input type="file" 
+                               class="form-control" 
+                               id="package_image" 
+                               name="package_image"
+                               accept="image/*"
+                               required>
+                        <div class="form-text">
+                            Allowed: JPG, PNG, GIF, WebP (Max: 5MB)
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="caption" class="form-label">
+                            <i class="fas fa-calendar-alt me-2"></i>
+                            Payment Month (Required)
+                        </label>
+                        <input type="text" 
+                               class="form-control"
+                               required 
+                               id="caption" 
+                               name="caption"
+                               placeholder="e.g. First Month, Second Month"
+                               maxlength="200">
+                        <div class="form-text">
+                            Specify which month this receipt is for
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            {{ purchase.max_images_allowed|add:"-purchase.images_uploaded" }} more receipt(s) required
+                        </small>
+                    </div>
+                    <button type="submit" 
+                            name="upload_image" 
+                            class="btn"
+                            style="background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple)); color: white; padding: 10px 25px; border-radius: 10px; border: none; font-weight: 600;">
+                        <i class="fas fa-upload me-2"></i> Upload Receipt
+                    </button>
+                </div>
+            </form>
+        </div>
+        {% else %}
+        <div class="alert alert-success" style="margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <i class="fas fa-check-circle" style="font-size: 1.5rem;"></i>
+                <div>
+                    <h4 style="margin: 0 0 5px 0;">All Receipts Uploaded!</h4>
+                    <p style="margin: 0;">You have uploaded all required receipts. Returns will be processed upon completion.</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Uploaded Images -->
+        {% if images %}
+        <div>
+            <h4 style="margin-bottom: 20px;">
+                <i class="fas fa-file-invoice me-2"></i>
+                Uploaded Receipts ({{ images.count }})
+            </h4>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
+                {% for img in images %}
+                <div style="border: 1px solid rgba(0, 119, 255, 0.1); border-radius: 10px; overflow: hidden; background: white;">
+                    <div style="position: relative;">
+                        <img src="{{ img.image.url }}" 
+                             alt="Receipt {{ forloop.counter }}"
+                             style="width: 100%; height: 150px; object-fit: cover;">
+                        
+                        <form method="POST" style="position: absolute; top: 10px; right: 10px;">
+                            {% csrf_token %}
+                            <input type="hidden" name="image_id" value="{{ img.id }}">
+                            <button type="submit" 
+                                    name="delete_image" 
+                                    class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Delete this receipt?')"
+                                    style="width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 0;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                    <div style="padding: 12px;">
+                        <p style="margin: 0 0 5px 0; font-weight: 500; font-size: 0.9rem;">
+                            {% if img.caption %}
+                                {{ img.caption }}
+                            {% else %}
+                                <span style="color: #666;">No month specified</span>
+                            {% endif %}
+                        </p>
+                        <p style="margin: 0; font-size: 0.8rem; color: #666;">
+                            <i class="far fa-clock me-1"></i>
+                            {{ img.uploaded_at|timesince }} ago
+                        </p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 40px 0;">
+            <i class="fas fa-file-invoice-dollar" style="font-size: 3rem; color: rgba(0, 119, 255, 0.3); margin-bottom: 15px;"></i>
+            <h4 style="margin-bottom: 10px;">No Receipts Uploaded Yet</h4>
+            <p style="color: #666;">Upload your first ₦6,000 payment receipt to get started.</p>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // File upload validation
+    const imageInput = document.getElementById('package_image');
+    if (imageInput) {
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Check file size (5MB limit)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size exceeds 5MB limit. Please choose a smaller file.');
+                    e.target.value = '';
+                    return;
+                }
+                
+                // Check file type
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'image/webp'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Please select a valid image file (JPG, PNG, GIF, or WebP).');
+                    e.target.value = '';
+                    return;
+                }
+            }
+        });
+    }
+    
+    // Auto-dismiss alerts after 5 seconds
+    setTimeout(function() {
+        document.querySelectorAll('.alert-custom').forEach(alert => {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        });
+    }, 5000);
+    
+    // Close alerts when close button is clicked
+    document.querySelectorAll('.alert-custom .btn-close').forEach(button => {
+        button.addEventListener('click', function() {
+            const alert = this.closest('.alert-custom');
+            if (alert) {
+                alert.style.opacity = '0';
+                alert.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => {
+                    alert.style.display = 'none';
+                }, 300);
+            }
+        });
+    });
+    
+    // Add hover effects to cards
+    document.querySelectorAll('.package-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+    
+    // Highlight referral requirement section
+    const referralSection = document.querySelector('.referral-requirement');
+    if (referralSection) {
+        referralSection.addEventListener('click', function() {
+            this.style.transform = 'scale(1.02)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+        });
+        
+        // Pulse animation for important rules
+        setInterval(() => {
+            referralSection.style.boxShadow = '0 0 20px rgba(255, 193, 7, 0.3)';
+            setTimeout(() => {
+                referralSection.style.boxShadow = 'none';
+            }, 1000);
+        }, 5000);
+    }
+    
+    // Add interactive effects to payment schedule table
+    const scheduleRows = document.querySelectorAll('.schedule-table tbody tr');
+    scheduleRows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = 'rgba(220, 53, 69, 0.1)';
+        });
+        
+        row.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = '';
+        });
+        
+        row.addEventListener('click', function() {
+            const paymentNum = this.querySelector('.payment-number').textContent;
+            const paymentDays = this.querySelector('.payment-days').textContent;
+            const paymentAmount = this.querySelector('.payment-amount').textContent;
+            
+            // Highlight the clicked row
+            scheduleRows.forEach(r => r.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show payment info in console (or could be used for other features)
+            console.log(`Selected: ${paymentNum} - ${paymentDays} - ${paymentAmount}`);
+        });
+    });
+});
+</script>
+{% endblock %}

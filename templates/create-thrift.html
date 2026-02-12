@@ -1,0 +1,28 @@
+{% extends 'home.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h1>Create New Thrift Item</h1>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    
+    <form method="POST" action="{% url 'create-thrift' %}">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="thriftname" class="form-label">Thrift Name *</label>
+            <input type="text" class="form-control" id="thriftname" name="thriftname" required>
+        </div>
+        
+       
+        
+        <!-- REMOVED: Quantity field -->
+        
+        <button type="submit" class="btn btn-primary">Create Thrift Item</button>
+        
+    </form>
+</div>
+{% endblock %}

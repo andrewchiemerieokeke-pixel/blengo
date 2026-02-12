@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BText - Clean White Navbar</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom CSS for white navbar */
+        body {
+            padding-top: 76px;
+            background-color: #f8f9fa;
+        }
+        
+        /* White navbar styling */
+        .navbar-custom {
+            background-color: white !important;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 12px 0;
+        }
+        
+        /* Brand styling */
+        .navbar-brand-custom {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: #166088 !important;
+            padding-left: 5px;
+            transition: color 0.2s ease;
+        }
+        
+        .navbar-brand-custom:hover {
+            color: #0d4461 !important;
+        }
+        
+        /* Nav links styling */
+        .nav-link-custom {
+            color: #555 !important;
+            font-weight: 500;
+            padding: 10px 18px !important;
+            margin: 0 5px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-link-custom:hover {
+            color: #166088 !important;
+            background-color: rgba(22, 96, 136, 0.08);
+            transform: translateY(-1px);
+        }
+        
+        .nav-link-custom.active {
+            color: #166088 !important;
+            background-color: rgba(22, 96, 136, 0.12);
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .nav-link-custom.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background-color: #166088;
+            border-radius: 2px;
+        }
+        
+        /* Dropdown styling */
+        .dropdown-menu-custom {
+            border: none;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 10px;
+            margin-top: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .dropdown-item-custom {
+            padding: 10px 18px;
+            border-radius: 8px;
+            color: #555;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .dropdown-item-custom:hover {
+            background-color: rgba(22, 96, 136, 0.1);
+            color: #166088;
+            transform: translateX(3px);
+        }
+        
+        .dropdown-divider-custom {
+            margin: 10px 0;
+            opacity: 0.2;
+        }
+        
+        /* Offcanvas styling */
+        .offcanvas-custom {
+            background-color: white;
+            border-left: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .offcanvas-header-custom {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 1.5rem 1.5rem;
+        }
+        
+        .offcanvas-title-custom {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: #166088;
+        }
+        
+        .offcanvas-body-custom {
+            padding: 1.5rem;
+        }
+        
+        /* Toggler button styling */
+        .navbar-toggler-custom {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .navbar-toggler-custom:hover {
+            border-color: rgba(22, 96, 136, 0.3);
+            background-color: rgba(22, 96, 136, 0.05);
+        }
+        
+        .navbar-toggler-custom:focus {
+            box-shadow: 0 0 0 3px rgba(22, 96, 136, 0.2);
+        }
+        
+        /* Close button in offcanvas */
+        .btn-close-custom:focus {
+            box-shadow: 0 0 0 3px rgba(22, 96, 136, 0.2);
+        }
+        
+        /* Offcanvas nav items */
+        .offcanvas-nav-item {
+            margin-bottom: 8px;
+        }
+        
+        /* Content for demonstration */
+        .demo-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .demo-content h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .demo-content p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Clean White Navbar -->
+    <nav class="navbar navbar-custom fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand navbar-brand-custom" href="{% url 'home' %}">btext</a>
+            <button class="navbar-toggler navbar-toggler-custom" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="offcanvas offcanvas-custom offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header offcanvas-header-custom">
+                    <h5 class="offcanvas-title offcanvas-title-custom" id="offcanvasNavbarLabel">btext</h5>
+                    <button type="button" class="btn-close btn-close-custom" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body offcanvas-body-custom">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item offcanvas-nav-item">
+                            <a class="nav-link nav-link-custom active" aria-current="page" href="#">Home</a>
+                        </li>
+                        <li class="nav-item offcanvas-nav-item">
+                            <a class="nav-link nav-link-custom" href="#">Link</a>
+                        </li>
+                        <li class="nav-item dropdown offcanvas-nav-item">
+                            <a class="nav-link nav-link-custom dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Dropdown
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-custom">
+                                <li><a class="dropdown-item dropdown-item-custom" href="#">Action</a></li>
+                                <li><a class="dropdown-item dropdown-item-custom" href="#">Another action</a></li>
+                                <li>
+                                    <hr class="dropdown-divider dropdown-divider-custom">
+                                </li>
+                                <li><a class="dropdown-item dropdown-item-custom" href="#">Something else here</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Demo Content -->
+    <div class="demo-content">
+        <h1>Clean White Navbar Design</h1>
+        <p>This navbar features a clean white design with subtle shadows, smooth hover effects, and a cohesive color scheme. The search form has been removed as requested, leaving a minimal and focused navigation experience.</p>
+        <p>The design maintains a professional appearance with:</p>
+        <ul style="text-align: left; max-width: 500px; margin: 20px auto;">
+            <li>White background with subtle shadow</li>
+            <li>Consistent blue accent color (#166088)</li>
+            <li>Smooth hover animations</li>
+            <li>Clean dropdown menus</li>
+            <li>Responsive offcanvas navigation</li>
+        </ul>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Add a subtle shadow effect when scrolling
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbar = document.querySelector('.navbar-custom');
+            
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 10) {
+                    navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+                    navbar.style.padding = '8px 0';
+                } else {
+                    navbar.style.boxShadow = '0 2px 15px rgba(0, 0, 0, 0.08)';
+                    navbar.style.padding = '12px 0';
+                }
+            });
+            
+            // Smooth active link switching for demo
+            const navLinks = document.querySelectorAll('.nav-link-custom');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!this.classList.contains('dropdown-toggle')) {
+                        navLinks.forEach(l => l.classList.remove('active'));
+                        this.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

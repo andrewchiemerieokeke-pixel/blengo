@@ -1,0 +1,895 @@
+<!-- thrift-list.html -->
+{% extends 'home.html' %}
+
+{% block content %}
+<style>
+    .thrift-container {
+        padding: 30px 20px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .thrift-header {
+        margin-bottom: 40px;
+        text-align: center;
+    }
+
+    .thrift-title {
+        font-weight: 800;
+        font-size: 2.5rem;
+        color: var(--text-dark);
+        margin-bottom: 15px;
+        background: linear-gradient(90deg, var(--neon-blue), var(--accent-purple));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .thrift-subtitle {
+        color: var(--text-medium);
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .add-item-btn {
+        background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple));
+        color: white;
+        border: none;
+        padding: 14px 30px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 4px 15px rgba(0, 119, 255, 0.2);
+        transition: all 0.3s ease;
+        margin-top: 20px;
+    }
+
+    .add-item-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 119, 255, 0.3);
+        color: white;
+    }
+
+    .thrift-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 30px;
+        margin-top: 30px;
+    }
+
+    .thrift-card {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0 8px 32px rgba(0, 119, 255, 0.1);
+        border: 1px solid rgba(0, 119, 255, 0.1);
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .thrift-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 119, 255, 0.15);
+        border-color: rgba(0, 119, 255, 0.2);
+    }
+
+    .thrift-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 6px;
+        height: 100%;
+        background: linear-gradient(to bottom, var(--neon-blue), var(--accent-purple));
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(0, 119, 255, 0.1);
+    }
+
+    .thrift-name {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin: 0;
+    }
+
+    .admin-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .action-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid;
+        background: white;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+
+    .edit-btn {
+        color: var(--accent-blue);
+        border-color: rgba(0, 119, 255, 0.2);
+    }
+
+    .edit-btn:hover {
+        background: rgba(0, 119, 255, 0.08);
+        border-color: var(--accent-blue);
+        transform: translateY(-2px);
+    }
+
+    .delete-btn {
+        color: var(--danger-red);
+        border-color: rgba(220, 53, 69, 0.2);
+    }
+
+    .delete-btn:hover {
+        background: rgba(220, 53, 69, 0.08);
+        border-color: var(--danger-red);
+        transform: translateY(-2px);
+    }
+
+    .description-container {
+        margin-bottom: 20px;
+        flex-grow: 1;
+    }
+
+    .description-label {
+        font-size: 0.9rem;
+        color: var(--text-medium);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .description-content {
+        color: var(--text-medium);
+        font-size: 0.95rem;
+        line-height: 1.5;
+        background: rgba(0, 119, 255, 0.03);
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 3px solid var(--accent-blue);
+    }
+
+    .price-section {
+        margin: 10px 0;
+    }
+
+    .price-badge {
+        background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple));
+        color: white;
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        display: inline-block;
+        box-shadow: 0 4px 15px rgba(0, 119, 255, 0.2);
+    }
+
+    .stock-info {
+        color: #4CAF50;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+    .purchase-section {
+        margin-top: auto;
+    }
+
+    .quantity-display {
+        background: rgba(0, 119, 255, 0.05);
+        border: 2px solid rgba(0, 119, 255, 0.1);
+        padding: 12px;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .quantity-label {
+        font-size: 0.9rem;
+        color: var(--text-medium);
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .quantity-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--accent-blue);
+    }
+
+    .buy-now-btn {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #4CAF50, #45a049);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .buy-now-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+    }
+
+    .buy-now-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .total-display {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        padding: 18px;
+        border-radius: 12px;
+        margin: 20px 0;
+        border: 2px dashed rgba(76, 175, 80, 0.3);
+    }
+
+    .total-label {
+        font-size: 0.95rem;
+        color: var(--text-medium);
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .total-amount {
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: #4CAF50;
+    }
+
+    .info-note {
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--text-medium);
+        margin-top: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        color: rgba(0, 119, 255, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .empty-title {
+        font-size: 1.8rem;
+        color: var(--text-medium);
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    .empty-text {
+        color: var(--text-medium);
+        font-size: 1rem;
+        max-width: 500px;
+        margin: 0 auto 30px;
+    }
+
+    /* Modal styling */
+    .modal-custom {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content-custom {
+        background-color: white;
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-header-custom {
+        background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple));
+        color: white;
+        border-radius: 20px 20px 0 0;
+        padding: 25px;
+        border: none;
+    }
+
+    .modal-title-custom {
+        font-weight: 700;
+        font-size: 1.3rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .modal-body-custom {
+        padding: 25px;
+    }
+
+    .modal-footer-custom {
+        border-top: 1px solid rgba(0, 119, 255, 0.1);
+        padding: 20px 25px;
+        border-radius: 0 0 20px 20px;
+    }
+
+    .btn-cancel {
+        background: rgba(0, 119, 255, 0.08);
+        color: var(--accent-blue);
+        border: 1px solid rgba(0, 119, 255, 0.2);
+        padding: 10px 25px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cancel:hover {
+        background: rgba(0, 119, 255, 0.15);
+        border-color: var(--accent-blue);
+    }
+
+    .btn-confirm {
+        background: linear-gradient(135deg, #4CAF50, #45a049);
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+    }
+
+    .btn-confirm:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+    }
+
+    .btn-delete {
+        background: linear-gradient(135deg, var(--danger-red), #c82333);
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
+    }
+
+    .btn-delete:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
+    }
+
+    /* Toast styling */
+    .toast-custom {
+        background: white;
+        border-radius: 12px;
+        border: 1px solid rgba(76, 175, 80, 0.2);
+        box-shadow: 0 8px 32px rgba(76, 175, 80, 0.15);
+    }
+
+    .toast-header-custom {
+        background: linear-gradient(135deg, #4CAF50, #45a049);
+        color: white;
+        border-radius: 12px 12px 0 0;
+        padding: 15px 20px;
+        border: none;
+    }
+
+    .toast-body-custom {
+        padding: 20px;
+        color: var(--text-dark);
+        font-weight: 500;
+    }
+
+    /* Alert messages */
+    .alert-custom {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        border: 1px solid;
+        padding: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .alert-success-custom {
+        border-color: rgba(76, 175, 80, 0.3);
+        background: rgba(76, 175, 80, 0.08);
+    }
+
+    .alert-error-custom {
+        border-color: rgba(220, 53, 69, 0.3);
+        background: rgba(220, 53, 69, 0.08);
+    }
+
+    .alert-info-custom {
+        border-color: rgba(0, 119, 255, 0.3);
+        background: rgba(0, 119, 255, 0.08);
+    }
+
+    /* Animation */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .thrift-card {
+        animation: fadeInUp 0.5s ease-out;
+        animation-fill-mode: both;
+    }
+
+    /* Stagger animation */
+    .thrift-card:nth-child(1) { animation-delay: 0.1s; }
+    .thrift-card:nth-child(2) { animation-delay: 0.2s; }
+    .thrift-card:nth-child(3) { animation-delay: 0.3s; }
+    .thrift-card:nth-child(4) { animation-delay: 0.4s; }
+    .thrift-card:nth-child(5) { animation-delay: 0.5s; }
+    .thrift-card:nth-child(6) { animation-delay: 0.6s; }
+
+    @media (max-width: 768px) {
+        .thrift-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .thrift-title {
+            font-size: 2rem;
+        }
+        
+        .thrift-card {
+            padding: 20px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .thrift-container {
+            padding: 20px 15px;
+        }
+        
+        .thrift-title {
+            font-size: 1.8rem;
+        }
+        
+        .card-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .admin-actions {
+            align-self: flex-end;
+        }
+    }
+</style>
+
+<div class="thrift-container">
+    <div class="thrift-header">
+        <h1 class="thrift-title">Available Thrifts</h1>
+        <p class="thrift-subtitle">Browse and purchase from our collection of premium thrift items</p>
+        <a href="{% url 'my-purchases' %}">check your purchased thrift here</a>
+        
+        {% if user.username == "james" %}
+        <a href="{% url 'create-thrift' %}" class="add-item-btn">
+            <i class="fas fa-plus-circle"></i> Add New Thrift Item
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- Display Django messages -->
+    {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+                <div class="alert-custom {% if message.tags == 'success' %}alert-success-custom{% elif message.tags == 'error' %}alert-error-custom{% else %}alert-info-custom{% endif %}">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            {% if message.tags == 'success' %}
+                                <i class="fas fa-check-circle" style="color: #4CAF50; font-size: 1.2rem;"></i>
+                            {% elif message.tags == 'error' %}
+                                <i class="fas fa-exclamation-circle" style="color: var(--danger-red); font-size: 1.2rem;"></i>
+                            {% else %}
+                                <i class="fas fa-info-circle" style="color: var(--accent-blue); font-size: 1.2rem;"></i>
+                            {% endif %}
+                            <span style="font-weight: 500;">{{ message }}</span>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <div class="thrift-grid">
+        {% for thrift in thrifts %}
+        <div class="thrift-card">
+            <!-- Card header with title and admin buttons -->
+            <div class="card-header">
+                <h3 class="thrift-name">{{ thrift.thriftname }}</h3>
+                {% if user.username == "james" %}
+                <div class="admin-actions">
+                    <!-- Edit Button -->
+                    <a href="{% url 'edit_thrift' thrift.id %}" 
+                       class="action-btn edit-btn" 
+                       title="Edit Item">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <!-- Delete Button -->
+                    <button type="button" 
+                            class="action-btn delete-btn" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#deleteModal{{ thrift.id }}"
+                            title="Delete Item">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Item description -->
+            <div class="description-container">
+                <div class="description-label">
+                    <i class="fas fa-align-left"></i>
+                    Description
+                </div>
+                <div class="description-content">
+                    {{ thrift.thriftdescription|truncatewords:500 }}
+                </div>
+            </div>
+            
+            <!-- Price -->
+            <div class="price-section">
+                <div class="price-badge">
+                    ₦{{ thrift.thriftprice|floatformat:2 }}
+                </div>
+                <div class="stock-info">
+                    <i class="fas fa-infinity"></i>
+                    Unlimited Stock Available
+                </div>
+            </div>
+            
+            <!-- Purchase form -->
+            <div class="purchase-section">
+                <form method="POST" action="{% url 'purchase-thrift' thrift.id %}" 
+                      class="purchase-form" 
+                      data-thrift-name="{{ thrift.thriftname }}">
+                    {% csrf_token %}
+                    
+                    <div class="quantity-display">
+                        <div class="quantity-label">Quantity</div>
+                        <div class="quantity-value">1</div>
+                        <input type="hidden" name="quantity" value="1">
+                    </div>
+                    
+                    <!-- Total price display -->
+                    <div class="total-display">
+                        <div class="total-label">Total Amount</div>
+                        <div class="total-amount">
+                            ₦{{ thrift.thriftprice|floatformat:2 }}
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="buy-now-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        Buy Now
+                    </button>
+                    
+                    <div class="info-note">
+                        <i class="fas fa-info-circle"></i>
+                        Click "Buy Now" to purchase this item
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Delete Confirmation Modal for each thrift item -->
+        {% if user.username == "james" %}
+        <div class="modal fade modal-custom" id="deleteModal{{ thrift.id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content modal-content-custom">
+                    <div class="modal-header modal-header-custom">
+                        <h5 class="modal-title modal-title-custom">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Confirm Deletion
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body modal-body-custom">
+                        <p style="font-size: 1.1rem; margin-bottom: 20px;">
+                            Are you sure you want to delete <strong>"{{ thrift.thriftname }}"</strong>?
+                        </p>
+                        <div style="background: rgba(220, 53, 69, 0.08); padding: 15px; border-radius: 10px; border-left: 4px solid var(--danger-red);">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                                <i class="fas fa-exclamation-triangle" style="color: var(--danger-red);"></i>
+                                <strong style="color: var(--danger-red);">Warning:</strong>
+                            </div>
+                            <p style="margin: 0; color: var(--text-medium);">
+                                All purchase records for this item will also be permanently removed!
+                            </p>
+                        </div>
+                    </div>
+                    <div class="modal-footer modal-footer-custom">
+                        <button type="button" class="btn-cancel" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i> Cancel
+                        </button>
+                        <form method="POST" action="{% url 'delete_thrift' thrift.id %}" style="margin: 0;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-delete">
+                                <i class="fas fa-trash me-2"></i> Delete Permanently
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% empty %}
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-tshirt"></i>
+            </div>
+            <h3 class="empty-title">No Thrifts Available</h3>
+            <p class="empty-text">
+                There are currently no thrift items available for purchase. 
+                Check back soon or contact support for more information.
+            </p>
+            {% if user.username == "james" %}
+            <a href="{% url 'create-thrift' %}" class="add-item-btn">
+                <i class="fas fa-plus-circle"></i> Add Your First Thrift Item
+            </a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Purchase Confirmation Modal -->
+<div class="modal fade modal-custom" id="confirmationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-content-custom">
+            <div class="modal-header modal-header-custom">
+                <h5 class="modal-title modal-title-custom">
+                    <i class="fas fa-shopping-cart"></i>
+                    Confirm Purchase
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body modal-body-custom">
+                <p id="confirmationMessage" style="font-size: 1.1rem; margin-bottom: 25px;">
+                    Are you sure you want to purchase this item?
+                </p>
+                <div id="purchaseDetails" style="background: rgba(0, 119, 255, 0.03); padding: 20px; border-radius: 12px; border: 1px solid rgba(0, 119, 255, 0.1);">
+                    <!-- Details will be populated by JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer modal-footer-custom">
+                <button type="button" class="btn-cancel" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i> Cancel
+                </button>
+                <button type="button" class="btn-confirm" id="confirmPurchaseBtn">
+                    <i class="fas fa-check me-2"></i> Confirm Purchase
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Toast Container -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+    <div id="successToast" class="toast toast-custom" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header toast-header-custom">
+            <strong class="me-auto">
+                <i class="fas fa-check-circle me-2"></i>
+                Purchase Successful!
+            </strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body toast-body-custom" id="toastMessage">
+            Your purchase has been completed successfully.
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+    const successToast = new bootstrap.Toast(document.getElementById('successToast'));
+    let currentForm = null;
+    
+    // Handle Buy Now button clicks
+    document.querySelectorAll('.buy-now-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const form = this.closest('.purchase-form');
+            const thriftName = form.getAttribute('data-thrift-name');
+            const card = form.closest('.thrift-card');
+            
+            // Get the price from the price badge
+            const priceBadge = card.querySelector('.price-badge');
+            const priceText = priceBadge.textContent.replace('₦', '').trim();
+            const price = parseFloat(priceText.replace(/,/g, ''));
+            
+            // Quantity is always 1
+            const quantity = 1;
+            const total = price * quantity;
+            
+            // Store current form
+            currentForm = form;
+            
+            // Update confirmation modal
+            document.getElementById('confirmationMessage').innerHTML = 
+                `You are about to purchase <strong>"${thriftName}"</strong>.`;
+            
+            const detailsHtml = `
+                <div style="margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(0, 119, 255, 0.1);">
+                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple)); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div>
+                            <h6 style="margin: 0 0 5px 0; font-weight: 600; color: var(--text-dark);">${thriftName}</h6>
+                            <p style="margin: 0; font-size: 0.9rem; color: var(--text-medium);">Premium thrift item</p>
+                        </div>
+                    </div>
+                    
+                    <div style="background: white; border-radius: 10px; padding: 20px; border: 1px solid rgba(0, 119, 255, 0.1);">
+                        <h6 style="margin: 0 0 15px 0; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-receipt"></i>
+                            Purchase Details
+                        </h6>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                                <p style="margin: 0 0 8px 0; font-size: 0.9rem; color: var(--text-medium); font-weight: 500;">Item:</p>
+                                <p style="margin: 0 0 8px 0; font-size: 0.9rem; color: var(--text-medium); font-weight: 500;">Quantity:</p>
+                                <p style="margin: 0 0 8px 0; font-size: 0.9rem; color: var(--text-medium); font-weight: 500;">Unit Price:</p>
+                                <p style="margin: 0; font-size: 0.9rem; color: var(--text-dark); font-weight: 600;">Total Amount:</p>
+                            </div>
+                            <div style="text-align: right;">
+                                <p style="margin: 0 0 8px 0; font-size: 0.9rem; color: var(--text-dark); font-weight: 500;">${thriftName}</p>
+                                <p style="margin: 0 0 8px 0; font-size: 0.9rem; color: var(--text-dark); font-weight: 500;">${quantity} unit</p>
+                                <p style="margin: 0 0 8px 0; font-size: 0.9rem; color: var(--text-dark); font-weight: 500;">₦${price.toLocaleString('en-NG', {minimumFractionDigits: 2})}</p>
+                                <p style="margin: 0; font-size: 1.2rem; color: #4CAF50; font-weight: 700;">
+                                    ₦${total.toLocaleString('en-NG', {minimumFractionDigits: 2})}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('purchaseDetails').innerHTML = detailsHtml;
+            
+            // Show confirmation modal
+            confirmationModal.show();
+        });
+    });
+    
+    // Handle confirmation button click
+    document.getElementById('confirmPurchaseBtn').addEventListener('click', function() {
+        if (currentForm) {
+            const submitBtn = currentForm.querySelector('.buy-now-btn');
+            const originalContent = submitBtn.innerHTML;
+            
+            // Show loading state
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Processing...';
+            submitBtn.disabled = true;
+            
+            // Get details for success message
+            const thriftName = currentForm.getAttribute('data-thrift-name');
+            const card = currentForm.closest('.thrift-card');
+            const priceBadge = card.querySelector('.price-badge');
+            const priceText = priceBadge.textContent.replace('₦', '').trim();
+            const price = parseFloat(priceText.replace(/,/g, ''));
+            const total = price; // Quantity is always 1
+            
+            // Show success toast
+            document.getElementById('toastMessage').innerHTML = `
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #4CAF50, #45a049); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div>
+                        <p style="margin: 0 0 5px 0; font-weight: 600;">Successfully purchased ${thriftName}!</p>
+                        <p style="margin: 0; font-size: 0.9rem; color: var(--text-medium);">Amount: ₦${total.toLocaleString('en-NG', {minimumFractionDigits: 2})}</p>
+                    </div>
+                </div>
+            `;
+            
+            successToast.show();
+            
+            // Submit the form
+            currentForm.submit();
+        }
+        confirmationModal.hide();
+    });
+    
+    // Reset form when modal is closed
+    document.getElementById('confirmationModal').addEventListener('hidden.bs.modal', function() {
+        if (currentForm) {
+            const submitBtn = currentForm.querySelector('.buy-now-btn');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Buy Now';
+        }
+        currentForm = null;
+    });
+    
+    // Auto-dismiss alerts after 5 seconds
+    setTimeout(function() {
+        document.querySelectorAll('.alert-custom').forEach(alert => {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        });
+    }, 5000);
+    
+    // Close alerts when close button is clicked
+    document.querySelectorAll('.alert-custom .btn-close').forEach(button => {
+        button.addEventListener('click', function() {
+            const alert = this.closest('.alert-custom');
+            if (alert) {
+                alert.style.opacity = '0';
+                alert.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => {
+                    alert.style.display = 'none';
+                }, 300);
+            }
+        });
+    });
+    
+    // Show toast for existing success messages
+    document.querySelectorAll('.alert-success-custom').forEach(successAlert => {
+        const message = successAlert.textContent.replace('×', '').trim();
+        if (message.includes('Successfully purchased')) {
+            document.getElementById('toastMessage').textContent = message;
+            successToast.show();
+        }
+    });
+});
+</script>
+{% endblock %}

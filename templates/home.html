@@ -1,0 +1,1219 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BLENGO - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --neon-blue: #03A9F4;
+            --neon-purple: #7c4dff;
+            --light-bg: #FAFAFA;
+            --glass: rgba(0, 0, 0, 0.05);
+            --text-dark: #1a1a2e;
+            --text-medium: #4a5568;
+            --accent-blue: #0077ff;
+            --accent-purple: #6d28d9;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --danger-red: #dc3545;
+        }
+
+        body {
+            padding-top: 76px;
+            background: radial-gradient(circle at top, #F0F4F8, #FAFAFA 80%);
+            color: var(--text-dark);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+        }
+
+        /* Modern navbar with gradient brand - Static (no animation) */
+        .navbar-custom {
+            background-color: white !important;
+            box-shadow: 0 4px 30px rgba(0, 119, 255, 0.08);
+            border-bottom: 1px solid rgba(0, 119, 255, 0.1);
+            padding: 12px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1030;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 2.2rem;
+            background: linear-gradient(90deg, var(--neon-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent !important;
+            padding-left: 10px;
+            letter-spacing: 1px;
+        }
+
+        /* Nav links with icons - Static (no hover animations) */
+        .nav-link-custom {
+            color: var(--text-medium) !important;
+            font-weight: 500;
+            padding: 10px 18px !important;
+            margin: 0 5px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link-custom:hover {
+            color: var(--accent-blue) !important;
+            background: rgba(0, 119, 255, 0.08);
+        }
+
+        .nav-link-custom.active {
+            color: var(--accent-blue) !important;
+            background: linear-gradient(135deg, rgba(0, 119, 255, 0.1), rgba(109, 40, 217, 0.1));
+            font-weight: 600;
+        }
+
+        .nav-link-custom.active i {
+            color: var(--accent-blue);
+        }
+
+        /* Special red styling for logout */
+        .nav-link-logout {
+            color: var(--danger-red) !important;
+        }
+
+        .nav-link-logout:hover {
+            color: white !important;
+            background: var(--danger-red);
+        }
+
+        .nav-link-logout i {
+            color: var(--danger-red);
+        }
+
+        .nav-link-logout:hover i {
+            color: white;
+        }
+
+        /* Special blue styling for login */
+        .nav-link-login {
+            color: var(--accent-blue) !important;
+        }
+
+        .nav-link-login:hover {
+            color: white !important;
+            background: var(--accent-blue);
+        }
+
+        .nav-link-login i {
+            color: var(--accent-blue);
+        }
+
+        .nav-link-login:hover i {
+            color: white;
+        }
+
+        /* Offcanvas styling */
+        .offcanvas-custom {
+            background-color: white;
+            border-left: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .offcanvas-header-custom {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 1.5rem 1.5rem;
+        }
+
+        .offcanvas-title-custom {
+            font-weight: 800;
+            font-size: 2rem;
+            background: linear-gradient(90deg, var(--neon-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .offcanvas-body-custom {
+            padding: 1.5rem;
+        }
+
+        /* Toggler button styling - Static */
+        .navbar-toggler-custom {
+            border: 1px solid rgba(0, 119, 255, 0.2);
+            padding: 8px 12px;
+            border-radius: 10px;
+            color: var(--accent-blue);
+        }
+
+        .navbar-toggler-custom:focus {
+            box-shadow: 0 0 0 2px rgba(0, 119, 255, 0.25);
+        }
+
+        /* Custom hamburger icon color */
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 119, 255, 0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Improve nav link visibility */
+        .nav-link-custom i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Better spacing for nav items in offcanvas */
+        .offcanvas-body-custom .nav-item {
+            margin-bottom: 10px;
+        }
+
+        /* Dashboard Container */
+        .dashboard-container {
+            padding: 30px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+
+        .dashboard-title {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dashboard-subtitle {
+            color: var(--text-medium);
+            font-size: 1rem;
+        }
+
+        /* Modern Card Design */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 119, 255, 0.1);
+            border: 1px solid rgba(0, 119, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+        }
+
+        .wallet-card::before {
+            background: linear-gradient(to bottom, var(--neon-blue), var(--accent-purple));
+        }
+
+        .referrals-card::before {
+            background: linear-gradient(to bottom, #4CAF50, #45a049);
+        }
+
+        .thrift-card::before {
+            background: linear-gradient(to bottom, #FF9800, #FFC107);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .wallet-icon {
+            background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple));
+        }
+
+        .referrals-icon {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+        }
+
+        .thrift-icon {
+            background: linear-gradient(135deg, #FF9800, #FFC107);
+        }
+
+        .stat-title {
+            font-size: 0.9rem;
+            color: var(--text-medium);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .stat-change {
+            font-size: 0.85rem;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .positive-change {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+        }
+
+        .stat-info {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Action Buttons - Static */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .action-btn {
+            padding: 14px 24px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple));
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 119, 255, 0.2);
+        }
+
+        /* Status Indicator */
+        .status-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .blinking-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        .blinking-dot.active {
+            background-color: #4CAF50;
+        }
+
+        .blinking-dot.pending {
+            background-color: #FF9800;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background-color: rgba(76, 175, 80, 0.15);
+            color: #4CAF50;
+        }
+
+        .status-pending {
+            background-color: rgba(255, 152, 0, 0.15);
+            color: #FF9800;
+        }
+
+        .status-inactive {
+            background-color: rgba(220, 53, 69, 0.15);
+            color: var(--danger-red);
+        }
+
+        /* Referral Section */
+        .referral-section {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 119, 255, 0.1);
+            margin: 30px 0;
+            border: 1px solid rgba(0, 119, 255, 0.1);
+        }
+
+        .referral-code-container {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            border: 2px dashed rgba(0, 119, 255, 0.3);
+            margin-bottom: 25px;
+        }
+
+        .referral-code {
+            font-family: 'Courier New', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            letter-spacing: 3px;
+            padding: 15px 25px;
+            background: white;
+            border-radius: 12px;
+            border: 2px solid var(--accent-blue);
+            display: inline-block;
+            margin: 10px 0;
+            box-shadow: 0 4px 15px rgba(0, 119, 255, 0.1);
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(0, 119, 255, 0.2);
+        }
+
+        .copy-btn.copied {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+        }
+
+        /* Wallet Activity Log */
+        .card {
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 119, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 119, 255, 0.1);
+        }
+        
+        .card-header.bg-gradient-primary {
+            background: linear-gradient(135deg, var(--neon-blue) 0%, var(--accent-purple) 100%) !important;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-title {
+                font-size: 1.5rem;
+            }
+            
+            .stat-value {
+                font-size: 1.8rem;
+            }
+            
+            .referral-code {
+                font-size: 1.5rem;
+                padding: 12px 20px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .dashboard-container {
+                padding: 20px 15px;
+            }
+            
+            .stat-card {
+                padding: 20px;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-btn {
+                padding: 12px 20px;
+            }
+            
+            .offcanvas-body-custom {
+                padding: 1rem;
+            }
+            
+            .offcanvas-header-custom {
+                padding: 1rem 1.5rem;
+            }
+        }
+
+        /* Welcome section for non-authenticated users */
+        .welcome-section {
+            text-align: center;
+            padding: 10px 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            margin: 5px auto;
+            max-width: 800px;
+            box-shadow: 0 8px 32px rgba(0, 119, 255, 0.1);
+            border: 1px solid rgba(0, 119, 255, 0.1);
+        }
+
+        .welcome-title {
+            background: linear-gradient(90deg, var(--neon-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .welcome-cta {
+            background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple));
+            color: white;
+            border: none;
+            padding: 8px 25px;
+            border-radius: 12px;
+            font-weight: 550;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 2px;
+            box-shadow: 0 4px 15px rgba(0, 119, 255, 0.2);
+        }
+    </style>
+  </head>
+  <body>
+    <!-- Modern Navbar - Static -->
+ <!-- Modern Navbar -->
+<nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+  <div class="container-fluid">
+
+    <!-- Brand -->
+    <a class="navbar-brand" href="{% url 'home' %}">BLENGO</a>
+
+    <!-- ========================= -->
+    <!-- DESKTOP NAVBAR LINKS -->
+    <!-- ========================= -->
+    <div class="collapse navbar-collapse d-none d-lg-flex justify-content-end">
+      <ul class="navbar-nav gap-2 align-items-center">
+
+        {% if user.is_authenticated %}
+
+          <!-- About -->
+          <li class="nav-item">
+            <a class="nav-link nav-link-custom" href="{% url 'About' %}">
+              <i class="fas fa-info-circle"></i> About
+            </a>
+          </li>
+
+          <!-- Contact -->
+          <li class="nav-item">
+            <a class="nav-link nav-link-custom" href="{% url 'contact' %}">
+              <i class="fas fa-star"></i> Contact
+            </a>
+          </li>
+
+          <!-- ========================= -->
+          <!-- MANAGER ONLY LINKS -->
+          <!-- ========================= -->
+          {% if user.username == "manager" %}
+            <li class="nav-item">
+              <a class="nav-link nav-link-custom" href="{% url 'manager' %}">
+                <i class="fas fa-user-shield"></i> Registration
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link nav-link-custom" href="{% url 'wallet-manager' %}">
+                <i class="fas fa-wallet"></i> Wallet Manager
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link nav-link-custom" href="{% url 'thrifts-confirmation' %}">
+                <i class="fas fa-check-circle"></i> Thrift Confirmation
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link nav-link-custom" href="{% url 'complaints' %}">
+                <i class="fas fa-envelope"></i> Complaints
+              </a>
+            </li>
+          {% endif %}
+
+          <!-- ========================= -->
+          <!-- ACTIVE USERS ONLY LINKS -->
+          <!-- ========================= -->
+          {% if registration_status == "active" %}
+
+            <li class="nav-item">
+              <a class="nav-link nav-link-custom" href="{% url 'purchase-thrifts' %}">
+                <i class="fas fa-shopping-cart"></i> Purchase Thrifts
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link nav-link-custom" href="{% url 'my-purchases' %}">
+                <i class="fas fa-piggy-bank"></i> My Thrifts
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link nav-link-custom" href="{% url 'account-details' %}">
+                <i class="fas fa-coins"></i> Account Details
+              </a>
+            </li>
+
+          {% endif %}
+
+          <!-- Logout -->
+          <li class="nav-item">
+            <a class="nav-link nav-link-custom nav-link-logout" href="{% url 'sign-out' %}">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+          </li>
+
+        {% else %}
+
+          <!-- Login -->
+          <li class="nav-item">
+            <a class="nav-link nav-link-custom nav-link-login" href="{% url 'sign-in' %}">
+              <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+          </li>
+
+          <!-- Register -->
+          <li class="nav-item">
+            <a class="nav-link nav-link-custom" href="{% url 'create-account' %}">
+              <i class="fas fa-user-plus"></i> Register
+            </a>
+          </li>
+
+          <!-- Contact -->
+          <li class="nav-item">
+            <a class="nav-link nav-link-custom" href="{% url 'contact' %}">
+              <i class="fas fa-star"></i> Contact
+            </a>
+          </li>
+
+        {% endif %}
+
+      </ul>
+    </div>
+
+    <!-- ========================= -->
+    <!-- MOBILE TOGGLE BUTTON -->
+    <!-- ========================= -->
+    <button class="navbar-toggler navbar-toggler-custom d-lg-none"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- ========================= -->
+    <!-- MOBILE OFFCANVAS MENU -->
+    <!-- ========================= -->
+    <div class="offcanvas offcanvas-end offcanvas-custom d-lg-none"
+         tabindex="-1"
+         id="offcanvasNavbar">
+
+      <div class="offcanvas-header offcanvas-header-custom">
+        <h5 class="offcanvas-title offcanvas-title-custom">BLENGO</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+      </div>
+
+      <div class="offcanvas-body offcanvas-body-custom">
+        <ul class="navbar-nav flex-column gap-2">
+
+          <!-- About -->
+          <li class="nav-item">
+            <a class="nav-link nav-link-custom" href="{% url 'About' %}">
+              <i class="fas fa-info-circle"></i> About
+            </a>
+          </li>
+
+          <!-- Contact -->
+          <li class="nav-item">
+            <a class="nav-link nav-link-custom" href="{% url 'contact' %}">
+              <i class="fas fa-star"></i> Contact
+            </a>
+          </li>
+
+          {% if user.is_authenticated %}
+
+            <!-- ========================= -->
+            <!-- ACTIVE USERS ONLY LINKS -->
+            <!-- ========================= -->
+            {% if registration_status == "active" %}
+
+              <li class="nav-item">
+                <a class="nav-link nav-link-custom" href="{% url 'purchase-thrifts' %}">
+                  <i class="fas fa-shopping-cart"></i> Purchase Thrifts
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link nav-link-custom" href="{% url 'my-purchases' %}">
+                  <i class="fas fa-piggy-bank"></i> My Thrifts
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link nav-link-custom" href="{% url 'account-details' %}">
+                  <i class="fas fa-coins"></i> Account Details
+                </a>
+              </li>
+
+            {% else %}
+
+              <!-- Inactive Notice -->
+              <li class="nav-item">
+                <span class="nav-link nav-link-custom text-muted">
+                  <i class="fas fa-lock"></i> Activate account to unlock features
+                </span>
+              </li>
+
+            {% endif %}
+
+            <!-- ========================= -->
+            <!-- MANAGER ONLY LINKS -->
+            <!-- ========================= -->
+            {% if user.username == "manager" %}
+              <li class="nav-item">
+                <a class="nav-link nav-link-custom" href="{% url 'manager' %}">
+                  <i class="fas fa-user-shield"></i> Registration
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link nav-link-custom" href="{% url 'wallet-manager' %}">
+                  <i class="fas fa-wallet"></i> Wallet Manager
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link nav-link-custom" href="{% url 'thrifts-confirmation' %}">
+                  <i class="fas fa-check-circle"></i> Thrift Confirmation
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link nav-link-custom" href="{% url 'complaints' %}">
+                  <i class="fas fa-envelope"></i> Complaints
+                </a>
+              </li>
+            {% endif %}
+
+            <!-- Logout -->
+            <li class="nav-item">
+              <a class="nav-link nav-link-custom nav-link-logout" href="{% url 'sign-out' %}">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </a>
+            </li>
+
+          {% else %}
+
+            <!-- Login -->
+            <li class="nav-item">
+              <a class="nav-link nav-link-custom nav-link-login" href="{% url 'sign-in' %}">
+                <i class="fas fa-sign-in-alt"></i> Login
+              </a>
+            </li>
+
+            <!-- Register -->
+            <li class="nav-item">
+              <a class="nav-link nav-link-custom" href="{% url 'create-account' %}">
+                <i class="fas fa-user-plus"></i> Register
+              </a>
+            </li>
+
+          {% endif %}
+
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+    {% block content %}
+    <!-- Dashboard Content -->
+    <div class="dashboard-container">
+        {% if user.is_authenticated %}
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">
+                    Hello {{ user.username|capfirst }}! <span class="greeting-emoji">👋</span>
+                    
+                    {% if registration_status == "active" %}
+                        <div class="status-container">
+                            <span class="blinking-dot active"></span>
+                            <span style="font-weight: bold;font-size: 10px;" class="status-indicator status-active">
+                                ACTIVE
+                            </span>
+                        </div>
+                    {% elif registration_status == "pending" %}
+                        <div class="status-container">
+                            <span class="blinking-dot pending"></span>
+                            <span class="status-indicator status-pending">
+                                <i class="fas fa-clock status-icon"></i>
+                                PENDING
+                            </span>
+                        </div>
+                    {% else %}
+                        <span class="status-indicator status-inactive">
+                            <i class="fas fa-times-circle status-icon"></i>
+                            INACTIVE
+                        </span>
+                    {% endif %}
+                </h1>
+                
+                {% if registration_status != "active" %}
+                    <p style="font-weight: bold;" class="dashboard-subtitle">
+                        {% if registration_status == "pending" %}
+                            <i class="fas fa-clock" style="color: #FF9800;"></i>
+                            Your registration fee is pending confirmation...<a href="{% url 'registration-fee' %}" >status</a>
+                        {% else %}
+                            <i class="fas fa-exclamation-triangle" style="color: #f44336;"></i>
+                            Pay the registration fee to activate your account 
+                            <a href="{% url 'registration-fee' %}">Activate Account</a>
+                        {% endif %}
+                    </p>
+                {% else %}
+                    <p class="dashboard-subtitle">
+                        <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                        Your account is fully active! <a href="{% url 'purchase-thrifts' %}">purchase thrifts</a>
+                    </p>
+                {% endif %}
+            </div>
+
+            {% if registration_status == "active" %}
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <!-- Wallet Balance Card -->
+                <div class="stat-card wallet-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-title">Wallet Balance</div>
+                            <div class="stat-value">₦<span id="walletBalance">
+                                {% if wallet_balance %}
+                                    {{ wallet_balance|floatformat:2 }}
+                                {% else %}
+                                    0.00
+                                {% endif %}
+                            </span></div>
+                            <div class="stat-change positive-change">
+                                <i class="fas fa-arrow-up"></i> 
+                                Referral Earnings: ₦{{ referral_earnings|default:"0.00"|floatformat:2 }}
+                            </div>
+                        </div>
+                        <div class="stat-icon wallet-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                    </div>
+                    <div class="stat-info">
+                        <i class="fas fa-info-circle"></i>
+                        Available for withdrawal and transactions
+                    </div>
+                    
+                    <input type="hidden" id="originalWalletBalance" value="
+                        {% if wallet_balance %}
+                            {{ wallet_balance|floatformat:2 }}
+                        {% else %}
+                            0.00
+                        {% endif %}
+                    ">
+                </div>
+
+                <!-- Total Referrals Card 
+                <div class="stat-card referrals-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-title">Referral Dashboard</div>
+                            <div class="stat-value" id="referralCount">{{ user.userprofile.total_referrals }}</div>
+                            <div class="stat-change positive-change">
+                                <i class="fas fa-arrow-up"></i> 
+                                Active: {{ active_referrals|default:0 }}
+                            </div>
+                        </div>
+                        <div class="stat-icon referrals-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="referral-section">
+                        <div class="referral-code-container">
+                            <div style="font-size: 0.9rem; color: var(--text-medium); margin-bottom: 10px; font-weight: 500;">
+                                Share your referral code:
+                            </div>
+                            <div class="referral-code" id="referralCode">
+                                {{ user.username|upper }}
+                            </div>
+                            <button class="copy-btn" id="copyReferralBtn">
+                                <i class="fas fa-copy"></i> Copy Code
+                            </button>
+                        </div>
+
+                        <div class="referred-users-container">
+                            <div class="section-title">
+                                <i class="fas fa-user-friends"></i>
+                                <span style="background: var(--accent-blue); color: white; padding: 3px 12px; border-radius: 20px; font-size: 0.9rem; font-weight: 500;">
+                                    {{ user.userprofile.total_referrals }} Referrals
+                                </span>
+                            </div>
+                            
+                            {% if referred_users %}
+                                <div style="background: #f8f9fa; border-radius: 12px; padding: 15px; border: 1px solid rgba(0,0,0,0.05);">
+                                    {% for referral in referred_users %}
+                                        <div class="username-item">
+                                            <div class="user-avatar">
+                                                {{ referral.user.username|first|upper }}
+                                            </div>
+                                            <div style="font-weight: 500; color: var(--text-dark);">
+                                                {{ referral.user.username }}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div style="text-align: center; padding: 30px 20px; color: var(--text-medium);">
+                                    <div style="font-size: 3rem; color: #ddd; margin-bottom: 15px;">
+                                        <i class="fas fa-user-friends"></i>
+                                    </div>
+                                    <p style="margin-bottom: 20px; font-weight: 500;">No referrals yet. Share your code to start earning!</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+-->
+                <!-- Total Thrift Account Card -->
+                <div class="stat-card thrift-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-title">Total Thrift Account</div>
+                            <div class="stat-value"><span id="thriftBalance">{{ purchase_count }}</span></div>
+                            <div class="stat-change positive-change">
+                                <i class="fas fa-arrow-up"></i> 20% to 40% growth
+                            </div>
+                        </div>
+                        <div class="stat-icon thrift-icon">
+                            <i class="fas fa-piggy-bank"></i>
+                        </div>
+                    </div>
+                    <div class="stat-info">
+                        <i class="fas fa-info-circle"></i>
+                        Savings and investment portfolio
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="{% url 'purchase-thrifts' %}" class="action-btn primary-btn">
+                    <i class="fas fa-plus-circle"></i>
+                    Purchase Thrifts
+                </a>
+            </div>
+
+            <!-- Wallet Activity Log -->
+            {% if user.is_authenticated %}
+            <div class="card mt-4">
+                <div class="card-header bg-gradient-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0 fw-semibold">
+                                <i class="fas fa-history me-2"></i>Wallet Activity Log
+                            </h6>
+                            <small class="opacity-75">Recent transactions</small>
+                        </div>
+                        <div class="badge bg-white" style="color: var(--accent-blue); padding: 8px 16px; border-radius: 20px; font-weight: 600;">
+                            <i class="fas fa-wallet me-1"></i> ₦{{ wallet_balance|floatformat:2 }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-body p-0">
+                    {% if transactions %}
+                        <div class="transaction-list">
+                            {% for transaction in transactions %}
+                            <div class="transaction-item border-bottom" style="border-color: rgba(0,0,0,0.05) !important;">
+                                <div class="row align-items-center py-3 px-4">
+                                    <div class="col-lg-3 col-md-4 mb-2 mb-md-0">
+                                        <div class="d-flex align-items-center">
+                                            <div class="transaction-icon me-3">
+                                                {% if transaction.transaction_type == 'deposit' %}
+                                                    <div class="icon-circle" style="background-color: rgba(25, 135, 84, 0.1); color: #198754;">
+                                                        <i class="fas fa-arrow-down"></i>
+                                                    </div>
+                                                {% elif transaction.transaction_type == 'withdrawal' %}
+                                                    <div class="icon-circle" style="background-color: rgba(220, 53, 69, 0.1); color: #dc3545;">
+                                                        <i class="fas fa-arrow-up"></i>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="icon-circle" style="background-color: rgba(13, 202, 240, 0.1); color: #0dcaf0;">
+                                                        <i class="fas fa-gift"></i>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div>
+                                                <small class="date-pill">
+                                                    <i class="fas fa-calendar-day me-2"></i>
+                                                    <span class="time-text">{{ transaction.created_at|timesince }} ago</span>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-4 col-md-4 mb-2 mb-md-0">
+                                        <div>
+                                            <div class="d-flex align-items-center mt-1">
+                                                <span class="badge {% if transaction.transaction_type == 'deposit' %}bg-success{% elif transaction.transaction_type == 'withdrawal' %}bg-danger{% else %}bg-info{% endif %} me-2">
+                                                    {{ transaction.transaction_type|title }}
+                                                </span>
+                                                {% if transaction.created_by %}
+                                                <small class="text-muted">
+                                                    <i class="fas fa-user-shield me-1"></i>by {{ user.username }}
+                                                </small>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-3 col-md-2 mb-2 mb-md-0">
+                                        <div class="text-end">
+                                            <div class="fw-bold fs-5 {% if transaction.transaction_type == 'deposit' %}text-success{% elif transaction.transaction_type == 'withdrawal' %}text-danger{% else %}text-info{% endif %}">
+                                                {% if transaction.transaction_type == 'deposit' %}+{% elif transaction.transaction_type == 'withdrawal' %}-{% endif %}
+                                                ₦{{ transaction.amount|floatformat:2 }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-2 col-md-2">
+                                        <div class="text-end">
+                                            <span class="badge {% if transaction.transaction_type == 'deposit' %}bg-success-subtle text-success{% elif transaction.transaction_type == 'withdrawal' %}bg-danger-subtle text-danger{% else %}bg-info-subtle text-info{% endif %} py-2 px-3">
+                                                {% if transaction.transaction_type == 'deposit' %}
+                                                    <i class="fas fa-plus-circle me-1"></i> Credited
+                                                {% elif transaction.transaction_type == 'withdrawal' %}
+                                                    <i class="fas fa-minus-circle me-1"></i> Debited
+                                                {% else %}
+                                                    <i class="fas fa-star me-1"></i> Bonus
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <div class="mb-4">
+                                <i class="fas fa-history fa-4x text-light"></i>
+                            </div>
+                            <h5 class="text-muted mb-2">No Transactions Yet</h5>
+                            <p class="text-muted mb-4">Your wallet activity will appear here once you have transactions</p>
+                            <div class="d-inline-block p-3 bg-light rounded">
+                                <i class="fas fa-info-circle text-primary me-2"></i>
+                                <small class="text-muted">Transactions are recorded when money is added or removed</small>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% endif %} {# End of active registration check #}
+
+        {% else %}
+            <!-- Welcome Section for Non-Authenticated Users -->
+            <div class="welcome-section">
+                <h2 class="welcome-title">WELCOME TO BLENGO YEARLY CONTRIBUTION</h2>
+                <p class="dashboard-subtitle" style="font-size: 1.0rem; max-width: 600px; margin: 0 auto 30px;">
+                    Join thousands of users who are already earning with our platform. 
+                    start your investment journey today with our next-generation trading platform and guaranteed returns.
+                </p>
+                <div style="display: flex; gap: 5px; justify-content: center; flex-wrap: wrap;">
+                    <a class="welcome-cta" href="{% url 'create-account' %}">
+                        <i class="fas fa-user-plus"></i> Join Now
+                    </a>
+                    <a class="welcome-cta" href="{% url 'sign-in' %}" style="background: linear-gradient(135deg, #4CAF50, #45a049);">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                    <a class="welcome-cta" href="{% url 'About' %}" style="background: linear-gradient(135deg, #FF9800, #FFC107);">
+                        <i class="fas fa-play-circle"></i> How It Works
+                    </a>
+                </div>
+            </div>
+
+            <!-- Demo Stats for Non-Authenticated Users -->
+            <div class="stats-grid">
+                <div class="stat-card wallet-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-title">Average Wallet Balance</div>
+                            <div class="stat-value">₦<span id="demoWalletBalance">50,000.00</span></div>
+                            <div class="stat-change positive-change">
+                                <i class="fas fa-arrow-up"></i> 12.5% monthly growth
+                            </div>
+                        </div>
+                        <div class="stat-icon wallet-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                    </div>
+                    <div class="stat-info">
+                        <i class="fas fa-chart-line"></i>
+                        Join to start building your own wallet
+                    </div>
+                </div>
+
+                
+
+                <div class="stat-card thrift-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-title">Active Thrifts</div>
+                            <div class="stat-value"><span id="demoThriftBalance">3,200+</span></div>
+                            <div class="stat-change positive-change">
+                                <i class="fas fa-arrow-up"></i> 20%-50% yearly growth
+                            </div>
+                        </div>
+                        <div class="stat-icon thrift-icon">
+                            <i class="fas fa-piggy-bank"></i>
+                        </div>
+                    </div>
+                    <div class="stat-info">
+                        <i class="fas fa-shield-alt"></i>
+                        Secure and guaranteed investment plans
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    {% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Remove all scroll effects and animations
+            const navbar = document.querySelector('.navbar-custom');
+            
+            // Remove the scroll event listener completely
+            window.removeEventListener('scroll', function() {});
+            
+            // Set navbar to static state
+            navbar.style.boxShadow = '0 4px 30px rgba(0, 119, 255, 0.08)';
+            navbar.style.padding = '12px 0';
+
+            // Smooth active link switching (simplified)
+            const navLinks = document.querySelectorAll('.nav-link-custom:not(.dropdown-toggle)');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Close offcanvas on mobile
+                    const offcanvas = document.getElementById('offcanvasNavbar');
+                    const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
+                    if (bsOffcanvas) {
+                        bsOffcanvas.hide();
+                    }
+                });
+            });
+
+            // Copy referral code functionality (simplified)
+            const copyReferralBtn = document.getElementById('copyReferralBtn');
+            if (copyReferralBtn) {
+                copyReferralBtn.addEventListener('click', async function() {
+                    const referralCode = document.getElementById('referralCode').textContent;
+                    
+                    try {
+                        await navigator.clipboard.writeText(referralCode);
+                        
+                        // Show success state
+                        const originalHTML = copyReferralBtn.innerHTML;
+                        copyReferralBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                        copyReferralBtn.classList.add('copied');
+                        
+                        // Reset button after 2 seconds
+                        setTimeout(() => {
+                            copyReferralBtn.innerHTML = originalHTML;
+                            copyReferralBtn.classList.remove('copied');
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Failed to copy:', err);
+                    }
+                });
+            }
+
+            // Remove all animation intervals
+            {% if not user.is_authenticated %}
+            // Remove demo animations
+            const demoWallet = document.getElementById('demoWalletBalance');
+            if (demoWallet) {
+                // Keep static value
+            }
+            {% endif %}
+
+            {% if user.is_authenticated and registration_status == "active" %}
+            // Remove live balance animation
+            const walletBalance = document.getElementById('walletBalance');
+            if (walletBalance) {
+                // Keep static value
+            }
+            {% endif %}
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,272 @@
+{% extends 'home.html' %}
+{% block content %}
+
+<style>
+    .transactions-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 30px 20px;
+        min-height: calc(100vh - 80px);
+    }
+
+    .back-button {
+        margin-bottom: 20px;
+    }
+
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 15px;
+        background: rgba(3, 169, 244, 0.1);
+        color: #03A9F4;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 500;
+    }
+
+    .back-btn:hover {
+        background: rgba(3, 169, 244, 0.2);
+    }
+
+    .wallet-summary {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .user-info h2 {
+        margin: 0;
+        color: #333;
+        font-size: 1.5rem;
+    }
+
+    .user-info p {
+        margin: 5px 0 0;
+        color: #666;
+    }
+
+    .balance-display {
+        text-align: right;
+    }
+
+    .balance-label {
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .balance-amount {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #0277bd;
+    }
+
+    .transactions-table {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .table-header {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        padding: 20px;
+        background: #f8f9fa;
+        font-weight: 600;
+        color: #555;
+        border-bottom: 1px solid #eee;
+    }
+
+    .transaction-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        padding: 15px 20px;
+        border-bottom: 1px solid #eee;
+        align-items: center;
+    }
+
+    .transaction-row:last-child {
+        border-bottom: none;
+    }
+
+    .transaction-row:hover {
+        background: #f9f9f9;
+    }
+
+    .transaction-type {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        text-align: center;
+        display: inline-block;
+    }
+
+    .type-deposit {
+        background: rgba(76, 175, 80, 0.1);
+        color: #4CAF50;
+    }
+
+    .type-withdrawal {
+        background: rgba(244, 67, 54, 0.1);
+        color: #f44336;
+    }
+
+    .type-transfer {
+        background: rgba(255, 152, 0, 0.1);
+        color: #FF9800;
+    }
+
+    .type-earning {
+        background: rgba(156, 39, 176, 0.1);
+        color: #9c27b0;
+    }
+
+    .type-bonus {
+        background: rgba(33, 150, 243, 0.1);
+        color: #2196F3;
+    }
+
+    .amount {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .status-badge {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        text-align: center;
+    }
+
+    .status-completed {
+        background: rgba(76, 175, 80, 0.1);
+        color: #4CAF50;
+    }
+
+    .status-pending {
+        background: rgba(255, 152, 0, 0.1);
+        color: #FF9800;
+    }
+
+    .status-failed {
+        background: rgba(244, 67, 54, 0.1);
+        color: #f44336;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+        color: #666;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+
+    @media (max-width: 768px) {
+        .table-header {
+            display: none;
+        }
+        
+        .transaction-row {
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 20px;
+        }
+        
+        .wallet-summary {
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+        }
+        
+        .balance-display {
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="transactions-container">
+    <!-- Back Button -->
+    <div class="back-button">
+        <a href="{% url 'users-wallet' %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Wallets
+        </a>
+    </div>
+
+    <!-- Wallet Summary -->
+    <div class="wallet-summary">
+        <div class="user-info">
+            <h2>{{ wallet.user.username }}'s Transactions</h2>
+            <p>{{ wallet.user.first_name }} {{ wallet.user.last_name }}</p>
+        </div>
+        
+        <div class="balance-display">
+            <div class="balance-label">Current Balance</div>
+            <div class="balance-amount">₦{{ wallet.balance|floatformat:2 }}</div>
+        </div>
+    </div>
+
+    <!-- Transactions Table -->
+    <div class="transactions-table">
+        {% if transactions %}
+        <div class="table-header">
+            <div>Date & Time</div>
+            <div>Type</div>
+            <div>Amount</div>
+            <div>Description</div>
+            <div>Status</div>
+        </div>
+        
+        {% for transaction in transactions %}
+        <div class="transaction-row">
+            <div>
+                {{ transaction.created_at|date:"M d, Y H:i" }}
+            </div>
+            
+            <div>
+                <span class="transaction-type type-{{ transaction.transaction_type }}">
+                    {{ transaction.get_transaction_type_display }}
+                </span>
+            </div>
+            
+            <div class="amount">
+                ₦{{ transaction.amount|floatformat:2 }}
+            </div>
+            
+            <div>
+                {{ transaction.description }}
+                {% if transaction.created_by %}
+                    <br><small>By: {{ transaction.created_by.username }}</small>
+                {% endif %}
+            </div>
+            
+            <div>
+                <span class="status-badge status-{{ transaction.status }}">
+                    {{ transaction.get_status_display }}
+                </span>
+            </div>
+        </div>
+        {% endfor %}
+        
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-history"></i>
+            <h3>No transactions yet</h3>
+            <p>This wallet has no transaction history</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

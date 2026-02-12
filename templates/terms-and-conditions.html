@@ -1,0 +1,625 @@
+{% extends 'home.html' %}
+
+{% block content %}
+<style>
+    .terms-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+
+    .terms-header {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .terms-title {
+        font-weight: 800;
+        font-size: 2.2rem;
+        color: var(--text-dark);
+        margin-bottom: 15px;
+        background: linear-gradient(90deg, var(--neon-blue), var(--accent-purple));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .terms-subtitle {
+        color: var(--text-medium);
+        font-size: 1rem;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .last-updated {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 8px 20px;
+        background: rgba(0, 119, 255, 0.08);
+        border-radius: 30px;
+        font-size: 0.85rem;
+        color: var(--accent-blue);
+        font-weight: 500;
+    }
+
+    .terms-card {
+        background: white;
+        border-radius: 24px;
+        padding: 40px;
+        box-shadow: 0 8px 32px rgba(0, 119, 255, 0.08);
+        border: 1px solid rgba(0, 119, 255, 0.1);
+        margin-bottom: 30px;
+    }
+
+    .terms-section {
+        margin-bottom: 40px;
+    }
+
+    .terms-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid rgba(0, 119, 255, 0.1);
+    }
+
+    .section-title i {
+        color: var(--accent-blue);
+        font-size: 1.2rem;
+    }
+
+    .section-content {
+        padding-left: 10px;
+    }
+
+    .section-content p {
+        color: var(--text-medium);
+        font-size: 0.95rem;
+        line-height: 1.7;
+        margin-bottom: 15px;
+    }
+
+    .subsection {
+        margin: 25px 0;
+        padding-left: 20px;
+        border-left: 3px solid rgba(0, 119, 255, 0.2);
+    }
+
+    .subsection-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 12px;
+    }
+
+    .plan-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 25px 0;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    .plan-table th {
+        background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple));
+        color: white;
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 15px;
+        text-align: left;
+    }
+
+    .plan-table td {
+        padding: 15px;
+        background: white;
+        border-bottom: 1px solid rgba(0, 119, 255, 0.1);
+        color: var(--text-medium);
+        font-size: 0.9rem;
+    }
+
+    .plan-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .plan-table td:first-child {
+        font-weight: 600;
+        color: var(--text-dark);
+    }
+
+    .highlight-box {
+        background: rgba(255, 193, 7, 0.08);
+        border-left: 4px solid #ffc107;
+        padding: 20px 25px;
+        border-radius: 12px;
+        margin: 25px 0;
+    }
+
+    .highlight-box.warning {
+        background: rgba(220, 53, 69, 0.08);
+        border-left-color: var(--danger-red);
+    }
+
+    .highlight-box.success {
+        background: rgba(76, 175, 80, 0.08);
+        border-left-color: #4CAF50;
+    }
+
+    .highlight-box i {
+        color: #ffc107;
+        font-size: 1.1rem;
+        margin-right: 10px;
+    }
+
+    .highlight-box.warning i {
+        color: var(--danger-red);
+    }
+
+    .highlight-box.success i {
+        color: #4CAF50;
+    }
+
+    .bullet-list {
+        list-style: none;
+        padding: 0;
+        margin: 15px 0;
+    }
+
+    .bullet-list li {
+        padding: 8px 0;
+        padding-left: 28px;
+        position: relative;
+        color: var(--text-medium);
+        font-size: 0.95rem;
+    }
+
+    .bullet-list li:before {
+        content: "•";
+        color: var(--accent-blue);
+        font-weight: bold;
+        font-size: 1.2rem;
+        position: absolute;
+        left: 8px;
+        top: 4px;
+    }
+
+    .numbered-list {
+        list-style: none;
+        counter-reset: item;
+        padding: 0;
+        margin: 15px 0;
+    }
+
+    .numbered-list li {
+        counter-increment: item;
+        padding: 8px 0;
+        padding-left: 35px;
+        position: relative;
+        color: var(--text-medium);
+        font-size: 0.95rem;
+    }
+
+    .numbered-list li:before {
+        content: counter(item) ".";
+        color: var(--accent-blue);
+        font-weight: 600;
+        position: absolute;
+        left: 8px;
+    }
+
+    .fine-print {
+        font-size: 0.8rem;
+        color: var(--text-light);
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(0, 119, 255, 0.1);
+        text-align: center;
+    }
+
+    .contact-info {
+        background: rgba(0, 119, 255, 0.03);
+        padding: 25px;
+        border-radius: 16px;
+        margin-top: 30px;
+    }
+
+    .contact-info p {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .contact-info i {
+        color: var(--accent-blue);
+        width: 20px;
+        text-align: center;
+    }
+
+    .back-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple));
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(0, 119, 255, 0.3);
+        transition: all 0.3s ease;
+        z-index: 100;
+    }
+
+    .back-to-top:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 119, 255, 0.4);
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .terms-container {
+            padding: 20px 15px;
+        }
+        
+        .terms-title {
+            font-size: 1.8rem;
+        }
+        
+        .terms-card {
+            padding: 25px;
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+        }
+        
+        .plan-table {
+            display: block;
+            overflow-x: auto;
+        }
+    }
+</style>
+
+<div class="terms-container">
+    <!-- Header -->
+    <div class="terms-header">
+        <h1 class="terms-title">Terms of Service</h1>
+        <p class="terms-subtitle">Please read these terms carefully before using Blengo's savings and investment services.</p>
+        <span class="last-updated"><i class="fas fa-calendar-alt me-2"></i>Last Updated: February 12, 2026</span>
+    </div>
+
+    <!-- Main Content Card -->
+    <div class="terms-card">
+        <!-- Section 1: Introduction -->
+        <div class="terms-section">
+            <div class="section-title">
+                <i class="fas fa-handshake"></i>
+                1. Introduction
+            </div>
+            <div class="section-content">
+                <p>Welcome to Blengo ("Company," "we," "our," "us"). By accessing or using our website, mobile application, and savings/investment services (collectively, the "Services"), you agree to be bound by these Terms of Service ("Terms"). Please read them carefully.</p>
+                <p><strong>Acceptance of Terms:</strong> By creating an account, purchasing a thrift plan, or using any of our Services, you acknowledge that you have read, understood, and agree to be bound by these Terms.</p>
+            </div>
+        </div>
+
+        <!-- Section 2: Eligibility -->
+        <div class="terms-section">
+            <div class="section-title">
+                <i class="fas fa-user-check"></i>
+                2. Eligibility
+            </div>
+            <div class="section-content">
+                <p>To use our Services, you must:</p>
+                <ul class="bullet-list">
+                    <li>Be at least 18 years of age</li>
+                    <li>Have legal capacity to enter into binding contracts</li>
+                    <li>Be a resident of the Federal Republic of Nigeria</li>
+                    <li>Provide accurate, current, and complete information</li>
+                    <li>Not be restricted from using our Services under applicable law</li>
+                </ul>
+                <p>We reserve the right to verify your eligibility and refuse service to anyone at any time.</p>
+            </div>
+        </div>
+
+        <!-- Section 3: Our Savings Plans -->
+        <div class="terms-section">
+            <div class="section-title">
+                <i class="fas fa-piggy-bank"></i>
+                3. Our Savings Plans
+            </div>
+            <div class="section-content">
+                <h6 class="subsection-title">3.1 Plan Types</h6>
+                
+                <table class="plan-table">
+                    <thead>
+                        <tr>
+                            <th>Plan</th>
+                            <th>Contribution</th>
+                            <th>Duration</th>
+                            <th>Interest Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>BASIC PLAN</strong></td>
+                            <td>₦25,000 – ₦50,000 monthly</td>
+                            <td>12 months</td>
+                            <td><span style="color: #0f9d58; font-weight: 600;">25%</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>PLUS PLAN</strong></td>
+                            <td>₦100,000+ monthly</td>
+                            <td>12 months</td>
+                            <td><span style="color: #ff8c00; font-weight: 600;">30%</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>MAX PLAN</strong></td>
+                            <td>One-time (any amount)</td>
+                            <td>12 months lock-in</td>
+                            <td><span style="color: var(--accent-purple); font-weight: 600;">40%</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h6 class="subsection-title" style="margin-top: 30px;">3.2 Payment Obligations</h6>
+                
+                <div class="highlight-box">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong style="color: #ffc107;">For Basic and Plus Plans (Monthly Payment):</strong>
+                </div>
+                <ul class="bullet-list">
+                    <li>First payment is due immediately upon enrollment</li>
+                    <li><strong>Subsequent payments must be made on or before the 1st of each month</strong></li>
+                    <li>Payments are non-refundable once processed</li>
+                    <li>You authorize us to charge your provided payment method</li>
+                </ul>
+
+                <div class="highlight-box success">
+                    <i class="fas fa-check-circle"></i>
+                    <strong style="color: #4CAF50;">For Max Plan (One-time Investment):</strong>
+                </div>
+                <ul class="bullet-list">
+                    <li>Full payment is due immediately upon enrollment</li>
+                    <li>Payment is non-refundable and locked for the 12-month term</li>
+                    <li>Early withdrawal is not permitted</li>
+                    <li>No monthly contributions required</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Section 4: Late Payment Penalties -->
+        <div class="terms-section">
+            <div class="section-title">
+                <i class="fas fa-clock"></i>
+                4. Late Payment Penalties
+            </div>
+            <div class="section-content">
+                <div class="highlight-box warning">
+                    <i class="fas fa-gavel"></i>
+                    <strong style="color: var(--danger-red);">IMPORTANT: ₦5,000 Late Payment Fine</strong>
+                </div>
+                <p>For Basic and Plus Plans, all monthly payments must be made on or before the <strong>1st of every month</strong>. Failure to comply will result in:</p>
+                <ul class="numbered-list">
+                    <li>An automatic fine of <strong>₦5,000 (Five Thousand Naira)</strong> assessed on the 2nd day of the month</li>
+                    <li>Accumulation of fines for each month payment is missed or delayed</li>
+                    <li>Suspension of interest accrual until all outstanding payments and fines are settled</li>
+                    <li>Possible termination of the savings plan after 3 consecutive missed payments</li>
+                </ul>
+                <p style="margin-top: 15px;">All fines must be paid in full before any withdrawal or maturity payout can be processed.</p>
+            </div>
+        </div>
+
+        <!-- Section 5: Legally Binding Agreement -->
+        <div class="terms-section">
+            <div class="section-title">
+                <i class="fas fa-file-signature"></i>
+                5. Legally Binding Agreement
+            </div>
+            <div class="section-content">
+                <p>By enrolling in any Blengo savings plan, you enter into a <strong>legally binding savings contract</strong> with Blengo. This agreement is enforceable under the laws of the Federal Republic of Nigeria.</p>
+                
+                <div class="subsection">
+                    <h6 class="subsection-title">5.1 For Monthly Plans (Basic & Plus):</h6>
+                    <ul class="bullet-list">
+                        <li>You commit to the full 12-month contribution cycle</li>
+                        <li>You cannot withdraw your funds before maturity without penalty</li>
+                        <li>Early termination will result in forfeiture of all accrued interest</li>
+                    </ul>
+                </div>
+                
+                <div class="subsection">
+                    <h6 class="subsection-title">5.2 For Max Plan (One-time):</h6>
+                    <ul class="bullet-list">
+                        <li>Your investment is locked for the entire 12-month term</li>
+                        <li>No early withdrawals are permitted under any circumstances</li>
+                        <li>Funds cannot be accessed until the maturity date</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 6: Maturity and Payouts -->
+        <div class="terms-section">
+            <div class="section-title">
+                <i class="fas fa-coins"></i>
+                6. Maturity and Payouts
+            </div>
+            <div class="section-content">
+                <p>Upon successful completion of your 12-month savings cycle:</p>
+                <ul class="bullet-list">
+                    <li><strong>Principal + Interest:</strong> You will receive your total contributions plus the guaranteed interest rate</li>
+                    <li><strong>Processing Time:</strong> Payouts are processed within 5-7 business days after maturity date</li>
+                    <li><strong>Payout Method:</strong> Funds will be transferred to your registered bank account</li>
+                    <li><strong>Taxes:</strong> You are solely responsible for any taxes applicable to your earnings</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Section 7: Account Responsibilities -->
+        <div class="terms-section">
+            <div class="section-title">
+                <i class="fas fa-shield-alt"></i>
+                7. Account Responsibilities
+            </div>
+            <div class="section-content">
+                <ul class="bullet-list">
+                    <li>You are responsible for maintaining the confidentiality of your account credentials</li>
+                    <li>You agree to immediately notify us of any unauthorized use of your account</li>
+                    <li>You are solely responsible for all activities that occur under your account</li>
+                    <li>We are not liable for any loss or damage arising from your failure to protect your account</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Section 8: Cancellation and Termination -->
+        <div class="terms-section">
+            <div class="section-title">
+                <i class="fas fa-ban"></i>
+                8. Cancellation and Termination
+            </div>
+            <div class="section-content">
+                <h6 class="subsection-title">8.1 By You:</h6>
+                <p>You may cancel your account at any time. However, active savings plans cannot be cancelled. Funds are locked until maturity as per the binding agreement.</p>
+                
+                <h6 class="subsection-title" style="margin-top: 20px;">8.2 By Us:</h6>
+                <p>We reserve the right to terminate or suspend your account immediately, without prior notice or liability, for any reason including but not limited to:</p>
+                <ul class="bullet-list">
+                    <li>Violation of these Terms</li>
+                    <li>Fraudulent or illegal activity</li>
+                    <li>Three (3) consecutive missed payments on monthly plans</li>
+                    <li>Providing false or misleading information</li>
+                </ul>
+                <p style="margin-top: 15px;">Upon termination, any pending transactions will be cancelled, and we may permanently delete your account data.</p>
+            </div>
+        </div>
+
+        <!-- Section 9: Limitation of Liability -->
+        <div class="terms-section">
+            <div class="section-title">
+                <i class="fas fa-exclamation-triangle"></i>
+                9. Limitation of Liability
+            </div>
+            <div class="section-content">
+                <p>To the maximum extent permitted by law, Blengo shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation:</p>
+                <ul class="bullet-list">
+                    <li>Loss of profits, data, or goodwill</li>
+                    <li>Service interruptions or system failures</li>
+                    <li>Unauthorized access to your account</li>
+                    <li>Actions or omissions of third parties</li>
+                </ul>
+                <p>Our total liability to you shall not exceed the amount of interest earned on your active savings plan.</p>
+            </div>
+        </div>
+
+        <!-- Section 10: Changes to Terms -->
+        <div class="terms-section">
+            <div class="section-title">
+                <i class="fas fa-edit"></i>
+                10. Changes to Terms
+            </div>
+            <div class="section-content">
+                <p>We reserve the right to modify or replace these Terms at any time. Material changes will be effective:</p>
+                <ul class="bullet-list">
+                    <li>30 days after posting on our website for existing users</li>
+                    <li>Immediately upon posting for new users</li>
+                </ul>
+                <p>Your continued use of our Services after any changes constitutes acceptance of the modified Terms.</p>
+            </div>
+        </div>
+
+        <!-- Section 11: Governing Law -->
+        <div class="terms-section">
+            <div class="section-title">
+                <i class="fas fa-gavel"></i>
+                11. Governing Law
+            </div>
+            <div class="section-content">
+                <p>These Terms shall be governed and construed in accordance with the laws of the Federal Republic of Nigeria, without regard to its conflict of law provisions.</p>
+                <p>Any disputes arising under these Terms shall be resolved exclusively by the courts of Lagos State, Nigeria.</p>
+            </div>
+        </div>
+
+        <!-- Section 12: Contact Information -->
+        <div class="terms-section">
+            <div class="section-title">
+                <i class="fas fa-envelope"></i>
+                12. Contact Us
+            </div>
+            <div class="section-content">
+                <p>If you have any questions about these Terms, please contact us:</p>
+                
+                <div class="contact-info">
+    <a href="mailto:support@example.com" class="contact-btn">Contact Us</a>
+</div>
+
+<style>
+.contact-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.contact-btn:hover {
+    background: linear-gradient(135deg, #45a049, #3e8e41);
+    transform: translateY(-2px);
+}
+</style>
+
+            </div>
+        </div>
+
+        <!-- Fine Print -->
+        <div class="fine-print">
+            <p>By using Blengo's services, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.</p>
+            <p style="margin-top: 10px;">© 2026 Blengo. All rights reserved.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Back to Top Button -->
+<a href="#" class="back-to-top" id="backToTopBtn">
+    <i class="fas fa-arrow-up"></i>
+</a>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Back to top button functionality
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    
+    window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 300) {
+            backToTopBtn.style.display = 'flex';
+        } else {
+            backToTopBtn.style.display = 'none';
+        }
+    });
+    
+    backToTopBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    
+    // Hide back to top button initially
+    backToTopBtn.style.display = 'none';
+});
+</script>
+
+{% endblock %}

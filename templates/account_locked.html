@@ -1,0 +1,400 @@
+<!-- templates/account_locked.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Locked - BLENGO</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #03A9F4;
+            --neon-purple: #7c4dff;
+            --accent-blue: #0077ff;
+            --accent-purple: #6d28d9;
+            --danger-red: #dc3545;
+            --warning-orange: #FF9800;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .lock-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 50px 40px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            max-width: 550px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .lock-icon {
+            font-size: 80px;
+            color: var(--danger-red);
+            margin-bottom: 25px;
+            background: rgba(220, 53, 69, 0.1);
+            width: 120px;
+            height: 120px;
+            line-height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 20px rgba(220, 53, 69, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+            }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, var(--danger-red), #ff6b6b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .lock-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--danger-red), #c82333);
+            color: white;
+            padding: 8px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .message-box {
+            background: #f8f9fa;
+            border-left: 5px solid var(--danger-red);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .message-box i {
+            color: var(--danger-red);
+            margin-right: 10px;
+        }
+
+        .reason-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0 0;
+            text-align: left;
+        }
+
+        .reason-list li {
+            padding: 12px 15px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .reason-list li i {
+            width: 24px;
+            text-align: center;
+        }
+
+        .text-muted-custom {
+            color: #6c757d;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple));
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 119, 255, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 119, 255, 0.3);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .btn-outline:hover {
+            background: var(--accent-blue);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .support-info {
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .support-info a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .support-info a:hover {
+            text-decoration: underline;
+        }
+
+        .countdown-timer {
+            background: linear-gradient(135deg, #fff3cd, #ffe69c);
+            color: #856404;
+            padding: 12px 20px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 576px) {
+            .lock-card {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .lock-icon {
+                width: 100px;
+                height: 100px;
+                line-height: 100px;
+                font-size: 60px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="lock-card">
+        <!-- Lock Icon -->
+        <div class="lock-icon">
+            <i class="fas fa-lock"></i>
+        </div>
+        
+        <!-- Badge -->
+        <span class="lock-badge">
+            <i class="fas fa-shield-alt me-2"></i>ACCOUNT LOCKED
+        </span>
+        
+        <!-- Title -->
+        <h1>Access Restricted</h1>
+        
+        <!-- Subtitle -->
+        <p class="text-muted-custom">
+            Your account has been temporarily locked due to multiple failed login attempts.
+        </p>
+        
+        <!-- Message Box with Reason -->
+        <div class="message-box">
+            <div class="d-flex align-items-center mb-3">
+                <i class="fas fa-exclamation-triangle fa-2x me-3" style="color: var(--warning-orange);"></i>
+                <div>
+                    <strong style="font-size: 1.1rem;">Why is my account locked?</strong>
+                </div>
+            </div>
+            
+            <ul class="reason-list">
+                <li>
+                    <i class="fas fa-times-circle" style="color: var(--danger-red);"></i>
+                    <span><strong>5+ failed attempts</strong> - Too many incorrect password attempts</span>
+                </li>
+                <li>
+                    <i class="fas fa-clock" style="color: var(--warning-orange);"></i>
+                    <span><strong>Temporary lock</strong> - 30 minute security timeout</span>
+                </li>
+                <li>
+                    <i class="fas fa-shield-alt" style="color: var(--accent-blue);"></i>
+                    <span><strong>Security measure</strong> - Protecting your account from unauthorized access</span>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Countdown Timer (if applicable) -->
+        <div class="countdown-timer" id="countdownContainer">
+            <i class="fas fa-hourglass-half"></i>
+            <span>Account will automatically unlock in:</span>
+            <strong id="countdown">30:00</strong>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="{% url 'sign-in' %}" class="btn btn-primary">
+                <i class="fas fa-undo-alt"></i>
+                Try Again
+            </a>
+            <a href="{% url 'password-reset' %}" class="btn btn-outline">
+                <i class="fas fa-key"></i>
+                Reset Password
+            </a>
+        </div>
+        
+        <!-- Support Information -->
+        <div class="support-info">
+            <i class="fas fa-headset me-2"></i>
+            Need help? Contact our support team at<br>
+            <a href="mailto:support@blengo.com">
+                <i class="fas fa-envelope me-1"></i>support@blengo.com
+            </a>
+            <span class="mx-2">|</span>
+            <a href="tel:+2348000000000">
+                <i class="fas fa-phone-alt me-1"></i>+234 800 000 0000
+            </a>
+            <div class="mt-3">
+                <small class="text-muted">
+                    <i class="fas fa-clock me-1"></i>
+                    Support hours: Mon-Fri, 9am - 6pm (WAT)
+                </small>
+            </div>
+        </div>
+        
+        <!-- Additional Help -->
+        <div class="mt-4">
+            <small class="text-muted">
+                <i class="fas fa-info-circle me-1"></i>
+                Still having issues? 
+                <a href="{% url 'contact' %}" class="text-decoration-none">Contact Administrator</a>
+            </small>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Countdown Timer Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set the lock duration (30 minutes = 1800 seconds)
+            let lockDuration = 30 * 60; // 30 minutes in seconds
+            const countdownElement = document.getElementById('countdown');
+            
+            function updateCountdown() {
+                const minutes = Math.floor(lockDuration / 60);
+                const seconds = lockDuration % 60;
+                countdownElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (lockDuration > 0) {
+                    lockDuration--;
+                } else {
+                    // When countdown reaches zero, change the message
+                    document.getElementById('countdownContainer').innerHTML = `
+                        <i class="fas fa-check-circle" style="color: #28a745;"></i>
+                        <span>Your account is now unlocked!</span>
+                        <a href="{% url 'sign-in' %}" class="btn btn-sm btn-success ms-3">Login Now</a>
+                    `;
+                }
+            }
+            
+            // Update countdown every second
+            updateCountdown(); // Initial call
+            setInterval(updateCountdown, 1000);
+            
+            // Simulate lock reason from server (you can pass this from Django view)
+            const failedAttempts = "{{ failed_attempts|default:'5' }}";
+            const lockTime = "{{ lock_time|default:'30' }}";
+        });
+    </script>
+    
+    <!-- Optional: Add this if you want to show different messages based on lock reason -->
+    <script>
+        // You can customize this based on data passed from your Django view
+        const lockReason = "{{ lock_reason|default:'too_many_attempts' }}";
+        
+        if (lockReason === 'suspicious_activity') {
+            document.querySelector('.message-box').innerHTML = `
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-shield-alt fa-2x me-3" style="color: var(--accent-blue);"></i>
+                    <div>
+                        <strong style="font-size: 1.1rem;">Suspicious Activity Detected</strong>
+                    </div>
+                </div>
+                <p class="mb-0">Our system detected unusual activity on your account. For your security, we've temporarily locked it. Please contact support to verify your identity.</p>
+            `;
+        }
+    </script>
+</body>
+</html>

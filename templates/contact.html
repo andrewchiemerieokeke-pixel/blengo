@@ -1,0 +1,449 @@
+{% extends 'home.html' %}
+
+{% block content %}
+<style>
+.contact-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 30px 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 119, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.contact-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.contact-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--neon-blue), var(--accent-purple));
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.contact-header p {
+    color: var(--text-medium);
+    font-size: 0.95rem;
+}
+
+/* Alert Messages */
+.alert {
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-success {
+    background: rgba(15, 157, 88, 0.1);
+    border: 1px solid rgba(15, 157, 88, 0.3);
+    color: #0f9d58;
+}
+
+.alert-success i {
+    color: #0f9d58;
+    font-size: 1.2rem;
+}
+
+.alert-error {
+    background: rgba(220, 53, 69, 0.1);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    color: #dc3545;
+}
+
+.alert-info {
+    background: rgba(0, 119, 255, 0.1);
+    border: 1px solid rgba(0, 119, 255, 0.3);
+    color: var(--accent-blue);
+}
+
+.alert-content {
+    flex: 1;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.alert-close {
+    background: none;
+    border: none;
+    color: currentColor;
+    opacity: 0.7;
+    cursor: pointer;
+    padding: 0;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+}
+
+.alert-close:hover {
+    opacity: 1;
+}
+
+/* Email Reply Note */
+.email-reply-note {
+    background: rgba(0, 119, 255, 0.05);
+    border-left: 4px solid var(--accent-blue);
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: var(--text-medium);
+}
+
+.email-reply-note i {
+    color: var(--accent-blue);
+    font-size: 1.1rem;
+}
+
+.contact-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 0.9rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 119, 255, 0.2);
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    transition: all 0.3s ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    border-color: var(--neon-blue);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 119, 255, 0.1);
+}
+
+.contact-form textarea {
+    resize: vertical;
+    min-height: 150px;
+}
+
+.contact-form button {
+    background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple));
+    color: white;
+    font-weight: 600;
+    padding: 14px 30px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.contact-form button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 119, 255, 0.3);
+}
+
+.contact-form button i {
+    font-size: 1rem;
+}
+
+/* Alternative Contact */
+.alt-contact {
+    margin-top: 30px;
+    text-align: center;
+    padding-top: 25px;
+    border-top: 1px solid rgba(0, 119, 255, 0.1);
+}
+
+.alt-contact p {
+    color: var(--text-medium);
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.alt-email {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 25px;
+    background: white;
+    border-radius: 50px;
+    border: 1px solid rgba(0, 119, 255, 0.2);
+    color: var(--text-dark);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.alt-email:hover {
+    border-color: var(--accent-blue);
+    background: rgba(0, 119, 255, 0.02);
+    transform: translateY(-2px);
+}
+
+.alt-email i {
+    color: var(--accent-blue);
+}
+
+.alt-email span {
+    font-weight: 600;
+}
+
+.copy-btn {
+    background: rgba(0, 119, 255, 0.1);
+    border: none;
+    border-radius: 30px;
+    padding: 6px 16px;
+    color: var(--accent-blue);
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+}
+
+.copy-btn:hover {
+    background: var(--accent-blue);
+    color: white;
+}
+
+/* Address Section - NEW */
+.address-section {
+    margin-top: 30px;
+    text-align: center;
+    padding: 20px;
+    background: rgba(0, 119, 255, 0.03);
+    border-radius: 12px;
+    border: 1px solid rgba(0, 119, 255, 0.1);
+}
+
+.address-section i {
+    color: var(--accent-blue);
+    margin-right: 8px;
+}
+
+.address-section p {
+    color: var(--text-medium);
+    font-size: 0.95rem;
+    margin: 5px 0;
+}
+
+/* Toast for copy */
+.toast-message {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: linear-gradient(135deg, #0f9d58, #1e7e34);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 20px rgba(15, 157, 88, 0.3);
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 9999;
+}
+
+.toast-message.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+@media (max-width: 576px) {
+    .contact-container {
+        margin: 30px 15px;
+        padding: 25px 15px;
+    }
+
+    .contact-header h1 {
+        font-size: 1.6rem;
+    }
+    
+    .alt-email {
+        flex-direction: column;
+        padding: 15px;
+        border-radius: 16px;
+    }
+    
+    .copy-btn {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+}
+</style>
+
+<div class="contact-container">
+    <div class="contact-header">
+        <h1>Contact Us</h1>
+        <p>Have questions or feedback? Fill out the form below and we'll get back to you shortly.</p>
+    </div>
+
+    <!-- Display Django messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}"></i>
+                <span class="alert-content">{{ message }}</span>
+                <button type="button" class="alert-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Email reply notification -->
+    <div class="email-reply-note">
+        <i class="fas fa-envelope-open-text"></i>
+        <span>We will reply to you through the email address you provide within 24 hours.</span>
+    </div>
+
+    <!-- Contact Form -->
+    <form method="POST" action="{% url 'contact' %}" class="contact-form">
+        {% csrf_token %}
+        
+        
+
+        <label for="email">
+            <i class="fas fa-envelope" style="color: var(--accent-blue); margin-right: 5px;"></i>
+            Email Address
+        </label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+        <label for="message">
+            <i class="fas fa-comment" style="color: var(--accent-blue); margin-right: 5px;"></i>
+            Message
+        </label>
+        <textarea id="message" name="message" placeholder="Write your message..." required></textarea>
+
+        <button type="submit">
+            <i class="fas fa-paper-plane"></i>
+            Send Message
+        </button>
+    </form>
+
+    <!-- Alternative Contact Method -->
+    <div class="alt-contact">
+        <p>
+            <i class="fas fa-envelope" style="color: var(--accent-blue);"></i>
+            Prefer to email us directly?
+        </p>
+        <div class="alt-email">
+            <i class="fas fa-envelope-open-text"></i>
+            <span>blengocontribution@gmail.com</span>
+            <button class="copy-btn" onclick="copyEmail()">
+                <i class="fas fa-copy"></i> Copy
+            </button>
+        </div>
+        <p style="margin-top: 15px; font-size: 0.85rem;">
+            <i class="fas fa-clock" style="color: #ffc107;"></i>
+            Response time: within 24 hours
+        </p>
+    </div>
+
+    <!-- Address Section - ONLY ADDITION -->
+    <div class="address-section">
+        <p>
+            <i class="fas fa-map-marker-alt"></i>
+            <strong>Head Office:</strong> 15, Rose Garden Estate, Aiyetoro Ijanikin, Lagos, Nigeria
+        </p>
+    </div>
+</div>
+
+<!-- Toast notification for copy -->
+<div id="copyToast" class="toast-message">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastText">Email address copied to clipboard!</span>
+</div>
+
+<script>
+// Copy email to clipboard function
+function copyEmail() {
+    const email = 'blengocontribution@gmail.com';
+    
+    navigator.clipboard.writeText(email).then(function() {
+        showToast('Email address copied to clipboard!');
+    }).catch(function(err) {
+        // Fallback method
+        const textArea = document.createElement('textarea');
+        textArea.value = email;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showToast('Email address copied to clipboard!');
+    });
+}
+
+// Show toast notification
+function showToast(message) {
+    const toast = document.getElementById('copyToast');
+    const toastText = document.getElementById('toastText');
+    toastText.textContent = message;
+    toast.classList.add('show');
+    
+    setTimeout(function() {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
+// Auto-dismiss alerts after 5 seconds
+setTimeout(function() {
+    document.querySelectorAll('.alert').forEach(alert => {
+        alert.style.opacity = '0';
+        alert.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => {
+            alert.style.display = 'none';
+        }, 300);
+    });
+}, 5000);
+
+// Close alerts manually
+document.querySelectorAll('.alert-close').forEach(button => {
+    button.addEventListener('click', function() {
+        const alert = this.closest('.alert');
+        alert.style.opacity = '0';
+        setTimeout(() => {
+            alert.style.display = 'none';
+        }, 300);
+    });
+});
+</script>
+
+{% endblock %}

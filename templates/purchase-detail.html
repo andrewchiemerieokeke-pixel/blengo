@@ -1,0 +1,914 @@
+{% extends 'home.html' %}
+
+{% block content %}
+<style>
+    .detail-container {
+        max-width: 700px;
+        margin: 25px auto;
+        padding: 0 16px;
+    }
+
+    .detail-card {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(8px);
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 12px 32px rgba(0, 119, 255, 0.1);
+        border: 1px solid rgba(0, 119, 255, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .detail-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(to bottom, var(--neon-blue), var(--accent-purple));
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--accent-blue);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 20px;
+    }
+
+    .back-link:hover {
+        text-decoration: underline;
+    }
+
+    .package-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+
+    .package-id {
+        background: rgba(0, 119, 255, 0.08);
+        color: var(--accent-blue);
+        padding: 6px 16px;
+        border-radius: 40px;
+        font-weight: 700;
+        font-size: 0.7rem;
+        letter-spacing: 0.5px;
+        border: 0.5px solid rgba(0, 119, 255, 0.15);
+    }
+
+    .status-badge {
+        padding: 6px 14px;
+        border-radius: 40px;
+        font-weight: 600;
+        font-size: 0.7rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        letter-spacing: 0.3px;
+    }
+
+    .status-badge i {
+        font-size: 0.65rem;
+    }
+
+    .status-pending {
+        background: rgba(255, 193, 7, 0.08);
+        color: #856404;
+        border: 0.5px solid rgba(255, 193, 7, 0.2);
+    }
+
+    .status-awaiting_approval {
+        background: rgba(0, 119, 255, 0.08);
+        color: var(--accent-blue);
+        border: 0.5px solid rgba(0, 119, 255, 0.2);
+    }
+
+    .status-active {
+        background: rgba(76, 175, 80, 0.08);
+        color: #2e7d32;
+        border: 0.5px solid rgba(76, 175, 80, 0.2);
+    }
+
+    .status-cancelled {
+        background: rgba(220, 53, 69, 0.08);
+        color: var(--danger-red);
+        border: 0.5px solid rgba(220, 53, 69, 0.2);
+    }
+
+    .status-completed {
+        background: rgba(108, 117, 125, 0.08);
+        color: #6c757d;
+        border: 0.5px solid rgba(108, 117, 125, 0.2);
+    }
+
+    .status-deleted {
+        background: rgba(108, 117, 125, 0.08);
+        color: #6c757d;
+        border: 0.5px solid rgba(108, 117, 125, 0.2);
+    }
+
+    .package-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        background: linear-gradient(90deg, var(--neon-blue), var(--accent-purple));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .package-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 24px;
+        color: var(--text-medium);
+        font-size: 0.8rem;
+        padding-bottom: 16px;
+        border-bottom: 1px solid rgba(0, 119, 255, 0.08);
+    }
+
+    .package-meta i {
+        margin-right: 6px;
+        color: var(--accent-blue);
+        font-size: 0.75rem;
+    }
+
+    .status-section {
+        background: rgba(255, 193, 7, 0.06);
+        border-left: 3px solid #ffc107;
+        padding: 14px 16px;
+        border-radius: 10px;
+        margin-bottom: 24px;
+        font-size: 0.85rem;
+    }
+
+    .status-section i {
+        font-size: 1.1rem;
+    }
+
+    .status-section h5 {
+        font-weight: 700;
+        margin-bottom: 4px;
+        font-size: 0.9rem;
+    }
+
+    .status-section p {
+        margin: 0;
+        color: var(--text-medium);
+        font-size: 0.8rem;
+    }
+
+    /* Active Plan Message */
+    .active-message {
+        background: linear-gradient(135deg, rgba(15, 157, 88, 0.08), rgba(76, 175, 80, 0.08));
+        border-left: 3px solid #0f9d58;
+        border-radius: 12px;
+        padding: 18px 20px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        border: 1px solid rgba(15, 157, 88, 0.2);
+    }
+
+    .active-message i {
+        color: #0f9d58;
+        font-size: 1.3rem;
+        margin-top: 2px;
+    }
+
+    .active-message-content {
+        flex: 1;
+        line-height: 1.6;
+        font-size: 0.9rem;
+        color: var(--text-dark);
+    }
+
+    .active-message strong {
+        color: #0f9d58;
+        font-weight: 700;
+    }
+
+    .progress-section {
+        margin-bottom: 24px;
+    }
+
+    .progress-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+        font-size: 0.8rem;
+    }
+
+    .progress-info span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .progress-info i {
+        color: var(--accent-blue);
+        font-size: 0.75rem;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: rgba(0, 119, 255, 0.08);
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--neon-blue), var(--accent-purple));
+        border-radius: 20px;
+        width: 0%;
+    }
+
+    .upload-section {
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 24px;
+        border: 1.5px dashed rgba(0, 119, 255, 0.2);
+    }
+
+    .upload-title {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .upload-title i {
+        font-size: 1.1rem;
+    }
+
+    .upload-area {
+        border: 1.5px dashed rgba(0, 119, 255, 0.2);
+        border-radius: 12px;
+        padding: 24px;
+        text-align: center;
+        background: rgba(0, 119, 255, 0.02);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-bottom: 16px;
+    }
+
+    .upload-area:hover {
+        border-color: var(--accent-blue);
+        background: rgba(0, 119, 255, 0.04);
+    }
+
+    .upload-area i {
+        font-size: 2.2rem;
+        color: var(--accent-blue);
+        margin-bottom: 8px;
+    }
+
+    .upload-area h5 {
+        font-weight: 600;
+        margin-bottom: 4px;
+        font-size: 0.9rem;
+    }
+
+    .upload-area p {
+        color: var(--text-medium);
+        font-size: 0.75rem;
+        margin-bottom: 0;
+    }
+
+    .file-input {
+        display: none;
+    }
+
+    .upload-btn {
+        background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple));
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 40px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .upload-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 119, 255, 0.2);
+    }
+
+    .upload-btn i {
+        font-size: 0.8rem;
+    }
+
+    .upload-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Deleted Image Placeholder */
+    .deleted-image-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 119, 255, 0.03);
+        color: var(--text-medium);
+        aspect-ratio: 1;
+    }
+
+    .deleted-image-placeholder i {
+        font-size: 2rem;
+        color: rgba(108, 117, 125, 0.3);
+        margin-bottom: 8px;
+    }
+
+    .deleted-image-placeholder span {
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: #6c757d;
+    }
+
+    .images-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 16px;
+        margin-top: 16px;
+        margin-bottom: 8px;
+    }
+
+    .image-item {
+        position: relative;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(0, 119, 255, 0.1);
+        aspect-ratio: 1;
+    }
+
+    .image-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+    .image-item img:hover {
+        transform: scale(1.05);
+    }
+
+    .image-status {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 6px;
+        text-align: center;
+        font-size: 0.65rem;
+        font-weight: 600;
+        backdrop-filter: blur(4px);
+    }
+
+    .status-approved {
+        background: rgba(76, 175, 80, 0.9);
+        color: white;
+    }
+
+    .status-pending {
+        background: rgba(255, 193, 7, 0.9);
+        color: #856404;
+    }
+
+    .status-deleted-badge {
+        background: rgba(108, 117, 125, 0.9);
+        color: white;
+    }
+
+    .images-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+
+    .images-title i {
+        color: #4CAF50;
+        font-size: 0.9rem;
+    }
+
+    .requirements-list {
+        background: rgba(0, 119, 255, 0.02);
+        border-radius: 14px;
+        padding: 18px;
+        margin-top: 24px;
+        border: 1px solid rgba(0, 119, 255, 0.06);
+    }
+
+    .requirements-list h4 {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+    }
+
+    .requirements-list h4 i {
+        font-size: 0.9rem;
+    }
+
+    .requirements-list ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .requirements-list li {
+        margin-bottom: 6px;
+        color: var(--text-medium);
+        font-size: 0.8rem;
+    }
+
+    .payout-info {
+        background: rgba(15, 157, 88, 0.06);
+        border: 1px solid rgba(15, 157, 88, 0.15);
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .payout-info i {
+        color: #0f9d58;
+        font-size: 1.1rem;
+    }
+
+    .payout-info span {
+        font-size: 0.85rem;
+        color: var(--text-dark);
+    }
+
+    .payout-info strong {
+        color: #0f9d58;
+        font-weight: 700;
+    }
+
+    /* Image Modal */
+    .modal-custom {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content-custom {
+        background-color: white;
+        border-radius: 20px;
+        border: none;
+    }
+
+    .modal-header-custom {
+        background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple));
+        color: white;
+        border-radius: 20px 20px 0 0;
+        padding: 20px 25px;
+    }
+
+    .modal-body-custom {
+        padding: 25px;
+        text-align: center;
+    }
+
+    .modal-body-custom img {
+        max-width: 100%;
+        max-height: 70vh;
+        border-radius: 12px;
+    }
+
+    @media (max-width: 768px) {
+        .detail-container {
+            padding: 0 12px;
+        }
+        
+        .detail-card {
+            padding: 20px;
+        }
+        
+        .package-name {
+            font-size: 1.3rem;
+        }
+        
+        .package-meta {
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .images-grid {
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+        }
+        
+        .active-message {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .detail-card {
+            padding: 18px;
+        }
+        
+        .package-name {
+            font-size: 1.2rem;
+        }
+        
+        .package-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .upload-area {
+            padding: 18px;
+        }
+        
+        .upload-area i {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<div class="detail-container">
+    <a href="{% url 'my-purchases' %}" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to My Packages
+    </a>
+
+    <div class="detail-card">
+        <div class="package-header">
+            <span class="package-id">
+                <i class="fas fa-receipt"></i> #{{ purchase.purchase_id }}
+            </span>
+            <span class="status-badge status-{{ purchase.status }}">
+                <i class="fas 
+                    {% if purchase.status == 'pending' %}fa-clock
+                    {% elif purchase.status == 'awaiting_approval' %}fa-hourglass-half
+                    {% elif purchase.status == 'active' %}fa-check-circle
+                    {% elif purchase.status == 'completed' %}fa-flag-checkered
+                    {% elif purchase.status == 'cancelled' %}fa-ban
+                    {% else %}fa-info-circle{% endif %}">
+                </i>
+                {{ purchase.get_status_display|default:purchase.status|title }}
+            </span>
+        </div>
+
+        <h1 class="package-name">{{ purchase.thrift.thriftname|upper }} PLAN</h1>
+        
+        <div class="package-meta">
+            <span><i class="fas fa-percentage"></i> {{ purchase.interest_rate }}% interest</span>
+            <span><i class="fas fa-calendar-alt"></i> Started: {{ purchase.purchased_at|date:"M d, Y" }}</span>
+            {% if purchase.payout_date %}
+            <span><i class="fas fa-gift"></i> Payout: {{ purchase.payout_date|date:"M d, Y" }}</span>
+            {% endif %}
+            {% if purchase.price_range == 'one-time' %}
+            <span><i class="fas fa-coins"></i> One-time investment</span>
+            {% else %}
+            <span><i class="fas fa-money-bill-wave"></i> ₦{{ purchase.price_range }}/mo</span>
+            {% endif %}
+        </div>
+
+        <!-- Active Plan Message -->
+        {% if purchase.status == 'active' %}
+        <div class="active-message">
+            <i class="fas fa-wallet"></i>
+            <div class="active-message-content">
+                <strong>Your investment has been added to your virtual wallet.</strong><br>
+                You have completed this payment and you will be paid by 
+                <strong>{{ purchase.payout_date|date:"F d, Y" }}</strong> and notified via your email address.
+            </div>
+        </div>
+        {% endif %}
+
+        {% if purchase.status == 'pending' %}
+        <div class="status-section">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <i class="fas fa-info-circle" style="color: #ffc107;"></i>
+                <div>
+                    <h5>Payment confirmation required</h5>
+                    <p>
+                        {% if purchase.plan_type == 'max' %}
+                            Upload 1 payment proof for your one-time investment.
+                        {% else %}
+                            Upload 12 monthly payment proofs ({{ purchase.payment_images.count }}/12 uploaded).
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if purchase.status == 'awaiting_approval' %}
+        <div class="status-section" style="background: rgba(0, 119, 255, 0.06); border-left-color: var(--accent-blue);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <i class="fas fa-hourglass-half" style="color: var(--accent-blue);"></i>
+                <div>
+                    <h5 style="color: var(--accent-blue);">Awaiting approval</h5>
+                    <p>
+                        Your payment proof has been uploaded and is waiting for manager confirmation.
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Upload Progress (only show if not active) -->
+        {% if purchase.status != 'active' and purchase.status != 'completed' and purchase.status != 'cancelled' %}
+        <div class="progress-section">
+            <div class="progress-info">
+                <span>
+                    <i class="fas fa-images"></i> Upload progress
+                </span>
+                <span style="color: var(--accent-blue); font-weight: 600;">
+                    {{ purchase.payment_images.count }} / {{ purchase.thrift.max_images }}
+                </span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {% widthratio purchase.payment_images.count purchase.thrift.max_images 100 %}%;"></div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Upload Form (only show if not active and still need images) -->
+        {% if purchase.payment_images.count < purchase.thrift.max_images and purchase.status != 'active' and purchase.status != 'completed' and purchase.status != 'cancelled' %}
+        <div class="upload-section">
+            <div class="upload-title">
+                <i class="fas fa-cloud-upload-alt" style="color: var(--accent-blue);"></i>
+                Upload payment proof
+            </div>
+            
+            <form method="POST" enctype="multipart/form-data" id="uploadForm" action="{% url 'purchase_detail' purchase.purchase_id %}">
+                {% csrf_token %}
+                
+                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h5>Click to upload</h5>
+                    <p>PNG, JPG, JPEG (max 5MB)</p>
+                </div>
+                
+                <input type="file" id="fileInput" name="payment_image" class="file-input" accept="image/*" required>
+                
+                <div style="display: flex; justify-content: flex-end;">
+                    <button type="submit" class="upload-btn" id="submitBtn">
+                        <i class="fas fa-upload"></i> Upload
+                    </button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- Uploaded Images -->
+        {% if purchase.payment_images.all %}
+        <div>
+            <h5 class="images-title">
+                <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                Uploaded proofs ({{ purchase.payment_images.count }})
+            </h5>
+            
+            <div class="images-grid">
+                {% for image in purchase.payment_images.all %}
+                <div class="image-item">
+                    {% if image.image %}
+                        <img src="{{ image.image.url }}" alt="Payment proof" onclick="openImageModal('{{ image.image.url }}')">
+                    {% else %}
+                        <div class="deleted-image-placeholder">
+                            <i class="fas fa-trash-alt"></i>
+                            <span>Image Deleted</span>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="image-status 
+                        {% if not image.image %}status-deleted-badge
+                        {% elif image.is_approved %}status-approved
+                        {% else %}status-pending{% endif %}">
+                        
+                        {% if not image.image %}
+                            <i class="fas fa-trash"></i> Deleted
+                        {% elif image.is_approved %}
+                            <i class="fas fa-check-circle"></i> Approved
+                        {% else %}
+                            <i class="fas fa-clock"></i> Pending
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Plan Requirements -->
+        <div class="requirements-list">
+            <h4>
+                <i class="fas fa-clipboard-list" style="color: var(--accent-blue);"></i>
+                Plan requirements
+            </h4>
+            <ul>
+                {% if purchase.plan_type == 'basic' %}
+                    <li>Monthly contribution: ₦25,000 - ₦50,000</li>
+                    <li>Duration: 12 months</li>
+                    <li>Upload 12 monthly payment proofs</li>
+                    <li>25% interest at maturity</li>
+                {% elif purchase.plan_type == 'plus' %}
+                    <li>Monthly contribution: ₦100,000+</li>
+                    <li>Duration: 12 months</li>
+                    <li>Upload 12 monthly payment proofs</li>
+                    <li>30% interest at maturity</li>
+                {% elif purchase.plan_type == 'max' %}
+                    <li>One-time investment (any amount)</li>
+                    <li>Duration: 12 months</li>
+                    <li>Upload 1 payment proof</li>
+                    <li>40% interest at maturity</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Image Preview Modal -->
+<div class="modal fade modal-custom" id="imageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content modal-content-custom">
+            <div class="modal-header modal-header-custom">
+                <h5 class="modal-title">
+                    <i class="fas fa-image me-2"></i>
+                    Payment Proof Preview
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body modal-body-custom">
+                <img id="modalImage" src="" alt="Payment Proof">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    'use strict';
+    
+    // Track if form has been submitted
+    let formSubmitted = false;
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('uploadForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const fileInput = document.getElementById('fileInput');
+        
+        // FIXED: Prevent duplicate submissions and page refresh resubmission
+        if (form) {
+            // Prevent default form submission on page refresh/back button
+            if (window.performance) {
+                if (performance.navigation.type === 1 || performance.getEntriesByType('navigation')[0]?.type === 'reload') {
+                    console.log('Page was refreshed - clearing form state');
+                    form.reset();
+                    formSubmitted = false;
+                    if (submitBtn) {
+                        submitBtn.innerHTML = '<i class="fas fa-upload"></i> Upload';
+                        submitBtn.disabled = false;
+                    }
+                }
+            }
+            
+            // FIXED: Use POST/Redirect/GET pattern to prevent duplicate submissions
+            form.addEventListener('submit', function(e) {
+                // Prevent double submission
+                if (formSubmitted) {
+                    console.log('Form already submitted - preventing duplicate');
+                    e.preventDefault();
+                    return false;
+                }
+                
+                // Check if file is selected
+                if (!fileInput.files.length) {
+                    e.preventDefault();
+                    alert('Please select an image to upload.');
+                    return false;
+                }
+                
+                // Validate file size (max 5MB)
+                const fileSize = fileInput.files[0].size / 1024 / 1024; // in MB
+                if (fileSize > 5) {
+                    e.preventDefault();
+                    alert('File size exceeds 5MB limit. Please choose a smaller file.');
+                    return false;
+                }
+                
+                // Validate file type
+                const fileType = fileInput.files[0].type;
+                if (!['image/jpeg', 'image/png', 'image/jpg'].includes(fileType)) {
+                    e.preventDefault();
+                    alert('Please select a valid image file (PNG, JPG, JPEG).');
+                    return false;
+                }
+                
+                // Set submitted flag
+                formSubmitted = true;
+                
+                // Disable button and show loading state
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" style="width: 0.8rem; height: 0.8rem;"></span> Uploading...';
+                submitBtn.disabled = true;
+                
+                // FIXED: Clear the file input to prevent re-upload on refresh
+                // We do this after setting the flag but before form submission
+                setTimeout(function() {
+                    if (fileInput) {
+                        fileInput.value = ''; // Clear the file input
+                    }
+                }, 100);
+                
+                // Allow form to submit normally
+                return true;
+            });
+        }
+        
+        if (fileInput) {
+            fileInput.addEventListener('change', function() {
+                if (this.files.length) {
+                    console.log('Selected:', this.files[0].name);
+                    // Validate file size on select
+                    const fileSize = this.files[0].size / 1024 / 1024;
+                    if (fileSize > 5) {
+                        alert('File size exceeds 5MB limit. Please choose a smaller file.');
+                        this.value = ''; // Clear the input
+                    }
+                }
+            });
+        }
+        
+        // FIXED: Handle page navigation and back button
+        window.addEventListener('pageshow', function(event) {
+            // Check if the page is loaded from cache (back/forward navigation)
+            if (event.persisted || (window.performance && performance.navigation.type === 2)) {
+                console.log('Page loaded from cache - resetting form state');
+                formSubmitted = false;
+                if (form) {
+                    form.reset();
+                }
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<i class="fas fa-upload"></i> Upload';
+                    submitBtn.disabled = false;
+                }
+                if (fileInput) {
+                    fileInput.value = '';
+                }
+            }
+        });
+        
+        // FIXED: Handle beforeunload to clean up
+        window.addEventListener('beforeunload', function() {
+            // Reset the submitted flag when leaving the page
+            formSubmitted = false;
+        });
+    });
+
+    // Image modal function - only open if image exists
+    window.openImageModal = function(imageUrl) {
+        if (imageUrl && imageUrl !== '') {
+            try {
+                const modalElement = document.getElementById('imageModal');
+                const modalImage = document.getElementById('modalImage');
+                
+                // Set the image source
+                modalImage.src = imageUrl;
+                
+                // Initialize and show the modal
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+            } catch (error) {
+                console.error('Error opening image modal:', error);
+            }
+        }
+    };
+})();
+</script>
+
+{% endblock %}
