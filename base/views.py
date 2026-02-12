@@ -407,39 +407,26 @@ def sanitize_filename(filename):
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     
     return f"{name}_{timestamp}{ext}"
+
+from PIL import Image
 def is_valid_file_content(file):
-    """
-    Validate file content - works in Python 3.13+
-    """
     import os
-    from PIL import Image
-    import io
-    
-    # Read first 2048 bytes for validation
-    file.seek(0)
-    header = file.read(2048)
-    file.seek(0)  # Reset file pointer
-    
-    # Get file extension
     ext = os.path.splitext(file.name)[1].lower()
-    
-    # For images, verify they are actually images using Pillow
+    file.seek(0)
     if ext in ['.jpg', '.jpeg', '.png', '.gif']:
         try:
-            # Try to open the image with Pillow
-            img = Image.open(io.BytesIO(header))
-            img.verify()  # Verify it's actually an image
+            img = Image.open(file)
+            img.verify()
+            file.seek(0)
             return True
         except Exception:
             return False
-    
-    # For PDFs, check PDF header
     if ext == '.pdf':
-        if header.startswith(b'%PDF'):
-            return True
-        return False
-    
+        header = file.read(4)
+        file.seek(0)
+        return header == b'%PDF'
     return True
+
 
 @login_required(login_url='sign-in')
 def registration_fee(request):
