@@ -369,6 +369,7 @@ def sign_out(request):
     return redirect('sign-in')
 
 
+
 # Allowed file extensions
 ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.pdf']
 # Max file size: 5MB
@@ -385,6 +386,57 @@ def validate_file_size(file):
     """Validate file size"""
     if file.size > MAX_FILE_SIZE:
         raise ValidationError(f'File too large. Max size: {MAX_FILE_SIZE//(1024*1024)}MB')
+
+def sanitize_filename(filename):
+    """Remove special characters and spaces from filename"""
+    import re
+    from django.utils.text import slugify
+    import os
+    from datetime import datetime
+    
+    # Split filename and extension
+    name, ext = os.path.splitext(filename)
+    
+    # Remove special characters and spaces
+    name = slugify(name)
+    if not name:  # If slugify returns empty string
+        import uuid
+        name = str(uuid.uuid4())[:8]
+    
+    # Add timestamp to prevent filename collision
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    
+    return f"{name}_{timestamp}{ext}"
+
+def is_valid_file_content(file):
+    """
+    Simple file validation - checks extension and attempts to verify image
+    """
+    import imghdr
+    import os
+    
+    # Read first 2048 bytes for validation
+    file.seek(0)
+    header = file.read(2048)
+    file.seek(0)  # Reset file pointer
+    
+    # Get file extension
+    ext = os.path.splitext(file.name)[1].lower()
+    
+    # For images, verify they are actually images
+    if ext in ['.jpg', '.jpeg', '.png', '.gif']:
+        image_type = imghdr.what(None, h=header)
+        if not image_type:
+            return False
+    
+    # For PDFs, just check extension (simple validation)
+    if ext == '.pdf':
+        # Check for PDF header (%PDF)
+        if not header.startswith(b'%PDF'):
+            return False
+    
+    return True
+
 @login_required(login_url='sign-in')
 def registration_fee(request):
     # Get ALL images (for admin view)
@@ -419,7 +471,7 @@ def registration_fee(request):
                     'error': str(e)
                 })
             
-            # 3. Validate file content
+            # 3. Validate file content (simplified)
             if not is_valid_file_content(image_upload):
                 return render(request, 'registration-fee.html', {
                     'user_receipt': user_receipt,
@@ -447,19 +499,18 @@ def registration_fee(request):
                     'error': 'Too many upload attempts. Please try again later.'
                 })
             
-            # === FIXED: Use MEDIA_ROOT instead of SECURE_UPLOAD_ROOT ===
-            # Store files in media/receipts/ which is served by Django
-            
             try:
                 if existing_receipt:
                     # Delete old file before saving new one
                     if existing_receipt.image_upload:
                         existing_receipt.image_upload.delete(save=False)
                     
-                    # Save new file - Django will automatically save to MEDIA_ROOT/receipts/
+                    # Save new file
                     existing_receipt.image_upload = image_upload
                     existing_receipt.date_uploaded = timezone.now()
                     existing_receipt.save()
+                    
+                    messages.success(request, 'Payment receipt updated successfully!')
                 else:
                     # Create new receipt
                     RegistrationFee.objects.create(
@@ -467,6 +518,7 @@ def registration_fee(request):
                         uploaded_by=request.user,
                         date_uploaded=timezone.now()
                     )
+                    messages.success(request, 'Payment receipt uploaded successfully!')
                 
                 return redirect('registration-fee')
                 
@@ -478,7 +530,7 @@ def registration_fee(request):
                 return render(request, 'registration-fee.html', {
                     'user_receipt': user_receipt,
                     'all_images': all_images,
-                    'error': f'Upload failed: {str(e)}'
+                    'error': f'Upload failed. Please try again with a different file.'
                 })
     
     context = {
@@ -488,63 +540,12 @@ def registration_fee(request):
         'max_file_size_mb': MAX_FILE_SIZE // (1024 * 1024),
     }
     return render(request, 'registration-fee.html', context)
-def sanitize_filename(filename):
-    """Remove special characters and spaces from filename"""
-    import re
-    from django.utils.text import slugify
-    
-    # Split filename and extension
-    name, ext = os.path.splitext(filename)
-    
-    # Remove special characters and spaces
-    name = slugify(name)
-    if not name:  # If slugify returns empty string
-        import uuid
-        name = str(uuid.uuid4())[:8]
-    
-    # Add timestamp to prevent filename collision
-    from datetime import datetime
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    
-    return f"{name}_{timestamp}{ext}"
 
-def is_valid_file_content(file):
-    """
-    Validate file content by checking magic bytes/signatures
-    Prevents files with double extensions or malicious content
-    """
-    import imghdr
-    import magic  # python-magic library
-    
-    # Read first 2048 bytes for validation
-    file.seek(0)
-    header = file.read(2048)
-    file.seek(0)  # Reset file pointer
-    
-    # Check if it's actually an image
-    if file.name.lower().endswith(('.jpg', '.jpeg', '.png', '.gif')):
-        image_type = imghdr.what(None, h=header)
-        if not image_type:
-            return False
-    
-    # Use python-magic to detect mime type
-    try:
-        mime = magic.from_buffer(header, mime=True)
-        
-        # Allowed mime types
-        allowed_mimes = [
-            'image/jpeg', 'image/png', 'image/gif',
-            'application/pdf', 'image/jpg'
-        ]
-        
-        if mime not in allowed_mimes:
-            return False
-            
-    except ImportError:
-        # python-magic not installed, skip this check
-        pass
-    
-    return True
+
+
+
+
+
 
 
 
