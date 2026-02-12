@@ -407,13 +407,13 @@ def sanitize_filename(filename):
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     
     return f"{name}_{timestamp}{ext}"
-
 def is_valid_file_content(file):
     """
-    Simple file validation - checks extension and attempts to verify image
+    Validate file content - works in Python 3.13+
     """
-    import imghdr
     import os
+    from PIL import Image
+    import io
     
     # Read first 2048 bytes for validation
     file.seek(0)
@@ -423,17 +423,21 @@ def is_valid_file_content(file):
     # Get file extension
     ext = os.path.splitext(file.name)[1].lower()
     
-    # For images, verify they are actually images
+    # For images, verify they are actually images using Pillow
     if ext in ['.jpg', '.jpeg', '.png', '.gif']:
-        image_type = imghdr.what(None, h=header)
-        if not image_type:
+        try:
+            # Try to open the image with Pillow
+            img = Image.open(io.BytesIO(header))
+            img.verify()  # Verify it's actually an image
+            return True
+        except Exception:
             return False
     
-    # For PDFs, just check extension (simple validation)
+    # For PDFs, check PDF header
     if ext == '.pdf':
-        # Check for PDF header (%PDF)
-        if not header.startswith(b'%PDF'):
-            return False
+        if header.startswith(b'%PDF'):
+            return True
+        return False
     
     return True
 
