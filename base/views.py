@@ -33,36 +33,15 @@ def custom_404(request, exception):
     return render(request, '404.html', status=404)
 
 
-
-
-
-
 def home(request):
     context = {}
     thrift_count = Thrifts.objects.count()
-    #purchase_count = UserPurchase.objects.filter(user=request.user).count()
+    
     if request.user.is_authenticated:
         purchase_count = UserPurchase.objects.filter(user=request.user).count()
         context['purchase_count'] = purchase_count
-    else:
-        context['purchase_count'] = 0
-    # Add purchase count for authenticated users
-    #if request.user.is_authenticated:
-        #purchase_count = Thrifts.objects.filter(user=request.user).count()
-    #else:
-        #purchase_count = 0
-    
-    # Add referral code from URL for signup form
-    referral_code = request.GET.get('ref', '')
-    if referral_code:
-        context['referral_code'] = referral_code
-    
-    # Add thrift_count and purchase_count to context for ALL users
-    context['thrift_count'] = thrift_count
-    #context['purchase_count'] = purchase_count
-    
-    if request.user.is_authenticated:
-        # Use get_or_create to ensure profile exists
+        
+        # Get or create profile
         profile, created = UserProfile.objects.get_or_create(
             user=request.user,
             defaults={
@@ -72,40 +51,27 @@ def home(request):
             }
         )
         
-        # Get or create wallet for user
+        # Get or create wallet
         wallet, wallet_created = Wallet.objects.get_or_create(
             user=request.user,
             defaults={'balance': Decimal('0.00')}
         )
         
-        # Get user's transaction history
+        # Get transactions
         transactions = Transaction.objects.filter(
             wallet=wallet
         ).select_related('created_by').order_by('-created_at')[:20]
         
-        # Get user's purchases
-        #purchases = Purchase.objects.filter(user=request.user).order_by('-datepurchased')
-        
-        # If profile was just created, save it to ensure referral_code is generated
-        if created:
-            profile.save()
-        
-        # Get users who were referred by this user
+        # Get referred users
         referred_users = User.objects.filter(profile__referred_by=request.user)
-        
-        # Calculate referral statistics
         active_referrals = referred_users.filter(is_active=True).count()
-        
-        # Calculate earnings (assuming each active referral earns you 100)
         referral_earnings = active_referrals * 100
         pending_earnings = referred_users.filter(is_active=False).count() * 100
         
-        # Prepare referred users data with their profiles
         referred_users_data = []
         for user in referred_users:
             try:
                 user_profile = user.profile
-                # Get earnings for this specific referral
                 earned_amount = 100 if user.is_active else 0
                 referred_users_data.append({
                     'user': user,
@@ -115,18 +81,7 @@ def home(request):
             except UserProfile.DoesNotExist:
                 continue
         
-        # Check if user has uploaded registration fee and if it's confirmed
-        registration_fee = None
-        registration_status = "inactive"
-        
-        try:
-            registration_fee = RegistrationFee.objects.get(uploaded_by=request.user)
-            if registration_fee.confirmed:
-                registration_status = "active"
-            else:
-                registration_status = "pending"
-        except RegistrationFee.DoesNotExist:
-            registration_status = "inactive"
+        # REMOVED: registration_status logic - now handled by context processor
         
         context.update({
             'referral_count': profile.total_referrals,
@@ -135,15 +90,24 @@ def home(request):
             'active_referrals': active_referrals,
             'referral_earnings': referral_earnings,
             'pending_earnings': pending_earnings,
-            'registration_fee': registration_fee,
-            'registration_status': registration_status,
             'wallet_balance': wallet.balance,
             'transactions': transactions,
-            'purchase_count': purchase_count, 
-             # Add purchases to context
+            'purchase_count': purchase_count,
         })
+    else:
+        context['purchase_count'] = 0
+    
+    # Add referral code from URL
+    referral_code = request.GET.get('ref', '')
+    if referral_code:
+        context['referral_code'] = referral_code
+    
+    context['thrift_count'] = thrift_count
     
     return render(request, 'home.html', context)
+
+
+
 
 
 
@@ -902,6 +866,8 @@ def All_referrals(request):
 ##THRIFTS
 @login_required(login_url='sign-in')
 def purchase_thrifts(request):
+
+    
     thrifts = Thrifts.objects.all()
     return render(request, 'purchase-thrifts.html', {'thrifts': thrifts})
 
@@ -1333,3 +1299,24 @@ def complaints_view(request):
 
     context = {'messages_list': messages_list}
     return render(request, 'complaints.html', context)
+
+
+
+##
+def registration_status_processor(request):
+    """Makes registration_status available to all templates"""
+    context = {}
+    
+    if request.user.is_authenticated:
+        try:
+            registration_fee = RegistrationFee.objects.get(uploaded_by=request.user)
+            if registration_fee.confirmed:
+                context['registration_status'] = "active"
+            else:
+                context['registration_status'] = "pending"
+        except RegistrationFee.DoesNotExist:
+            context['registration_status'] = "inactive"
+    else:
+        context['registration_status'] = "inactive"  # Default for non-authenticated
+    
+    return context
