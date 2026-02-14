@@ -8,7 +8,8 @@ from django_ratelimit.decorators import ratelimit
 handler404 = views.custom_404
 urlpatterns = [
     path('my-new-secret/', admin.site.urls),
-    path('', include('base.urls'))
+    path('',include('base.urls')),
+    path("accounts/",include("allauth.urls"))
 ]
 
 # Only add static/media URLs in DEBUG mode
