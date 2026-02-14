@@ -735,6 +735,11 @@
                   <i class="fas fa-user-shield"></i> Registration
                 </a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link nav-link-custom" href="{% url 'check-account-details' %}">
+                  <i class="fas fa-user-shield"></i> Check Account Details
+                </a>
+              </li>
 
               <li class="nav-item">
                 <a class="nav-link nav-link-custom" href="{% url 'wallet-manager' %}">
@@ -856,7 +861,7 @@
                             </span></div>
                             <div class="stat-change positive-change">
                                 <i class="fas fa-arrow-up"></i> 
-                                Referral Earnings: ₦{{ referral_earnings|default:"0.00"|floatformat:2 }}
+                                available balance
                             </div>
                         </div>
                         <div class="stat-icon wallet-icon">
@@ -945,7 +950,7 @@
                             <div class="stat-title">Total Thrift Account</div>
                             <div class="stat-value"><span id="thriftBalance">{{ purchase_count }}</span></div>
                             <div class="stat-change positive-change">
-                                <i class="fas fa-arrow-up"></i> 20% to 40% growth
+                                <i class="fas fa-arrow-up"></i> 25% to 40% growth
                             </div>
                         </div>
                         <div class="stat-icon thrift-icon">
@@ -1126,7 +1131,7 @@
                             <div class="stat-title">Active Thrifts</div>
                             <div class="stat-value"><span id="demoThriftBalance">3,200+</span></div>
                             <div class="stat-change positive-change">
-                                <i class="fas fa-arrow-up"></i> 20%-50% yearly growth
+                                <i class="fas fa-arrow-up"></i> 25%-40% yearly growth
                             </div>
                         </div>
                         <div class="stat-icon thrift-icon">

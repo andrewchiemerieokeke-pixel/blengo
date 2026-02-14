@@ -954,6 +954,9 @@ def validate_payment_image(file):
     
     return True
 
+from django.utils import timezone
+from datetime import timedelta
+
 @login_required(login_url='sign-in')
 def purchase_detail(request, purchase_id):
     """Display specific purchase and allow payment image uploads"""
@@ -963,6 +966,15 @@ def purchase_detail(request, purchase_id):
         purchase_id=purchase_id,
         user=request.user
     )
+    
+    # ========== 🎯 ADD PAYOUT DATE CALCULATION ==========
+    # Calculate payout date (365 days after purchase)
+    purchase.payout_date = purchase.purchased_at + timedelta(days=365)
+    
+    # You can also calculate additional useful dates
+    today = timezone.now()
+    days_until_payout = (purchase.payout_date - today).days if purchase.payout_date > today else 0
+    is_eligible_for_payout = today >= purchase.payout_date
     
     if request.method == 'POST' and 'payment_image' in request.FILES:
         
@@ -1009,7 +1021,12 @@ def purchase_detail(request, purchase_id):
         return redirect("purchase_detail", purchase_id=purchase.purchase_id)
     
     return render(request, "purchase-detail.html", {
-        "purchase": purchase
+        "purchase": purchase,
+        # ========== 🎯 PASS PAYOUT INFO TO TEMPLATE ==========
+        "payout_date": purchase.payout_date,
+        "days_until_payout": days_until_payout,
+        "is_eligible_for_payout": is_eligible_for_payout,
+        "today": today,
     })
 
 
@@ -1320,3 +1337,51 @@ def registration_status_processor(request):
         context['registration_status'] = "inactive"  # Default for non-authenticated
     
     return context
+
+
+
+####
+from django.contrib.auth.decorators import user_passes_test
+# Helper function to check if user is manager
+def is_manager(user):
+    return user.is_authenticated and user.username == 'manager'  # or check a group/role
+
+@user_passes_test(is_manager, login_url='signin')
+def check_account_details(request):
+    # Get search query from request
+    search_query = request.GET.get('search', '')
+    account_details = AccountDetail.objects.select_related('user').all()
+    
+    # Apply search filter if query exists
+    if search_query:
+        account_details = account_details.filter(
+            Q(user__username__icontains=search_query) |
+            Q(user__email__icontains=search_query) |
+            Q(account_name__icontains=search_query) |
+            Q(account_number__icontains=search_query) |
+            Q(bank_name__icontains=search_query)
+        )
+    
+    # Order by most recent first
+    account_details = account_details.order_by('-created_at')
+    
+    context = {
+        'account_details': account_details,
+        'search_query': search_query,
+        'total_accounts': account_details.count()
+    }
+    return render(request, 'check-account-details.html', context)
+
+
+@user_passes_test(is_manager, login_url='signin')
+def view_user_account_detail(request, user_id):
+    """Optional: View details for a specific user"""
+    user = get_object_or_404(User, id=user_id)
+    accounts = AccountDetail.objects.filter(user=user).order_by('-created_at')
+    
+    context = {
+        'viewing_user': user,
+        'accounts': accounts,
+        'total_accounts': accounts.count()
+    }
+    return render(request, 'user-account-detail.html', context)

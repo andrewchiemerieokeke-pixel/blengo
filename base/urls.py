@@ -61,4 +61,6 @@ path('confirm-payment-image/<int:image_id>/', views.confirm_payment_image, name=
     path('complaints/', views.complaints_view, name='complaints'),
     path('account-locked/', views.account_locked, name='account_locked'),
 
+     path('manager/account-details/', views.check_account_details, name='check-account-details'),
+
 ]

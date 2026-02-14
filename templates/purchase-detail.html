@@ -702,7 +702,7 @@
                     {% else %}
                         <div class="deleted-image-placeholder">
                             <i class="fas fa-trash-alt"></i>
-                            <span>Image Deleted</span>
+                            <span>payment confirmed</span>
                         </div>
                     {% endif %}
                     
@@ -712,7 +712,7 @@
                         {% else %}status-pending{% endif %}">
                         
                         {% if not image.image %}
-                            <i class="fas fa-trash"></i> Deleted
+                            <i class="fas fa-trash"></i> confirmed
                         {% elif image.is_approved %}
                             <i class="fas fa-check-circle"></i> Approved
                         {% else %}
