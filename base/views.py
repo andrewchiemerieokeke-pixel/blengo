@@ -862,16 +862,15 @@ def All_referrals(request):
     return render(request, 'All-referrals.html', context)
 
 
+from django.core.exceptions import PermissionDenied
+##
 
-##THRIFTS
+
 @login_required(login_url='sign-in')
 def purchase_thrifts(request):
-
     
     thrifts = Thrifts.objects.all()
     return render(request, 'purchase-thrifts.html', {'thrifts': thrifts})
-
-
 
 
 # View to create a new thrift
@@ -1305,7 +1304,7 @@ def contact(request):
 
     return render(request, 'contact.html')
 
-@login_required
+@login_required(login_url='sign-in')
 def complaints_view(request):
     # Only allow staff or user with username 'manager'
     if request.user.username == "manager":
@@ -1320,6 +1319,7 @@ def complaints_view(request):
 
 
 ##
+@login_required(login_url='sign-in')
 def registration_status_processor(request):
     """Makes registration_status available to all templates"""
     context = {}
