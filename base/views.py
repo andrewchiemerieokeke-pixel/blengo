@@ -1138,6 +1138,7 @@ def edit_thrift(request, id):
     return render(request, 'create-thrift.html', context)
 
 #######
+from datetime import timedelta
 from django.db.models import Count, Q
 @login_required(login_url='sign-in')
 def thrifts_confirmation(request):
@@ -1193,7 +1194,7 @@ def thrifts_confirmation(request):
 
 @login_required(login_url='sign-in')
 def confirm_payment_image(request, image_id):
-    """Confirm a payment image and delete the file only"""
+    """Confirm a payment image - KEEP the image, just mark as approved"""
     if request.user.username != "manager":
         messages.error(request, "You don't have permission to confirm payments.")
         return redirect('my_purchases')
@@ -1201,18 +1202,7 @@ def confirm_payment_image(request, image_id):
     image = get_object_or_404(PaymentImage, id=image_id)
     
     if not image.is_approved and image.image:
-        # Store image path before deletion
-        image_path = image.image.path if image.image else None
-        
-        # Delete the actual file from storage
-        if image_path and os.path.isfile(image_path):
-            try:
-                os.remove(image_path)
-            except Exception as e:
-                print(f"Error deleting image file: {e}")
-        
-        # Nullify the image field but keep the record
-        image.image = None
+        # ✅ JUST MARK AS APPROVED - DON'T DELETE THE IMAGE
         image.is_approved = True
         image.approved_by = request.user
         image.approved_at = timezone.now()
@@ -1228,43 +1218,36 @@ def confirm_payment_image(request, image_id):
         if approved_count >= max_images:
             purchase.status = 'active'
             purchase.save()
-            messages.success(request, f'All payments confirmed! Plan is now active.')
+            messages.success(request, f'✅ All payments confirmed! Plan is now active.')
         else:
             images_left = max_images - approved_count
-            messages.success(request, f'Payment proof confirmed! {images_left} more payment(s) needed.')
+            messages.success(request, f'✅ Payment proof confirmed! {images_left} more payment(s) needed.')
     
     return redirect('thrifts-confirmation')
 
-
 @login_required(login_url='sign-in')
 def delete_payment_image(request, image_id):
-    """Delete a payment image file and nullify the record"""
+    """Delete a payment image from Cloudinary"""
     if request.user.username != "manager":
         messages.error(request, "You don't have permission to delete payment images.")
         return redirect('my_purchases')
     
     image = get_object_or_404(PaymentImage, id=image_id)
     
-    # Store image path for deletion
-    image_path = None
     if image.image:
         try:
-            image_path = image.image.path
-        except:
-            pass
-    
-    # Delete the actual file from storage
-    if image_path and os.path.isfile(image_path):
-        try:
-            os.remove(image_path)
+            # ✅ Use Cloudinary's delete method
+            image.image.delete(save=False)  # This removes from Cloudinary
+            messages.success(request, f'✅ Payment proof image deleted from Cloudinary.')
         except Exception as e:
-            print(f"Error deleting image file: {e}")
+            print(f"Error deleting image from Cloudinary: {e}")
+            messages.error(request, f"Error deleting image: {str(e)}")
+            return redirect('thrifts-confirmation')
     
     # Nullify the image field but keep the record
     image.image = None
     image.save()
     
-    messages.success(request, f'Payment proof image deleted successfully.')
     return redirect('thrifts-confirmation')
 
 #Email
