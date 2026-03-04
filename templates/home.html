@@ -532,8 +532,7 @@
     </style>
   </head>
   <body>
-    <!-- Modern Navbar - Static -->
- <!-- Modern Navbar -->
+  <!-- Modern Navbar -->
 <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
   <div class="container-fluid">
 
@@ -548,17 +547,17 @@
 
         {% if user.is_authenticated %}
 
-          <!-- About -->
+          <!-- About - Ocean Blue -->
           <li class="nav-item">
             <a class="nav-link nav-link-custom" href="{% url 'About' %}">
-              <i class="fas fa-info-circle"></i> About
+              <i class="fas fa-info-circle" style="color: #0d6efd;"></i> About
             </a>
           </li>
 
-          <!-- Contact -->
+          <!-- Contact - Sunset Orange -->
           <li class="nav-item">
             <a class="nav-link nav-link-custom" href="{% url 'contact' %}">
-              <i class="fas fa-star"></i> Contact
+              <i class="fas fa-star" style="color: #fd7e14;"></i> Contact
             </a>
           </li>
 
@@ -566,27 +565,31 @@
           <!-- MANAGER ONLY LINKS -->
           <!-- ========================= -->
           {% if user.username == "manager" %}
+            <!-- Registration - Royal Purple -->
             <li class="nav-item">
               <a class="nav-link nav-link-custom" href="{% url 'manager' %}">
-                <i class="fas fa-user-shield"></i> Registration
+                <i class="fas fa-user-shield" style="color: #6f42c1;"></i> Registration
               </a>
             </li>
 
+            <!-- Wallet Manager - Emerald Green -->
             <li class="nav-item">
               <a class="nav-link nav-link-custom" href="{% url 'wallet-manager' %}">
-                <i class="fas fa-wallet"></i> Wallet Manager
+                <i class="fas fa-wallet" style="color: #198754;"></i> Wallet Manager
               </a>
             </li>
 
+            <!-- Thrift Confirmation - Ruby Red -->
             <li class="nav-item">
               <a class="nav-link nav-link-custom" href="{% url 'thrifts-confirmation' %}">
-                <i class="fas fa-check-circle"></i> Thrift Confirmation
+                <i class="fas fa-check-circle" style="color: #dc3545;"></i> Thrift Confirmation
               </a>
             </li>
 
+            <!-- Complaints - Amber Gold -->
             <li class="nav-item">
               <a class="nav-link nav-link-custom" href="{% url 'complaints' %}">
-                <i class="fas fa-envelope"></i> Complaints
+                <i class="fas fa-envelope" style="color: #ffc107;"></i> Complaints
               </a>
             </li>
           {% endif %}
@@ -596,27 +599,30 @@
           <!-- ========================= -->
           {% if registration_status == "active" %}
 
+            <!-- Purchase Thrifts - Teal -->
             <li class="nav-item">
               <a class="nav-link nav-link-custom" href="{% url 'purchase-thrifts' %}">
-                <i class="fas fa-shopping-cart"></i> Purchase Thrifts
+                <i class="fas fa-shopping-cart" style="color: #20c997;"></i> Purchase Thrifts
               </a>
             </li>
 
+            <!-- My Thrifts - Pink -->
             <li class="nav-item">
               <a class="nav-link nav-link-custom" href="{% url 'my-purchases' %}">
-                <i class="fas fa-piggy-bank"></i> My Thrifts
+                <i class="fas fa-piggy-bank" style="color: #d63384;"></i> My Thrifts
               </a>
             </li>
 
+            <!-- Account Details - Indigo -->
             <li class="nav-item">
               <a class="nav-link nav-link-custom" href="{% url 'account-details' %}">
-                <i class="fas fa-coins"></i> Account Details
+                <i class="fas fa-coins" style="color: #6610f2;"></i> Account Details
               </a>
             </li>
 
           {% endif %}
 
-          <!-- Logout -->
+          <!-- Logout - stays red for warning -->
           <li class="nav-item">
             <a class="nav-link nav-link-custom nav-link-logout" href="{% url 'sign-out' %}">
               <i class="fas fa-sign-out-alt"></i> Logout
@@ -625,24 +631,24 @@
 
         {% else %}
 
-          <!-- Login -->
+          <!-- Login - Bright Cyan -->
           <li class="nav-item">
             <a class="nav-link nav-link-custom nav-link-login" href="{% url 'sign-in' %}">
-              <i class="fas fa-sign-in-alt"></i> Login
+              <i class="fas fa-sign-in-alt" style="color: #0dcaf0;"></i> Login
             </a>
           </li>
 
-          <!-- Register -->
+          <!-- Register - Success Green -->
           <li class="nav-item">
             <a class="nav-link nav-link-custom" href="{% url 'create-account' %}">
-              <i class="fas fa-user-plus"></i> Register
+              <i class="fas fa-user-plus" style="color: #28a745;"></i> Register
             </a>
           </li>
 
-          <!-- Contact -->
+          <!-- Contact - Sunset Orange (for non-auth users too) -->
           <li class="nav-item">
             <a class="nav-link nav-link-custom" href="{% url 'contact' %}">
-              <i class="fas fa-star"></i> Contact
+              <i class="fas fa-star" style="color: #fd7e14;"></i> Contact
             </a>
           </li>
 
@@ -662,7 +668,7 @@
     </button>
 
     <!-- ========================= -->
-    <!-- MOBILE OFFCANVAS MENU -->
+    <!-- MOBILE OFFCANVAS MENU (SAME COLORS) -->
     <!-- ========================= -->
     <div class="offcanvas offcanvas-end offcanvas-custom d-lg-none"
          tabindex="-1"
@@ -676,17 +682,17 @@
       <div class="offcanvas-body offcanvas-body-custom">
         <ul class="navbar-nav flex-column gap-2">
 
-          <!-- About -->
+          <!-- About - Ocean Blue -->
           <li class="nav-item">
             <a class="nav-link nav-link-custom" href="{% url 'About' %}">
-              <i class="fas fa-info-circle"></i> About
+              <i class="fas fa-info-circle" style="color: #0d6efd;"></i> About
             </a>
           </li>
 
-          <!-- Contact -->
+          <!-- Contact - Sunset Orange -->
           <li class="nav-item">
             <a class="nav-link nav-link-custom" href="{% url 'contact' %}">
-              <i class="fas fa-star"></i> Contact
+              <i class="fas fa-star" style="color: #fd7e14;"></i> Contact
             </a>
           </li>
 
@@ -697,30 +703,33 @@
             <!-- ========================= -->
             {% if registration_status == "active" %}
 
+              <!-- Purchase Thrifts - Teal -->
               <li class="nav-item">
                 <a class="nav-link nav-link-custom" href="{% url 'purchase-thrifts' %}">
-                  <i class="fas fa-shopping-cart"></i> Purchase Thrifts
+                  <i class="fas fa-shopping-cart" style="color: #20c997;"></i> Purchase Thrifts
                 </a>
               </li>
 
+              <!-- My Thrifts - Pink -->
               <li class="nav-item">
                 <a class="nav-link nav-link-custom" href="{% url 'my-purchases' %}">
-                  <i class="fas fa-piggy-bank"></i> My Thrifts
+                  <i class="fas fa-piggy-bank" style="color: #d63384;"></i> My Thrifts
                 </a>
               </li>
 
+              <!-- Account Details - Indigo -->
               <li class="nav-item">
                 <a class="nav-link nav-link-custom" href="{% url 'account-details' %}">
-                  <i class="fas fa-coins"></i> Account Details
+                  <i class="fas fa-coins" style="color: #6610f2;"></i> Account Details
                 </a>
               </li>
 
             {% else %}
 
-              <!-- Inactive Notice -->
+              <!-- Inactive Notice - Gray -->
               <li class="nav-item">
                 <span class="nav-link nav-link-custom text-muted">
-                  <i class="fas fa-lock"></i> Activate account to unlock features
+                  <i class="fas fa-lock" style="color: #6c757d;"></i> Activate account to unlock features
                 </span>
               </li>
 
@@ -730,37 +739,43 @@
             <!-- MANAGER ONLY LINKS -->
             <!-- ========================= -->
             {% if user.username == "manager" %}
+              <!-- Registration - Royal Purple -->
               <li class="nav-item">
                 <a class="nav-link nav-link-custom" href="{% url 'manager' %}">
-                  <i class="fas fa-user-shield"></i> Registration
+                  <i class="fas fa-user-shield" style="color: #6f42c1;"></i> Registration
                 </a>
               </li>
+              
+              <!-- Check Account Details - Deep Purple -->
               <li class="nav-item">
                 <a class="nav-link nav-link-custom" href="{% url 'check-account-details' %}">
-                  <i class="fas fa-user-shield"></i> Check Account Details
+                  <i class="fas fa-user-shield" style="color: #6f42c1;"></i> Check Account Details
                 </a>
               </li>
 
+              <!-- Wallet Manager - Emerald Green -->
               <li class="nav-item">
                 <a class="nav-link nav-link-custom" href="{% url 'wallet-manager' %}">
-                  <i class="fas fa-wallet"></i> Wallet Manager
+                  <i class="fas fa-wallet" style="color: #198754;"></i> Wallet Manager
                 </a>
               </li>
 
+              <!-- Thrift Confirmation - Ruby Red -->
               <li class="nav-item">
                 <a class="nav-link nav-link-custom" href="{% url 'thrifts-confirmation' %}">
-                  <i class="fas fa-check-circle"></i> Thrift Confirmation
+                  <i class="fas fa-check-circle" style="color: #dc3545;"></i> Thrift Confirmation
                 </a>
               </li>
 
+              <!-- Complaints - Amber Gold -->
               <li class="nav-item">
                 <a class="nav-link nav-link-custom" href="{% url 'complaints' %}">
-                  <i class="fas fa-envelope"></i> Complaints
+                  <i class="fas fa-envelope" style="color: #ffc107;"></i> Complaints
                 </a>
               </li>
             {% endif %}
 
-            <!-- Logout -->
+            <!-- Logout - Red (warning) -->
             <li class="nav-item">
               <a class="nav-link nav-link-custom nav-link-logout" href="{% url 'sign-out' %}">
                 <i class="fas fa-sign-out-alt"></i> Logout
@@ -769,17 +784,17 @@
 
           {% else %}
 
-            <!-- Login -->
+            <!-- Login - Bright Cyan -->
             <li class="nav-item">
               <a class="nav-link nav-link-custom nav-link-login" href="{% url 'sign-in' %}">
-                <i class="fas fa-sign-in-alt"></i> Login
+                <i class="fas fa-sign-in-alt" style="color: #0dcaf0;"></i> Login
               </a>
             </li>
 
-            <!-- Register -->
+            <!-- Register - Success Green -->
             <li class="nav-item">
               <a class="nav-link nav-link-custom" href="{% url 'create-account' %}">
-                <i class="fas fa-user-plus"></i> Register
+                <i class="fas fa-user-plus" style="color: #28a745;"></i> Register
               </a>
             </li>
 
@@ -828,8 +843,87 @@
                 {% if registration_status != "active" %}
                     <p style="font-weight: bold;" class="dashboard-subtitle">
                         {% if registration_status == "pending" %}
-                            <i class="fas fa-clock" style="color: #FF9800;"></i>
-                            Your registration fee is pending confirmation...<a href="{% url 'registration-fee' %}" >status</a>
+                            <div style="
+    background: #fff8e7;
+    border-left: 4px solid #FF9800;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+">
+    <!-- Clock Icon -->
+    <div style="
+        background: #FF9800;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    ">
+        <i class="fas fa-clock" style="color: white; font-size: 1.2rem;"></i>
+    </div>
+    
+    <!-- Content -->
+    <div style="flex: 1;">
+        <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+            <span style="
+                font-weight: 600;
+                font-size: 0.95rem;
+                color: #663c00;
+            ">
+                Your registration fee is pending confirmation...
+            </span>
+            
+            <a href="{% url 'About' %}" style="
+                background: #FF9800;
+                color: white;
+                padding: 5px 16px;
+                border-radius: 30px;
+                font-weight: bold;
+                font-size: 0.8rem;
+                font-weight: 500;
+                text-decoration: none;
+                transition: background 0.2s ease;
+            "
+            onmouseover="this.style.background='#f57c00'"
+            onmouseout="this.style.background='#FF9800'">
+                Read how the website works
+            </a>
+        </div>
+        
+        <!-- 24 Hours Indicator -->
+        <div style="
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        ">
+            <i class="far fa-hourglass" style="color: #FF9800; font-size: 0.9rem;"></i>
+            <span style="
+                font-size: 0.85rem;
+                color: #5f5f5f;
+            ">
+                This can take up to 
+                <span style="
+                    background: #fff0d9;
+                    color: #e65100;
+                    font-weight: 600;
+                    padding: 3px 10px;
+                    border-radius: 30px;
+                    margin-left: 5px;
+                    font-size: 0.8rem;
+                ">
+                    24 hours
+                </span>
+            </span>
+        </div>
+    </div>
+</div>
                         {% else %}
                             <i class="fas fa-exclamation-triangle" style="color: #f44336;"></i>
                             Pay the registration fee to activate your account 

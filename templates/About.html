@@ -16,61 +16,88 @@
       --muted:#6b7280;
       --card:#ffffff;
       --border:#e5e7eb;
+      --success:#10b981;
+      --warning:#f59e0b;
+      --danger:#ef4444;
+      --purple:#7e22ce;
     }
 
     body{
       margin:0;
-      font-family: system-ui, sans-serif;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
+      line-height: 1.5;
     }
 
     .container{
-      max-width:500px;
+      max-width:600px;
       margin:auto;
-      padding:25px 15px;
+      padding:25px 20px;
     }
 
     /* Header */
     .header{
       text-align:center;
-      margin-bottom:25px;
+      margin-bottom:30px;
     }
 
     .header h1{
-      font-size:1.7rem;
+      font-size:2rem;
       font-weight:800;
       margin:0;
-      color:var(--primary);
+      background: linear-gradient(135deg, #1d4ed8, #7e22ce);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
 
     .header p{
-      margin-top:6px;
-      font-size:0.9rem;
-      color:var(--muted);
+      margin-top:8px;
+      font-size:1rem;
+      color: var(--muted);
     }
 
     /* Card */
     .card{
-      background:var(--card);
+      background: var(--card);
       border:1px solid var(--border);
-      border-radius:14px;
-      padding:18px;
-      margin-bottom:18px;
-      box-shadow:0 2px 8px rgba(0,0,0,0.03);
+      border-radius:24px;
+      padding:24px;
+      margin-bottom:24px;
+      box-shadow:0 8px 20px rgba(0,0,0,0.03);
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      box-shadow:0 12px 30px rgba(29, 78, 216, 0.08);
     }
 
     .card-title{
       font-weight:700;
-      margin-bottom:15px;
-      font-size:1rem;
-      color:var(--primary);
+      margin-bottom:18px;
+      font-size:1.1rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 2px solid #eef2f6;
+      padding-bottom: 12px;
+    }
+
+    .card-title i {
+      color: var(--primary);
     }
 
     .card p{
-      font-size:0.9rem;
-      color:var(--muted);
-      line-height:1.6;
+      font-size:0.95rem;
+      color: #4b5563;
+      line-height:1.7;
+      margin: 0 0 16px 0;
+    }
+
+    .card p:last-child {
+      margin-bottom: 0;
     }
 
     /* Packages */
@@ -78,126 +105,336 @@
       display:flex;
       justify-content:space-between;
       align-items:center;
-      padding:12px 14px;
+      padding:16px 18px;
       border:1px solid var(--border);
-      border-radius:12px;
-      margin-top:10px;
-      background:#fafafa;
+      border-radius:16px;
+      margin-bottom:12px;
+      background: #fafcff;
+      transition: all 0.2s ease;
     }
 
-    .package:first-of-type {
-      margin-top:0;
+    .package:hover {
+      border-color: var(--primary);
+      background: white;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(29, 78, 216, 0.08);
+    }
+
+    .package:last-of-type {
+      margin-bottom: 0;
     }
 
     .package-info {
       display: flex;
       flex-direction: column;
+      gap: 4px;
     }
 
     .package-name {
-      font-size:0.75rem;
-      color:var(--primary);
-      font-weight:600;
+      font-size:0.8rem;
+      color: var(--primary);
+      font-weight:700;
       text-transform:uppercase;
       letter-spacing:0.5px;
-      margin-bottom:2px;
+    }
+
+    .package-name.purple {
+      color: var(--purple);
+    }
+
+    .package-name.gold {
+      color: #b45309;
     }
 
     .package-desc {
-      font-size:0.88rem;
-      font-weight:600;
-      color:var(--text);
+      font-size:1rem;
+      font-weight:700;
+      color: var(--text);
     }
 
-    .package strong{
-      color:var(--primary);
-      font-size:1.1rem;
+    .package-duration {
+      font-size:0.7rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .package-interest {
+      font-size:1.4rem;
+      font-weight:800;
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .package-interest.purple {
+      background: linear-gradient(135deg, #7e22ce, #9333ea);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .package-interest.gold {
+      background: linear-gradient(135deg, #b45309, #d97706);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    /* Warning Notice - Completely Redesigned */
+    .warning-container {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 20px;
+      padding: 20px;
+      margin: 20px 0 10px;
+    }
+
+    .warning-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .warning-icon {
+      width: 40px;
+      height: 40px;
+      background: #f97316;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .warning-header h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #9a3412;
+      margin: 0;
+    }
+
+    .warning-rules {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .warning-rules li {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #fed7aa;
+      font-size: 0.9rem;
+      color: #7b341e;
+    }
+
+    .warning-rules li:last-child {
+      border-bottom: none;
+    }
+
+    .rule-bullet {
+      width: 20px;
+      height: 20px;
+      background: #f97316;
+      border-radius: 50%;
+      color: white;
+      font-size: 0.7rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .rule-content {
+      flex: 1;
+    }
+
+    .rule-content strong {
+      color: #c2410c;
+      font-weight: 700;
+    }
+
+    .fine-badge {
+      display: inline-block;
+      background: #dc2626;
+      color: white;
+      padding: 3px 10px;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+
+    .example-box {
+      background: white;
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 16px;
+      border: 1px solid #fed7aa;
+    }
+
+    .example-title {
+      font-weight: 700;
+      color: #9a3412;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+    }
+
+    .example-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .example-item {
+      background: #fff7ed;
+      padding: 12px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .example-amount {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #9a3412;
+    }
+
+    .example-total {
+      font-size: 0.8rem;
+      color: #7b341e;
+      margin-top: 4px;
     }
 
     /* Single Purchase Button */
     .purchase-section {
-      margin-top: 25px;
+      margin-top: 30px;
       text-align: center;
     }
 
     .purchase-button {
       display: inline-block;
-      padding: 14px 28px;
-      background: var(--primary);
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #1d4ed8, #7e22ce);
       color: white;
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 1.1rem;
       text-decoration: none;
-      border-radius: 50px;
-      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.2);
+      border-radius: 60px;
+      box-shadow: 0 8px 20px rgba(29, 78, 216, 0.3);
       transition: all 0.3s ease;
       border: none;
       width: 100%;
-      max-width: 300px;
+      max-width: 350px;
+      letter-spacing: 0.3px;
     }
 
     .purchase-button:hover {
-      background: #1e3a8a;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(29, 78, 216, 0.3);
+      background: linear-gradient(135deg, #1e3a8a, #6b21a5);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(29, 78, 216, 0.4);
     }
 
     .purchase-button span {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 12px;
+    }
+
+    /* Plan Comparison Note */
+    .comparison-note {
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 2px dashed #e2e8f0;
+      text-align: center;
+    }
+
+    .max-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #f3e8ff, #ede9fe);
+      color: #6b21a5;
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: 1px solid #d8b4fe;
+    }
+
+    .max-badge i {
+      color: #7e22ce;
     }
 
     /* Contact */
-    .contact{
-      text-align:center;
-      font-size:0.85rem;
-      color:var(--muted);
+    .contact-card {
+      text-align: center;
+      background: linear-gradient(135deg, #f8fafc, #f1f5f9);
     }
 
-    .contact a{
-      display:inline-block;
-      margin-top:10px;
-      padding:10px 18px;
-      border-radius:10px;
-      background:var(--primary);
-      color:white;
-      font-weight:600;
-      text-decoration:none;
-    }
-
-    .contact a:hover{
-      opacity:0.9;
-    }
-
-    /* Warning note styles */
-    .warning-note {
+    .contact-info {
       display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      margin-top: 15px;
-      padding: 14px 16px;
-      background-color: #fff5f5;
-      border-left: 4px solid #dc3545;
-      border-radius: 8px;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      color: #475569;
+      font-size: 0.9rem;
     }
 
-    .warning-icon {
-      flex-shrink: 0;
-      color: #dc3545;
-      font-size: 20px;
-      font-weight: bold;
+    .contact-info i {
+      color: var(--primary);
     }
 
-    .warning-text {
-      color: #721c24;
-      font-size: 0.85rem;
-      line-height: 1.5;
+    .contact-btn {
+      display: inline-block;
+      padding: 12px 28px;
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 40px;
+      transition: all 0.2s ease;
+      border: none;
+      font-size: 0.9rem;
     }
 
-    .warning-text strong {
-      color: #dc3545;
+    .contact-btn:hover {
+      background: #1e3a8a;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(29, 78, 216, 0.2);
+      color: white;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px 15px;
+      }
+      
+      .header h1 {
+        font-size: 1.7rem;
+      }
+      
+      .package {
+        padding: 14px;
+      }
+      
+      .package-interest {
+        font-size: 1.2rem;
+      }
+      
+      .example-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -208,91 +445,160 @@
     <!-- Header -->
     <div class="header">
       <h1>Blengo Yearly Savings</h1>
-      <p>Save consistently and earn up to 40% interest annually.</p>
+      <p>Save consistently and earn up to 40% interest annually</p>
     </div>
 
-    <!-- About -->
+    <!-- About Section -->
     <div class="card">
-      <div class="card-title">HOW IT WORKS</div>
+      <div class="card-title">
+        <i class="fas fa-info-circle"></i> HOW IT WORKS
+      </div>
       <p>
         <strong>Blengo AJO Monthly Contribution</strong> is a trusted savings platform
         that helps individuals grow their money through disciplined monthly thrift plans.
       </p>
       <p>
-        Members complete a 12-month savings cycle and receive guaranteed interest
-        payouts at maturity.
-        For members who prefer a single deposit, we offer a one-time savings plan that pays 40% interest after 12 months — no monthly contributions required.
+        Members complete a <strong>12-month savings cycle</strong> and receive guaranteed interest
+        payouts at maturity. For members who prefer a single deposit, we offer a 
+        <strong>one-time MAX Plan</strong> that pays 40% interest after 12 months — no monthly contributions required.
       </p>
       
-      <!-- 🔴 RED NOTE ICON & WARNING MESSAGE -->
-      <div class="warning-note">
-        <div class="warning-icon">⚠️</div>
-        <div class="warning-text">
-          <strong>IMPORTANT:</strong> For the 12 months monthly payment plan (Basic Plan and Plus Plan): After your first payment, all subsequent payments must be made on the <strong>1st of every month</strong>. Failure to comply attracts a fine of <strong>₦5,000</strong>.
+      <!-- COMPLETELY REDESIGNED WARNING SECTION -->
+      <div class="warning-container">
+        <div class="warning-header">
+          <div class="warning-icon">⚠️</div>
+          <h3>Important Payment Rules</h3>
+        </div>
+
+        <ul class="warning-rules">
+          <li>
+            <span class="rule-bullet">1</span>
+            <span class="rule-content">
+              <strong>Consistent Monthly Payments:</strong> For Basic and Plus Plans, your monthly payment amount must remain the same throughout the 12-month cycle.
+            </span>
+          </li>
+          <li>
+            <span class="rule-bullet">2</span>
+            <span class="rule-content">
+              <strong>Separate Receipts Required:</strong> Each monthly payment must be uploaded separately with its own receipt. 
+              <span class="fine-badge">₦5,000 fine for non-compliance</span>
+            </span>
+          </li>
+          <li>
+            <span class="rule-bullet">3</span>
+            <span class="rule-content">
+              <strong>No Bulk Payments:</strong> Even if you pay multiple months at once, you must make <strong>separate payments of your chosen amount</strong> and upload receipts individually.
+            </span>
+          </li>
+        </ul>
+
+        <!-- Clear Examples -->
+        <div class="example-box">
+          <div class="example-title">
+            <i class="fas fa-calculator"></i> Clear Examples:
+          </div>
+          <div class="example-grid">
+            <div class="example-item">
+              <div class="example-amount">₦10,000/month</div>
+              <div class="example-total">Total: ₦120,000/year</div>
+              <div style="font-size:0.7rem; color:#9a3412; margin-top:6px;">12 separate receipts</div>
+            </div>
+            <div class="example-item">
+              <div class="example-amount">₦20,000/month</div>
+              <div class="example-total">Total: ₦240,000/year</div>
+              <div style="font-size:0.7rem; color:#9a3412; margin-top:6px;">12 separate receipts</div>
+            </div>
+            <div class="example-item">
+              <div class="example-amount">₦30,000/month</div>
+              <div class="example-total">Total: ₦360,000/year</div>
+              <div style="font-size:0.7rem; color:#9a3412; margin-top:6px;">12 separate receipts</div>
+            </div>
+            <div class="example-item">
+              <div class="example-amount">₦50,000/month</div>
+              <div class="example-total">Total: ₦600,000/year</div>
+              <div style="font-size:0.7rem; color:#9a3412; margin-top:6px;">12 separate receipts</div>
+            </div>
+          </div>
+          <p style="font-size:0.8rem; color:#9a3412; margin-top:12px; text-align:center;">
+            <i class="fas fa-exclamation-triangle"></i> 
+            <strong>Example:</strong> If you choose ₦10,000/month, you must make 12 separate payments of ₦10,000 each and upload 12 receipts — even if you pay early.
+          </p>
         </div>
       </div>
     </div>
 
-    <!-- Packages -->
+    <!-- Savings Packages -->
     <div class="card">
-      <div class="card-title">✨ SAVINGS PACKAGES</div>
+      <div class="card-title">
+        <i class="fas fa-gem"></i> SAVINGS PACKAGES
+      </div>
 
       <!-- BASIC PLAN - 25% -->
       <div class="package">
         <div class="package-info">
           <span class="package-name">🔵 BASIC PLAN</span>
-          <span class="package-desc">₦20,000 – ₦50,000 monthly</span>
-          <span style="font-size:0.75rem; color:var(--muted);">12 months duration</span>
+          <span class="package-desc">₦10,000 – ₦50,000 monthly</span>
+          <span class="package-duration">
+            <i class="far fa-calendar-alt"></i> 12 months duration
+          </span>
         </div>
-        <strong>25%</strong>
+        <span class="package-interest">25%</span>
       </div>
 
       <!-- PLUS PLAN - 30% -->
       <div class="package">
         <div class="package-info">
-          <span class="package-name" style="color:#2563eb;">✨ PLUS PLAN</span>
+          <span class="package-name gold">✨ PLUS PLAN</span>
           <span class="package-desc">₦100,000+ monthly</span>
-          <span style="font-size:0.75rem; color:var(--muted);">12 months duration</span>
+          <span class="package-duration">
+            <i class="far fa-calendar-alt"></i> 12 months duration
+          </span>
         </div>
-        <strong>30%</strong>
+        <span class="package-interest gold">30%</span>
       </div>
 
       <!-- MAX PLAN - 40% (One-time) -->
       <div class="package">
         <div class="package-info">
-          <span class="package-name" style="color:#7e22ce;">💎 MAX PLAN</span>
-          <span class="package-desc">One-time investment</span>
-          <span style="font-size:0.75rem; color:var(--muted);">12 months lock-in • 40% interest</span>
+          <span class="package-name purple">💎 MAX PLAN</span>
+          <span class="package-desc">₦1,000,000+ one-time investment</span>
+          <span class="package-duration">
+            <i class="far fa-calendar-alt"></i> 12 months lock-in • 40% guaranteed
+          </span>
         </div>
-        <strong>40%</strong>
+        <span class="package-interest purple">40%</span>
       </div>
 
-      <!-- SINGLE PURCHASE THRIFT LINK - UNDER ALL THREE PACKAGES -->
+      <!-- Purchase Button -->
       <div class="purchase-section">
         <a href="{% url 'purchase-thrifts' %}" class="purchase-button">
           <span>
-            🛒 Purchase Thrift Plan
-            <span style="font-size:1.2rem;">→</span>
+            <i class="fas fa-shopping-cart"></i> Purchase Thrift Plan
+            <i class="fas fa-arrow-right"></i>
           </span>
         </a>
-        <p style="font-size:0.75rem; color:var(--muted); margin-top:10px;">
-          Choose your preferred plan after clicking
+        <p style="font-size:0.8rem; color:var(--muted); margin-top:14px;">
+          👆 Click to select your preferred plan and start saving
         </p>
       </div>
 
-      <!-- Plan Comparison Note -->
-      <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed var(--border); font-size:0.8rem; color:var(--muted); text-align:center;">
-        <span style="display: inline-block; padding: 6px 16px; background: #e6f7e6; color: #2e7d32; border-radius: 20px;">
-          ✅ MAX Plan: One-time payment • No monthly commitments • 40% guaranteed
+      <!-- MAX Plan Highlight -->
+      <div class="comparison-note">
+        <span class="max-badge">
+          <i class="fas fa-crown"></i>
+          MAX Plan: One-time payment • No monthly commitments • 40% guaranteed
+          <i class="fas fa-check-circle"></i>
         </span>
       </div>
     </div>
 
-    <!-- Contact -->
-    <div class="card contact">
-      <p>📍 15, Rose Garden Estate, Aiyetoro Ijanikin</p>
-      <p>For more enquiries, contact us directly:</p>
-      <a href="{% url 'contact' %}"> CONTACT US</a>
+    <!-- Contact Section -->
+    <div class="card contact-card">
+      
+      <p style="color:#475569; margin: 16px 0;">For more enquiries, contact us directly:</p>
+      <a href="{% url 'contact' %}" class="contact-btn">
+        <i class="fas fa-headset me-2"></i> CONTACT US
+      </a>
     </div>
 
   </div>

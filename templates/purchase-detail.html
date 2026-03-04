@@ -250,7 +250,10 @@
         align-items: center;
         gap: 8px;
     }
-
+.status-confirmed {
+    background: rgba(76, 175, 80, 0.9);
+    color: white;
+}
     .upload-title i {
         font-size: 1.1rem;
     }
@@ -687,43 +690,44 @@
         {% endif %}
 
         <!-- Uploaded Images -->
-        {% if purchase.payment_images.all %}
-        <div>
-            <h5 class="images-title">
-                <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
-                Uploaded proofs ({{ purchase.payment_images.count }})
-            </h5>
-            
-            <div class="images-grid">
-                {% for image in purchase.payment_images.all %}
-                <div class="image-item">
-                    {% if image.image %}
-                        <img src="{{ image.image.url }}" alt="Payment proof" onclick="openImageModal('{{ image.image.url }}')">
-                    {% else %}
-                        <div class="deleted-image-placeholder">
-                            <i class="fas fa-trash-alt"></i>
-                            <span>payment confirmed</span>
-                        </div>
-                    {% endif %}
-                    
-                    <div class="image-status 
-                        {% if not image.image %}status-deleted-badge
-                        {% elif image.is_approved %}status-approved
-                        {% else %}status-pending{% endif %}">
-                        
-                        {% if not image.image %}
-                            <i class="fas fa-trash"></i> confirmed
-                        {% elif image.is_approved %}
-                            <i class="fas fa-check-circle"></i> Approved
-                        {% else %}
-                            <i class="fas fa-clock"></i> Pending
-                        {% endif %}
-                    </div>
+        <!-- Uploaded Images -->
+{% if purchase.payment_images.all %}
+<div>
+    <h5 class="images-title">
+        <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+        Uploaded proofs ({{ purchase.payment_images.count }})
+    </h5>
+    
+    <div class="images-grid">
+        {% for image in purchase.payment_images.all %}
+        <div class="image-item">
+            {% if image.image %}
+                <img src="{{ image.image.url }}" alt="Payment proof" onclick="openImageModal('{{ image.image.url }}')">
+            {% else %}
+                <div class="deleted-image-placeholder">
+                    <i class="fas fa-thumbs-up" style="color: #4CAF50; font-size: 2.5rem;"></i>
+                    <span style="color: #4CAF50; font-weight: 600;">Confirmed</span>
                 </div>
-                {% endfor %}
+            {% endif %}
+            
+            <div class="image-status 
+                {% if not image.image %}status-confirmed
+                {% elif image.is_approved %}status-approved
+                {% else %}status-pending{% endif %}">
+                
+                {% if not image.image %}
+                    <i class="fas fa-thumbs-up"></i> Confirmed
+                {% elif image.is_approved %}
+                    <i class="fas fa-check-circle"></i> Approved
+                {% else %}
+                    <i class="fas fa-clock"></i> Pending
+                {% endif %}
             </div>
         </div>
-        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
 
         <!-- Plan Requirements -->
         <div class="requirements-list">
@@ -733,7 +737,7 @@
             </h4>
             <ul>
                 {% if purchase.plan_type == 'basic' %}
-                    <li>Monthly contribution: ₦25,000 - ₦50,000</li>
+                    <li>Monthly contribution: ₦10,000 - ₦50,000</li>
                     <li>Duration: 12 months</li>
                     <li>Upload 12 monthly payment proofs</li>
                     <li>25% interest at maturity</li>
@@ -743,7 +747,7 @@
                     <li>Upload 12 monthly payment proofs</li>
                     <li>30% interest at maturity</li>
                 {% elif purchase.plan_type == 'max' %}
-                    <li>One-time investment (any amount)</li>
+                    <li>One-time investment 1,000,000 +</li>
                     <li>Duration: 12 months</li>
                     <li>Upload 1 payment proof</li>
                     <li>40% interest at maturity</li>
