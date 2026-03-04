@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 import os
 from django.utils.timezone import now 
+from cloudinary.models import CloudinaryField
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     referral_code = models.CharField(max_length=150, unique=True)  # Increased max_length
@@ -25,7 +26,8 @@ class UserProfile(models.Model):
         verbose_name_plural = 'User Profiles'
 
 class RegistrationFee(models.Model):
-    image_upload = models.ImageField(upload_to='registration_fees/')
+    #image_upload = models.ImageField(upload_to='registration_fees/')
+    image_upload = CloudinaryField('image')
     uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)
     date_uploaded = models.DateTimeField(auto_now_add=True)
     confirmed = models.BooleanField(default=False)
@@ -134,7 +136,8 @@ def get_package_image_upload_path(instance, filename):
 
 class PaymentImage(models.Model):
     purchase = models.ForeignKey(UserPurchase, on_delete=models.CASCADE, related_name='payment_images')
-    image = models.ImageField(upload_to=get_package_image_upload_path)
+    #image = models.ImageField(upload_to=get_package_image_upload_path)
+    image = CloudinaryField('image')
     uploaded_at = models.DateTimeField(auto_now_add=True)
     is_approved = models.BooleanField(default=False)
     approved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='approved_images')

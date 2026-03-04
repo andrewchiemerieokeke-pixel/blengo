@@ -4,15 +4,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 from base import views
 
-from django_ratelimit.decorators import ratelimit
 handler404 = views.custom_404
+
 urlpatterns = [
     path('my-new-secret/', admin.site.urls),
-    path('',include('base.urls')),
-    path("accounts/",include("allauth.urls"))
+    path('', include('base.urls')),
+    path("accounts/", include("allauth.urls")),
 ]
 
-# Only add static/media URLs in DEBUG mode
+# Only for local development
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
