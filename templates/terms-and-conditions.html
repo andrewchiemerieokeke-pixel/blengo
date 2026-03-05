@@ -215,6 +215,131 @@
         left: 8px;
     }
 
+    .warning-rules {
+        list-style: none;
+        padding: 0;
+        margin: 15px 0;
+    }
+
+    .warning-rules li {
+        display: flex;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.95rem;
+        color: var(--text-medium);
+    }
+
+    .warning-rules li:last-child {
+        border-bottom: none;
+    }
+
+    .rule-bullet {
+        width: 20px;
+        height: 20px;
+        background: var(--accent-blue);
+        border-radius: 50%;
+        color: white;
+        font-size: 0.7rem;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    .rule-content {
+        flex: 1;
+    }
+
+    .rule-content strong {
+        color: var(--text-dark);
+        font-weight: 700;
+    }
+
+    .fine-badge {
+        display: inline-block;
+        background: #dc2626;
+        color: white;
+        padding: 3px 10px;
+        border-radius: 40px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        margin-left: 8px;
+    }
+
+    .account-details-box {
+        background: linear-gradient(135deg, #f0f9ff, #f3e8ff);
+        border: 2px solid var(--accent-blue);
+        border-radius: 20px;
+        padding: 30px;
+        margin: 40px 0 20px;
+        text-align: center;
+    }
+
+    .account-details-box h3 {
+        color: var(--text-dark);
+        font-weight: 800;
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .account-details-box h3 i {
+        color: var(--accent-blue);
+    }
+
+    .account-details-box .warning-text {
+        background: #fff9e6;
+        border-left: 5px solid #e6a700;
+        padding: 15px;
+        border-radius: 12px;
+        margin: 20px 0;
+        font-size: 1rem;
+        color: #2d3a4c;
+    }
+
+    .account-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        max-width: 500px;
+        margin: 25px auto;
+    }
+
+    .account-row {
+        display: flex;
+        align-items: center;
+        background: white;
+        border-radius: 50px;
+        overflow: hidden;
+        border: 1px solid #dde3ed;
+    }
+
+    .account-label {
+        background: var(--accent-blue);
+        color: white;
+        padding: 12px 20px;
+        font-weight: 600;
+        min-width: 140px;
+        text-align: left;
+    }
+
+    .account-value {
+        padding: 12px 20px;
+        font-weight: 600;
+        color: var(--text-dark);
+        font-family: 'Courier New', monospace;
+        font-size: 1.1rem;
+        background: #f8fafc;
+        flex: 1;
+        text-align: left;
+    }
+
     .fine-print {
         font-size: 0.8rem;
         color: var(--text-light);
@@ -242,6 +367,23 @@
         color: var(--accent-blue);
         width: 20px;
         text-align: center;
+    }
+
+    .contact-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background: linear-gradient(135deg, #4CAF50, #45a049);
+        color: white;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .contact-btn:hover {
+        background: linear-gradient(135deg, #45a049, #3e8e41);
+        transform: translateY(-2px);
     }
 
     .back-to-top {
@@ -289,6 +431,22 @@
             display: block;
             overflow-x: auto;
         }
+        
+        .account-row {
+            flex-direction: column;
+            border-radius: 20px;
+        }
+        
+        .account-label {
+            width: 100%;
+            text-align: center;
+            border-radius: 0;
+        }
+        
+        .account-value {
+            width: 100%;
+            text-align: center;
+        }
     }
 </style>
 
@@ -297,7 +455,7 @@
     <div class="terms-header">
         <h1 class="terms-title">Terms of Service</h1>
         <p class="terms-subtitle">Please read these terms carefully before using Blengo's savings and investment services.</p>
-        
+        <span class="last-updated"><i class="fas fa-calendar-alt me-2"></i>Last Updated: February 12, 2026</span>
     </div>
 
     <!-- Main Content Card -->
@@ -323,10 +481,11 @@
             <div class="section-content">
                 <p>To use our Services:</p>
                 <ul class="bullet-list">
+                    <li>There is an activation fee of ₦3,500</li>
                     <li>Anyone anywhere is eligible to make use of our platform</li>
                     <li>Provide accurate, current, and complete information</li>
                     <li>Give us permission to use his/her name from the gmail account they are using</li>
-                    
+                </ul>
             </div>
         </div>
 
@@ -377,33 +536,33 @@
                     <strong style="color: #ffc107;">For Basic and Plus Plans (Monthly Payment):</strong>
                 </div>
                 <ul class="warning-rules">
-    <li>
-      <span class="rule-bullet">1</span>
-      <span class="rule-content">
-        <strong>Consistent Monthly Payments:</strong> For Basic and Plus Plans, your monthly payment amount must remain the same throughout the 12-month cycle.
-      </span>
-    </li>
-    <li>
-      <span class="rule-bullet">2</span>
-      <span class="rule-content">
-        <strong>Separate Receipts Required:</strong> Each monthly payment must be uploaded separately with its own receipt. 
-        <span class="fine-badge">₦5,000 fine for non-compliance</span>
-      </span>
-    </li>
-    <li>
-      <span class="rule-bullet">3</span>
-      <span class="rule-content">
-        <strong>No Bulk Payments:</strong> Even if you pay multiple months at once, you must make <strong>separate payments of your chosen amount</strong> and upload receipts individually.
-      </span>
-    </li>
-    <li>
-      <span class="rule-bullet">4</span>
-      <span class="rule-content">
-        <strong>No Missed Payments Allowed:</strong> Missing a monthly payment will attract a <strong>₦5,000 fine</strong>. Consistent payment is required to qualify for full interest at maturity.
-        <span class="fine-badge">₦5,000 fine per missed month</span>
-      </span>
-    </li>
-  </ul>
+                    <li>
+                        <span class="rule-bullet">1</span>
+                        <span class="rule-content">
+                            <strong>Consistent Monthly Payments:</strong> For Basic and Plus Plans, your monthly payment amount must remain the same throughout the 12-month cycle.
+                        </span>
+                    </li>
+                    <li>
+                        <span class="rule-bullet">2</span>
+                        <span class="rule-content">
+                            <strong>Separate Receipts Required:</strong> Each monthly payment must be uploaded separately with its own receipt. 
+                            <span class="fine-badge">₦5,000 fine for non-compliance</span>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="rule-bullet">3</span>
+                        <span class="rule-content">
+                            <strong>No Bulk Payments:</strong> Even if you pay multiple months at once, you must make <strong>separate payments of your chosen amount</strong> and upload receipts individually.
+                        </span>
+                    </li>
+                    <li>
+                        <span class="rule-bullet">4</span>
+                        <span class="rule-content">
+                            <strong>No Missed Payments Allowed:</strong> Missing a monthly payment will attract a <strong>₦5,000 fine</strong>. Consistent payment is required to qualify for full interest at maturity.
+                            <span class="fine-badge">₦5,000 fine per missed month</span>
+                        </span>
+                    </li>
+                </ul>
 
                 <div class="highlight-box success">
                     <i class="fas fa-check-circle"></i>
@@ -447,13 +606,13 @@
                 5. Legally Binding Agreement
             </div>
             <div class="section-content">
-                <p>By enrolling in any Blengo savings plan, you enter into a <strong>legally binding savings contract</strong> with Blengo. This agreement is enforceable under the laws of the Federal Republic of Nigeria.</p>
+                <p>By enrolling in any Blengo savings plan, you enter into a <strong>legally binding savings contract</strong> with Blengo.</p>
                 
                 <div class="subsection">
                     <h6 class="subsection-title">5.1 For Monthly Plans (Basic & Plus):</h6>
                     <ul class="bullet-list">
                         <li>You commit to the full 12-month contribution cycle</li>
-                        <li>You cannot withdraw your funds before maturity without penalty</li>
+                        <li>You cannot withdraw your funds before maturity</li>
                         <li>Early termination will result in forfeiture of all accrued interest</li>
                     </ul>
                 </div>
@@ -524,10 +683,7 @@
             </div>
         </div>
 
-        <!-- Section 9: Limitation of Liability -->
-       
-
-        <!-- Section 10: Changes to Terms -->
+        <!-- Section 9: Changes to Terms -->
         <div class="terms-section">
             <div class="section-title">
                 <i class="fas fa-edit"></i>
@@ -543,51 +699,52 @@
             </div>
         </div>
 
-        <!-- Section 11: Governing Law -->
-        <div class="terms-section">
-            <div class="section-title">
-                <i class="fas fa-gavel"></i>
-                11. Governing Law
-            </div>
-            <div class="section-content">
-                <p>These Terms shall be governed and construed in accordance with the laws of the Federal Republic of Nigeria, without regard to its conflict of law provisions.</p>
-                <p>Any disputes arising under these Terms shall be resolved exclusively by the courts of Lagos State, Nigeria.</p>
-            </div>
-        </div>
-
-        <!-- Section 12: Contact Information -->
+        <!-- Section 10: Contact Information -->
         <div class="terms-section">
             <div class="section-title">
                 <i class="fas fa-envelope"></i>
-                12. Contact Us
+                10. Contact Us
             </div>
             <div class="section-content">
                 <p>If you have any questions about these Terms, please contact us:</p>
                 
                 <div class="contact-info">
-    <a href="mailto:support@example.com" class="contact-btn">Contact Us</a>
-</div>
-
-<style>
-.contact-btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background: linear-gradient(135deg, #4CAF50, #45a049);
-    color: white;
-    font-weight: 600;
-    font-size: 0.9rem;
-    text-decoration: none;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-.contact-btn:hover {
-    background: linear-gradient(135deg, #45a049, #3e8e41);
-    transform: translateY(-2px);
-}
-</style>
-
+                    <a href="mailto:support@blengo.com" class="contact-btn">Contact Us</a>
+                </div>
             </div>
+        </div>
+
+        <!-- BLENGO ACCOUNT DETAILS SECTION - ADDED HERE -->
+        <div class="account-details-box">
+            <h3>
+                <i class="fas fa-university"></i>
+                Official Blengo Account Details
+                <i class="fas fa-check-circle" style="color: #10b981;"></i>
+            </h3>
+            
+            <div class="warning-text">
+                ⚠️ <strong>This is the ONLY official account for all Blengo payments.</strong> We will never ask you to pay into a different account. If you receive any message requesting payment elsewhere, ignore it — it's a scam.
+            </div>
+
+            <div class="account-grid">
+                <div class="account-row">
+                    <div class="account-label">Account Number:</div>
+                    <div class="account-value">5601668588</div>
+                </div>
+                <div class="account-row">
+                    <div class="account-label">Bank Name:</div>
+                    <div class="account-value">Fidelity Bank</div>
+                </div>
+                <div class="account-row">
+                    <div class="account-label">Account Name:</div>
+                    <div class="account-value">Blengo Bee Enterprise</div>
+                </div>
+            </div>
+
+            <p style="margin-top: 20px; color: var(--text-medium);">
+                <i class="fas fa-lock" style="color: var(--accent-blue);"></i>
+                Always verify these details on this official page before making any payment.
+            </p>
         </div>
 
         <!-- Fine Print -->
