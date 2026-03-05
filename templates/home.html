@@ -696,6 +696,13 @@
             </a>
           </li>
 
+         <li class="nav-item">
+    <a class="nav-link nav-link-custom" href="{% url 'Blengo-Account-Details' %}">
+        <i class="fas fa-money-check-alt" style="color:rgb(197, 101, 117);"></i> 
+        Blengo Account Details
+    </a>
+</li>
+
           {% if user.is_authenticated %}
 
             <!-- ========================= -->
@@ -720,7 +727,7 @@
               <!-- Account Details - Indigo -->
               <li class="nav-item">
                 <a class="nav-link nav-link-custom" href="{% url 'account-details' %}">
-                  <i class="fas fa-coins" style="color: #6610f2;"></i> Account Details
+                  <i class="fas fa-coins" style="color: #6610f2;"></i> {{user.username|capfirst}} Account Details
                 </a>
               </li>
 

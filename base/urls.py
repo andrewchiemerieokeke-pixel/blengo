@@ -28,6 +28,8 @@ urlpatterns = [
 
     #Wallet urls
    path('wallet-manager/', views.wallet_manager, name='wallet-manager'),
+   path('Blengo-Account-Details/', views.blengo_account, name='Blengo-Account-Details'),
+
    path('All-referrals/', views.All_referrals, name='All-referrals'),
 path('delete-transaction/', views.delete_transaction, name='delete-transaction'),
 

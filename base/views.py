@@ -1368,3 +1368,7 @@ def view_user_account_detail(request, user_id):
         'total_accounts': accounts.count()
     }
     return render(request, 'user-account-detail.html', context)
+
+
+def blengo_account(request):
+    return render(request,"Blengo-Account-Details.html")
