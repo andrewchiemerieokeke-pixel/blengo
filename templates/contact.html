@@ -130,7 +130,7 @@
 .contact-form textarea {
     width: 100%;
     padding: 12px 15px;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     border-radius: 12px;
     border: 1px solid rgba(0, 119, 255, 0.2);
     background: rgba(255, 255, 255, 0.9);
@@ -146,9 +146,47 @@
     box-shadow: 0 0 0 4px rgba(0, 119, 255, 0.1);
 }
 
+.contact-form input.error,
+.contact-form textarea.error {
+    border-color: #dc3545;
+    background-color: rgba(220, 53, 69, 0.02);
+}
+
+.contact-form input.error:focus,
+.contact-form textarea.error:focus {
+    box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
+}
+
 .contact-form textarea {
     resize: vertical;
     min-height: 150px;
+    max-height: 300px;
+}
+
+.char-counter {
+    text-align: right;
+    font-size: 0.8rem;
+    margin-bottom: 20px;
+    color: var(--text-medium);
+}
+
+.char-counter.warning {
+    color: #ff9800;
+}
+
+.char-counter.danger {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 0.8rem;
+    margin-top: 2px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .contact-form button {
@@ -168,9 +206,14 @@
     gap: 10px;
 }
 
-.contact-form button:hover {
+.contact-form button:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(0, 119, 255, 0.3);
+}
+
+.contact-form button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .contact-form button i {
@@ -239,7 +282,7 @@
     color: white;
 }
 
-/* Address Section - NEW */
+/* Address Section */
 .address-section {
     margin-top: 30px;
     text-align: center;
@@ -334,25 +377,33 @@
         <span>We will reply to you through the email address you provide within 24 hours.</span>
     </div>
 
-    <!-- Contact Form -->
-    <form method="POST" action="{% url 'contact' %}" class="contact-form">
+    <!-- Contact Form with Validation -->
+    <form method="POST" action="{% url 'contact' %}" class="contact-form" id="contactForm" onsubmit="return validateForm()">
         {% csrf_token %}
         
-        
-
         <label for="email">
             <i class="fas fa-envelope" style="color: var(--accent-blue); margin-right: 5px;"></i>
             Email Address
         </label>
-        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required
+               onkeyup="validateEmail()" onblur="validateEmail()">
+        <div id="emailError" class="error-message" style="display: none;"></div>
 
         <label for="message">
             <i class="fas fa-comment" style="color: var(--accent-blue); margin-right: 5px;"></i>
             Message
+            <span style="font-weight: normal; font-size: 0.8rem; color: var(--text-medium); margin-left: 10px;">
+                
+            </span>
         </label>
-        <textarea id="message" name="message" placeholder="Write your message..." required></textarea>
+        <textarea id="message" name="message" placeholder="Write your message..." required
+                  onkeyup="validateMessage()" onblur="validateMessage()" maxlength="150"></textarea>
+        <div id="messageError" class="error-message" style="display: none;"></div>
+        
+        <!-- Character Counter -->
+        <div id="charCounter" class="char-counter">0 / 150 characters</div>
 
-        <button type="submit">
+        <button type="submit" id="submitBtn">
             <i class="fas fa-paper-plane"></i>
             Send Message
         </button>
@@ -376,8 +427,6 @@
             Response time: within 48 hours
         </p>
     </div>
-
-    
 </div>
 
 <!-- Toast notification for copy -->
@@ -387,6 +436,170 @@
 </div>
 
 <script>
+// Email Validation
+function validateEmail() {
+    const email = document.getElementById('email');
+    const errorDiv = document.getElementById('emailError');
+    const value = email.value.trim();
+    
+    // Regular expression for email validation
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    
+    if (value.length === 0) {
+        showError(email, errorDiv, 'Email address is required');
+        return false;
+    } else if (!emailPattern.test(value)) {
+        showError(email, errorDiv, 'Please enter a valid email address (e.g., name@example.com)');
+        return false;
+    } else {
+        hideError(email, errorDiv);
+        return true;
+    }
+}
+
+// Message Validation - Only letters, numbers, spaces, and basic punctuation
+function validateMessage() {
+    const message = document.getElementById('message');
+    const errorDiv = document.getElementById('messageError');
+    const counter = document.getElementById('charCounter');
+    const value = message.value;
+    
+    // Count characters
+    const charCount = value.length;
+    counter.textContent = charCount + ' / 150 characters';
+    
+    // Update counter color based on length
+    counter.classList.remove('warning', 'danger');
+    if (charCount > 140) {
+        counter.classList.add('warning');
+    }
+    if (charCount >= 150) {
+        counter.classList.add('danger');
+    }
+    
+    // Check if empty
+    if (value.length === 0) {
+        showError(message, errorDiv, 'Message is required');
+        return false;
+    }
+    
+    // Check maximum length
+    if (value.length > 150) {
+        showError(message, errorDiv, 'Message cannot exceed 150 characters');
+        return false;
+    }
+    
+    // Allow only letters, numbers, spaces, and basic punctuation (. , ! ? ' -)
+    // This prevents special characters that could be used for XSS attacks
+    const validPattern = /^[a-zA-Z0-9\s\.,!?'-]+$/;
+    
+    if (!validPattern.test(value)) {
+        showError(message, errorDiv, 'Message can only contain letters, numbers, spaces, and basic punctuation (. , ! ? \' -)');
+        return false;
+    }
+    
+    // Check for multiple consecutive special characters (spam prevention)
+    if (/([.,!?'-])\1{2,}/.test(value)) {
+        showError(message, errorDiv, 'Message contains repeated punctuation (spam prevention)');
+        return false;
+    }
+    
+    hideError(message, errorDiv);
+    return true;
+}
+
+// Show error function
+function showError(input, errorDiv, message) {
+    input.classList.add('error');
+    errorDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + message;
+    errorDiv.style.display = 'flex';
+}
+
+// Hide error function
+function hideError(input, errorDiv) {
+    input.classList.remove('error');
+    errorDiv.style.display = 'none';
+}
+
+// Form validation before submit
+function validateForm() {
+    const isEmailValid = validateEmail();
+    const isMessageValid = validateMessage();
+    
+    if (!isEmailValid || !isMessageValid) {
+        // Create error alert at top
+        const container = document.querySelector('.contact-container');
+        const alert = document.createElement('div');
+        alert.className = 'alert alert-error';
+        alert.innerHTML = `
+            <i class="fas fa-exclamation-circle"></i>
+            <span class="alert-content">Please fix the errors before submitting</span>
+            <button type="button" class="alert-close" onclick="this.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        
+        // Insert after existing messages
+        const messagesDiv = document.querySelector('.alert:last-child');
+        if (messagesDiv) {
+            messagesDiv.insertAdjacentElement('afterend', alert);
+        } else {
+            container.insertBefore(alert, container.children[1]);
+        }
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            if (alert.parentNode) {
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 300);
+            }
+        }, 5000);
+        
+        return false;
+    }
+    
+    // Disable button and show loading
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+    
+    return true;
+}
+
+// Restrict input for message field (while typing)
+document.getElementById('message')?.addEventListener('keypress', function(e) {
+    const char = String.fromCharCode(e.which);
+    // Allow letters, numbers, spaces, and basic punctuation
+    if (!/[a-zA-Z0-9\s\.,!?'-]/.test(char)) {
+        e.preventDefault();
+    }
+});
+
+// Prevent paste of invalid characters
+document.getElementById('message')?.addEventListener('paste', function(e) {
+    e.preventDefault();
+    const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+    
+    // Filter only allowed characters
+    const filtered = pastedText.replace(/[^a-zA-Z0-9\s\.,!?'-]/g, '');
+    
+    // Get current value and cursor position
+    const start = this.selectionStart;
+    const end = this.selectionEnd;
+    const currentValue = this.value;
+    
+    // Insert filtered text at cursor position
+    this.value = currentValue.substring(0, start) + filtered + currentValue.substring(end);
+    
+    // Limit to 150 characters
+    if (this.value.length > 150) {
+        this.value = this.value.substring(0, 150);
+    }
+    
+    // Trigger validation
+    validateMessage();
+});
+
 // Copy email to clipboard function
 function copyEmail() {
     const email = 'blengocontribution@gmail.com';
@@ -437,6 +650,16 @@ document.querySelectorAll('.alert-close').forEach(button => {
             alert.style.display = 'none';
         }, 300);
     });
+});
+
+// Initial validation on page load (if fields have values)
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('email').value) {
+        validateEmail();
+    }
+    if (document.getElementById('message').value) {
+        validateMessage();
+    }
 });
 </script>
 

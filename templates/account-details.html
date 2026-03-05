@@ -203,6 +203,23 @@
         font-weight: 600;
     }
 
+    .input-field.error {
+        border-color: #f44336;
+    }
+
+    .input-field.error:focus {
+        box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.1);
+    }
+
+    .error-message {
+        color: #f44336;
+        font-size: 0.75rem;
+        margin-top: 4px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
     .primary-btn {
         width: 100%;
         padding: 14px;
@@ -410,26 +427,32 @@
     </div>
 
     {% if not account %}
-        <!-- CREATE FORM -->
+        <!-- CREATE FORM WITH VALIDATION -->
         <div class="single-form-view">
             <div class="card">
                 
-                <form method="POST" action="{% url 'add-account' %}" id="addForm">
+                <form method="POST" action="{% url 'add-account' %}" id="addForm" onsubmit="return validateForm()">
                     {% csrf_token %}
 
                     <div class="form-group">
-                        <input type="text" id="add_bank_name" name="bank_name" class="input-field" placeholder=" " required>
+                        <input type="text" id="add_bank_name" name="bank_name" class="input-field" placeholder=" " required 
+                               onkeyup="validateBankName()" onblur="validateBankName()">
                         <label for="add_bank_name" class="form-label">Bank Name</label>
+                        <div id="bankNameError" class="error-message" style="display: none;"></div>
                     </div>
 
                     <div class="form-group">
-                        <input type="text" id="add_account_name" name="account_name" class="input-field" placeholder=" " required>
+                        <input type="text" id="add_account_name" name="account_name" class="input-field" placeholder=" " required
+                               onkeyup="validateAccountName()" onblur="validateAccountName()">
                         <label for="add_account_name" class="form-label">Account Holder Name</label>
+                        <div id="accountNameError" class="error-message" style="display: none;"></div>
                     </div>
 
                     <div class="form-group">
-                        <input type="text" id="add_account_number" name="account_number" class="input-field" placeholder=" " required>
+                        <input type="text" id="add_account_number" name="account_number" class="input-field" placeholder=" " required
+                               onkeyup="validateAccountNumber()" onblur="validateAccountNumber()" maxlength="10">
                         <label for="add_account_number" class="form-label">Account Number</label>
+                        <div id="accountNumberError" class="error-message" style="display: none;"></div>
                     </div>
 
                     <button type="submit" class="primary-btn" id="addSubmitBtn">
@@ -492,6 +515,144 @@
 </div>
 
 <script>
+// Validation Functions
+function validateBankName() {
+    const input = document.getElementById('add_bank_name');
+    const errorDiv = document.getElementById('bankNameError');
+    const value = input.value.trim();
+    
+    // Allow only letters, spaces, dots, and apostrophes (for names like "First Bank", "O'Neil", "St. Mary's")
+    const validPattern = /^[A-Za-z\s\.\'-]+$/;
+    
+    if (value.length < 2) {
+        showError(input, errorDiv, 'Bank name must be at least 2 characters');
+        return false;
+    } else if (!validPattern.test(value)) {
+        showError(input, errorDiv, 'Bank name can only contain letters and spaces');
+        return false;
+    } else {
+        hideError(input, errorDiv);
+        return true;
+    }
+}
+
+function validateAccountName() {
+    const input = document.getElementById('add_account_name');
+    const errorDiv = document.getElementById('accountNameError');
+    const value = input.value.trim();
+    
+    // Allow letters, spaces, dots, hyphens, and apostrophes (for names like "John Doe", "Mary-Jane", "O'Connor")
+    const validPattern = /^[A-Za-z\s\.\'-]+$/;
+    
+    if (value.length < 3) {
+        showError(input, errorDiv, 'Account holder name must be at least 3 characters');
+        return false;
+    } else if (!validPattern.test(value)) {
+        showError(input, errorDiv, 'Name can only contain letters and spaces');
+        return false;
+    } else {
+        hideError(input, errorDiv);
+        return true;
+    }
+}
+
+function validateAccountNumber() {
+    const input = document.getElementById('add_account_number');
+    const errorDiv = document.getElementById('accountNumberError');
+    let value = input.value.replace(/\D/g, ''); // Remove non-digits
+    
+    // Update input with only digits
+    input.value = value;
+    
+    if (value.length === 0) {
+        showError(input, errorDiv, 'Account number is required');
+        return false;
+    } else if (value.length !== 10) {
+        showError(input, errorDiv, 'Account number must be exactly 10 digits');
+        return false;
+    } else {
+        hideError(input, errorDiv);
+        return true;
+    }
+}
+
+function showError(input, errorDiv, message) {
+    input.classList.add('error');
+    errorDiv.innerHTML = '<i class="ri-error-warning-line"></i> ' + message;
+    errorDiv.style.display = 'flex';
+}
+
+function hideError(input, errorDiv) {
+    input.classList.remove('error');
+    errorDiv.style.display = 'none';
+}
+
+function validateForm() {
+    const isBankValid = validateBankName();
+    const isNameValid = validateAccountName();
+    const isNumberValid = validateAccountNumber();
+    
+    if (!isBankValid || !isNameValid || !isNumberValid) {
+        // Show error message at top
+        const container = document.querySelector('.message-container');
+        const errorMsg = document.createElement('div');
+        errorMsg.className = 'alert-message alert-error';
+        errorMsg.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <i class="ri-error-warning-fill" style="font-size: 1rem; color: #f44336;"></i>
+                <span>Please fix the errors before submitting</span>
+            </div>
+            <button class="close-btn" onclick="this.parentElement.style.display='none'">&times;</button>
+        `;
+        container.insertBefore(errorMsg, container.firstChild);
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            if (errorMsg.parentNode) {
+                errorMsg.style.display = 'none';
+            }
+        }, 5000);
+        
+        return false;
+    }
+    
+    return true;
+}
+
+// Restrict input to letters only for name fields (while typing)
+document.getElementById('add_bank_name')?.addEventListener('keypress', function(e) {
+    const char = String.fromCharCode(e.which);
+    // Allow letters, spaces, dots, apostrophes, hyphens
+    if (!/[a-zA-Z\s\.\'-]/.test(char)) {
+        e.preventDefault();
+    }
+});
+
+document.getElementById('add_account_name')?.addEventListener('keypress', function(e) {
+    const char = String.fromCharCode(e.which);
+    // Allow letters, spaces, dots, apostrophes, hyphens
+    if (!/[a-zA-Z\s\.\'-]/.test(char)) {
+        e.preventDefault();
+    }
+});
+
+// Restrict input to digits only for account number (while typing)
+document.getElementById('add_account_number')?.addEventListener('keypress', function(e) {
+    const char = String.fromCharCode(e.which);
+    if (!/[0-9]/.test(char)) {
+        e.preventDefault();
+    }
+});
+
+// Auto-format: Remove non-digits on paste
+document.getElementById('add_account_number')?.addEventListener('paste', function(e) {
+    e.preventDefault();
+    const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+    const digits = pastedText.replace(/\D/g, '');
+    this.value = digits.substring(0, 10); // Limit to 10 digits
+    validateAccountNumber();
+});
+
 function toggleNumber(btn, fullNumber) {
     const container = btn.parentElement;
     if (container.innerHTML.includes('••••')) {
@@ -505,7 +666,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Auto-hide messages after 5 seconds
     document.querySelectorAll('.alert-message').forEach(msg => {
         setTimeout(() => {
-            msg.style.display = 'none';
+            if (msg.style.display !== 'none') {
+                msg.style.display = 'none';
+            }
         }, 5000);
     });
 
@@ -513,22 +676,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const addForm = document.getElementById('addForm');
     if (addForm) {
         addForm.addEventListener('submit', e => {
+            // Don't disable if validation fails
+            if (!validateForm()) {
+                e.preventDefault();
+                return;
+            }
+            
             const btn = document.getElementById('addSubmitBtn');
             btn.disabled = true;
             btn.innerHTML = '<span style="display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 8px;"></span> Saving...';
         });
     }
-
-    // Update form loading state
-    const updateForm = document.getElementById('updateForm');
-    if (updateForm) {
-        updateForm.addEventListener('submit', e => {
-            const btn = document.getElementById('updateSubmitBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<span style="display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 8px;"></span> Updating...';
-        });
-    }
 });
 </script>
+
+<style>
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
 
 {% endblock %}
