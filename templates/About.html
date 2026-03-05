@@ -31,19 +31,19 @@
     }
 
     .container{
-      max-width:600px;
-      margin:auto;
-      padding:25px 20px;
+      max-width: 95%;
+      margin: 0 auto;
+      padding: 15px 10px;
     }
 
     /* Header */
     .header{
       text-align:center;
-      margin-bottom:30px;
+      margin-bottom:20px;
     }
 
     .header h1{
-      font-size:2rem;
+      font-size:1.8rem;
       font-weight:800;
       margin:0;
       background: linear-gradient(135deg, #1d4ed8, #7e22ce);
@@ -53,8 +53,8 @@
     }
 
     .header p{
-      margin-top:8px;
-      font-size:1rem;
+      margin-top:6px;
+      font-size:0.95rem;
       color: var(--muted);
     }
 
@@ -62,27 +62,27 @@
     .card{
       background: var(--card);
       border:1px solid var(--border);
-      border-radius:24px;
-      padding:24px;
-      margin-bottom:24px;
-      box-shadow:0 8px 20px rgba(0,0,0,0.03);
+      border-radius: 18px;
+      padding: 18px 16px;
+      margin-bottom: 18px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.02);
       transition: all 0.2s ease;
     }
 
     .card:hover {
-      box-shadow:0 12px 30px rgba(29, 78, 216, 0.08);
+      box-shadow:0 8px 20px rgba(29, 78, 216, 0.06);
     }
 
     .card-title{
       font-weight:700;
-      margin-bottom:18px;
-      font-size:1.1rem;
+      margin-bottom:14px;
+      font-size:1rem;
       color: var(--primary);
       display: flex;
       align-items: center;
-      gap: 8px;
-      border-bottom: 2px solid #eef2f6;
-      padding-bottom: 12px;
+      gap: 6px;
+      border-bottom: 1.5px solid #eef2f6;
+      padding-bottom: 10px;
     }
 
     .card-title i {
@@ -90,10 +90,10 @@
     }
 
     .card p{
-      font-size:0.95rem;
+      font-size:0.9rem;
       color: #4b5563;
-      line-height:1.7;
-      margin: 0 0 16px 0;
+      line-height:1.6;
+      margin: 0 0 12px 0;
     }
 
     .card p:last-child {
@@ -105,10 +105,10 @@
       display:flex;
       justify-content:space-between;
       align-items:center;
-      padding:16px 18px;
+      padding: 14px 16px;
       border:1px solid var(--border);
-      border-radius:16px;
-      margin-bottom:12px;
+      border-radius: 14px;
+      margin-bottom:10px;
       background: #fafcff;
       transition: all 0.2s ease;
     }
@@ -116,8 +116,8 @@
     .package:hover {
       border-color: var(--primary);
       background: white;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 16px rgba(29, 78, 216, 0.08);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.06);
     }
 
     .package:last-of-type {
@@ -127,15 +127,15 @@
     .package-info {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
     }
 
     .package-name {
-      font-size:0.8rem;
+      font-size:0.75rem;
       color: var(--primary);
       font-weight:700;
       text-transform:uppercase;
-      letter-spacing:0.5px;
+      letter-spacing:0.4px;
     }
 
     .package-name.purple {
@@ -143,17 +143,17 @@
     }
 
     .package-name.gold {
-      color: #b45309;
+      color: #fcbe05;
     }
 
     .package-desc {
-      font-size:1rem;
+      font-size:0.95rem;
       font-weight:700;
       color: var(--text);
     }
 
     .package-duration {
-      font-size:0.7rem;
+      font-size:0.65rem;
       color: var(--muted);
       display: flex;
       align-items: center;
@@ -161,7 +161,7 @@
     }
 
     .package-interest {
-      font-size:1.4rem;
+      font-size:1.3rem;
       font-weight:800;
       background: linear-gradient(135deg, #1d4ed8, #2563eb);
       -webkit-background-clip: text;
@@ -176,42 +176,42 @@
     }
 
     .package-interest.gold {
-      background: linear-gradient(135deg, #b45309, #d97706);
+      background: linear-gradient(135deg,#fcbe05, #d97706);
       -webkit-background-clip: text;
       background-clip: text;
     }
 
-    /* Warning Notice - Completely Redesigned */
+    /* Warning Notice */
     .warning-container {
       background: #fff7ed;
       border: 1px solid #fed7aa;
-      border-radius: 20px;
-      padding: 20px;
-      margin: 20px 0 10px;
+      border-radius: 16px;
+      padding: 16px;
+      margin: 16px 0 8px;
     }
 
     .warning-header {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 15px;
+      gap: 8px;
+      margin-bottom: 12px;
     }
 
     .warning-icon {
-      width: 40px;
-      height: 40px;
+      width: 32px;
+      height: 32px;
       background: #f97316;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 1.2rem;
+      font-size: 1rem;
       font-weight: bold;
     }
 
     .warning-header h3 {
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 700;
       color: #9a3412;
       margin: 0;
@@ -225,10 +225,10 @@
 
     .warning-rules li {
       display: flex;
-      gap: 12px;
-      padding: 12px 0;
+      gap: 10px;
+      padding: 10px 0;
       border-bottom: 1px solid #fed7aa;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: #7b341e;
     }
 
@@ -237,12 +237,12 @@
     }
 
     .rule-bullet {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       background: #f97316;
       border-radius: 50%;
       color: white;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       font-weight: bold;
       display: flex;
       align-items: center;
@@ -264,110 +264,110 @@
       display: inline-block;
       background: #dc2626;
       color: white;
-      padding: 3px 10px;
-      border-radius: 40px;
-      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 30px;
+      font-size: 0.65rem;
       font-weight: 700;
-      margin-left: 8px;
+      margin-left: 6px;
     }
 
     .example-box {
       background: white;
-      border-radius: 14px;
-      padding: 16px;
-      margin-top: 16px;
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 14px;
       border: 1px solid #fed7aa;
     }
 
     .example-title {
       font-weight: 700;
       color: #9a3412;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 0.9rem;
+      gap: 5px;
+      font-size: 0.85rem;
     }
 
     .example-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
     }
 
     .example-item {
       background: #fff7ed;
-      padding: 12px;
-      border-radius: 12px;
+      padding: 10px;
+      border-radius: 10px;
       text-align: center;
     }
 
     .example-amount {
       font-weight: 800;
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: #9a3412;
     }
 
     .example-total {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: #7b341e;
-      margin-top: 4px;
+      margin-top: 3px;
     }
 
-    /* Single Purchase Button */
+    /* Purchase Button */
     .purchase-section {
-      margin-top: 30px;
+      margin-top: 20px;
       text-align: center;
     }
 
     .purchase-button {
       display: inline-block;
-      padding: 16px 32px;
+      padding: 14px 16px;
       background: linear-gradient(135deg, #1d4ed8, #7e22ce);
       color: white;
       font-weight: 700;
-      font-size: 1.1rem;
+      font-size: 0.95rem;
       text-decoration: none;
-      border-radius: 60px;
-      box-shadow: 0 8px 20px rgba(29, 78, 216, 0.3);
+      border-radius: 50px;
+      box-shadow: 0 6px 16px rgba(29, 78, 216, 0.25);
       transition: all 0.3s ease;
       border: none;
       width: 100%;
-      max-width: 350px;
+      max-width: 320px;
       letter-spacing: 0.3px;
     }
 
     .purchase-button:hover {
       background: linear-gradient(135deg, #1e3a8a, #6b21a5);
-      transform: translateY(-3px);
-      box-shadow: 0 12px 28px rgba(29, 78, 216, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(29, 78, 216, 0.35);
     }
 
     .purchase-button span {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      gap: 8px;
     }
 
     /* Plan Comparison Note */
     .comparison-note {
-      margin-top: 25px;
-      padding-top: 20px;
-      border-top: 2px dashed #e2e8f0;
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1.5px dashed #e2e8f0;
       text-align: center;
     }
 
     .max-badge {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       background: linear-gradient(135deg, #f3e8ff, #ede9fe);
       color: #6b21a5;
-      padding: 10px 20px;
-      border-radius: 50px;
+      padding: 8px 16px;
+      border-radius: 40px;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       border: 1px solid #d8b4fe;
     }
 
@@ -381,23 +381,9 @@
       background: linear-gradient(135deg, #f8fafc, #f1f5f9);
     }
 
-    .contact-info {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 16px;
-      color: #475569;
-      font-size: 0.9rem;
-    }
-
-    .contact-info i {
-      color: var(--primary);
-    }
-
     .contact-btn {
       display: inline-block;
-      padding: 12px 28px;
+      padding: 10px 24px;
       background: var(--primary);
       color: white;
       font-weight: 600;
@@ -405,35 +391,40 @@
       border-radius: 40px;
       transition: all 0.2s ease;
       border: none;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
 
     .contact-btn:hover {
       background: #1e3a8a;
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(29, 78, 216, 0.2);
+      box-shadow: 0 5px 12px rgba(29, 78, 216, 0.2);
       color: white;
     }
 
     @media (max-width: 480px) {
       .container {
-        padding: 20px 15px;
+        max-width: 100%;
+        padding: 12px 8px;
       }
       
       .header h1 {
-        font-size: 1.7rem;
+        font-size: 1.5rem;
       }
       
       .package {
-        padding: 14px;
+        padding: 12px;
       }
       
       .package-interest {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
       }
       
       .example-grid {
         grid-template-columns: 1fr;
+      }
+      
+      .purchase-button {
+        max-width: 100%;
       }
     }
   </style>
@@ -445,7 +436,7 @@
     <!-- Header -->
     <div class="header">
       <h1>Blengo Yearly Savings</h1>
-      <p>Save consistently and earn up to 40% interest annually</p>
+      <p>Save consistently and earn up to 25% to 40% interest annually</p>
     </div>
 
     <!-- About Section -->
@@ -463,7 +454,7 @@
         <strong>one-time MAX Plan</strong> that pays 40% interest after 12 months — no monthly contributions required.
       </p>
       
-    <!-- COMPLETELY REDESIGNED WARNING SECTION -->
+    <!-- WARNING SECTION -->
 <div class="warning-container">
   <div class="warning-header">
     <div class="warning-icon">⚠️</div>
@@ -481,56 +472,67 @@
       <span class="rule-bullet">2</span>
       <span class="rule-content">
         <strong>Separate Receipts Required:</strong> Each monthly payment must be uploaded separately with its own receipt. 
-        <span class="fine-badge">₦5,000 fine for non-compliance</span>
+        <span class="fine-badge">₦5,000 fine</span>
       </span>
     </li>
     <li>
       <span class="rule-bullet">3</span>
       <span class="rule-content">
-        <strong>No Bulk Payments:</strong> Even if you pay multiple months at once, you must make <strong>separate payments of your chosen amount</strong> and upload receipts individually.
+        <strong>No Bulk Payments:</strong> Even if you pay multiple months at once, you must make <strong>separate payments</strong> and upload receipts individually.
       </span>
     </li>
     <li>
       <span class="rule-bullet">4</span>
       <span class="rule-content">
-        <strong>No Missed Payments Allowed:</strong> Missing a monthly payment will attract a <strong>₦5,000 fine</strong>. Consistent payment is required to qualify for full interest at maturity.
+        <strong>No Missed Payments Allowed:</strong> Missing a monthly payment will attract a <strong>₦5,000 fine</strong> per missed month.
         <span class="fine-badge">₦5,000 fine per missed month</span>
       </span>
     </li>
   </ul>
-
-  <!-- Clear Examples -->
-  <div class="example-box">
-    <div class="example-title">
-      <i class="fas fa-calculator"></i> Clear Examples:
+  
+<!-- Clear Examples -->
+<div class="example-box">
+  <div class="example-title">
+    <i class="fas fa-calculator"></i> Clear Examples:
+  </div>
+  <div class="example-grid">
+    <!-- Monthly Plans (25%) -->
+    <div class="example-item">
+      <div class="example-amount">₦10,000/month</div>
+      <div class="example-total">Total saved: ₦120,000</div>
+      <div style="font-size:0.75rem; color:#0f9d58; font-weight:600; margin-top:4px;">Payout: ₦150,000 (25%)</div>
+      <div style="font-size:0.65rem; color:#9a3412; margin-top:4px;">12 months • 12 receipts</div>
     </div>
-    <div class="example-grid">
-      <div class="example-item">
-        <div class="example-amount">₦10,000/month</div>
-        <div class="example-total">Total: ₦120,000/year</div>
-        <div style="font-size:0.7rem; color:#9a3412; margin-top:6px;">12 separate receipts</div>
-      </div>
-      <div class="example-item">
-        <div class="example-amount">₦20,000/month</div>
-        <div class="example-total">Total: ₦240,000/year</div>
-        <div style="font-size:0.7rem; color:#9a3412; margin-top:6px;">12 separate receipts</div>
-      </div>
-      <div class="example-item">
-        <div class="example-amount">₦30,000/month</div>
-        <div class="example-total">Total: ₦360,000/year</div>
-        <div style="font-size:0.7rem; color:#9a3412; margin-top:6px;">12 separate receipts</div>
-      </div>
-      <div class="example-item">
-        <div class="example-amount">₦50,000/month</div>
-        <div class="example-total">Total: ₦600,000/year</div>
-        <div style="font-size:0.7rem; color:#9a3412; margin-top:6px;">12 separate receipts</div>
-      </div>
+    
+    <div class="example-item">
+      <div class="example-amount">₦50,000/month</div>
+      <div class="example-total">Total saved: ₦600,000</div>
+      <div style="font-size:0.75rem; color:#0f9d58; font-weight:600; margin-top:4px;">Payout: ₦750,000 (25%)</div>
+      <div style="font-size:0.65rem; color:#9a3412; margin-top:4px;">12 months • 12 receipts</div>
     </div>
-    <p style="font-size:0.8rem; color:#9a3412; margin-top:12px; text-align:center;">
-      <i class="fas fa-exclamation-triangle"></i> 
-      <strong>Example:</strong> If you choose ₦10,000/month, you must make 12 separate payments of ₦10,000 each and upload 12 receipts — even if you pay early.
-    </p>
-   
+    
+    <!-- Plus Plan (30%) -->
+    <div class="example-item">
+      <div class="example-amount">₦100,000/month</div>
+      <div class="example-total">Total saved: ₦1,200,000</div>
+      <div style="font-size:0.75rem; color:#b45309; font-weight:600; margin-top:4px;">Payout: ₦1,560,000 (30%)</div>
+      <div style="font-size:0.65rem; color:#9a3412; margin-top:4px;">12 months • 12 receipts</div>
+    </div>
+    
+    <div class="example-item">
+      <div class="example-amount">₦500,000/month</div>
+      <div class="example-total">Total saved: ₦6,000,000</div>
+      <div style="font-size:0.75rem; color:#b45309; font-weight:600; margin-top:4px;">Payout: ₦7,800,000 (30%)</div>
+      <div style="font-size:0.65rem; color:#9a3412; margin-top:4px;">12 months • 12 receipts</div>
+    </div>
+    
+    <!-- MAX Plan (40%) -->
+    <div class="example-item">
+      <div class="example-amount">₦1,000,000 one-time</div>
+      <div class="example-total">Total invested: ₦1,000,000</div>
+      <div style="font-size:0.75rem; color:#7e22ce; font-weight:600; margin-top:4px;">Payout: ₦1,400,000 (40%)</div>
+      <div style="font-size:0.65rem; color:#9a3412; margin-top:4px;">One-time • No monthly receipts</div>
+    </div>
   </div>
 </div>
 
@@ -540,37 +542,37 @@
         <i class="fas fa-gem"></i> SAVINGS PACKAGES
       </div>
 
-      <!-- BASIC PLAN - 25% -->
+      <!-- BASIC PLAN -->
       <div class="package">
         <div class="package-info">
           <span class="package-name">🔵 BASIC PLAN</span>
           <span class="package-desc">₦10,000 – ₦50,000 monthly</span>
           <span class="package-duration">
-            <i class="far fa-calendar-alt"></i> 12 months duration
+            <i class="far fa-calendar-alt"></i> 12 months
           </span>
         </div>
         <span class="package-interest">25%</span>
       </div>
 
-      <!-- PLUS PLAN - 30% -->
+      <!-- PLUS PLAN -->
       <div class="package">
         <div class="package-info">
           <span class="package-name gold">✨ PLUS PLAN</span>
-          <span class="package-desc">₦100,000+ monthly</span>
+          <span class="package-desc">₦100,000 and above monthly</span>
           <span class="package-duration">
-            <i class="far fa-calendar-alt"></i> 12 months duration
+            <i class="far fa-calendar-alt"></i> 12 months
           </span>
         </div>
         <span class="package-interest gold">30%</span>
       </div>
 
-      <!-- MAX PLAN - 40% (One-time) -->
+      <!-- MAX PLAN -->
       <div class="package">
         <div class="package-info">
           <span class="package-name purple">💎 MAX PLAN</span>
-          <span class="package-desc">₦1,000,000+ one-time investment</span>
+          <span class="package-desc">₦1,000,000+ one-time</span>
           <span class="package-duration">
-            <i class="far fa-calendar-alt"></i> 12 months lock-in • 40% guaranteed
+            <i class="far fa-calendar-alt"></i> 12 months • 40%
           </span>
         </div>
         <span class="package-interest purple">40%</span>
@@ -584,8 +586,8 @@
             <i class="fas fa-arrow-right"></i>
           </span>
         </a>
-        <p style="font-size:0.8rem; color:var(--muted); margin-top:14px;">
-          👆 Click to select your preferred plan and start saving
+        <p style="font-size:0.75rem; color:var(--muted); margin-top:10px;">
+          👆 Click to select your plan and start saving
         </p>
       </div>
 
@@ -593,7 +595,7 @@
       <div class="comparison-note">
         <span class="max-badge">
           <i class="fas fa-crown"></i>
-          MAX Plan: One-time payment • No monthly commitments • 40% guaranteed
+          MAX Plan: One-time • 40% guaranteed
           <i class="fas fa-check-circle"></i>
         </span>
       </div>
@@ -601,8 +603,7 @@
 
     <!-- Contact Section -->
     <div class="card contact-card">
-      
-      <p style="color:#475569; margin: 16px 0;">For more enquiries, contact us directly:</p>
+      <p style="color:#475569; margin: 10px 0;">For more enquiries, contact us directly:</p>
       <a href="{% url 'contact' %}" class="contact-btn">
         <i class="fas fa-headset me-2"></i> CONTACT US
       </a>
