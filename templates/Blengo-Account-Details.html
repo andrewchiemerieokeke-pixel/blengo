@@ -42,37 +42,48 @@
         border-radius: 14px;
         border: 1px solid #dde3ed;
         margin: 25px 0;
-        font-size: 1.2rem;
     }
 
-    .account-details p {
-        margin: 12px 0;
-        display: flex;
-        align-items: baseline;
-        flex-wrap: wrap;
+    .detail-item {
+        margin-bottom: 20px;
+    }
+
+    .detail-item:last-child {
+        margin-bottom: 0;
     }
 
     .detail-label {
         font-weight: 600;
         color: #1e3a5f;
-        min-width: 130px;
-        font-size: 1.0rem;
+        font-size: 0.95rem;
+        margin-bottom: 6px;
+        display: block;
     }
 
     .detail-value {
         color: #0b1c2f;
         background: #f2f5fb;
-        padding: 1px 30px;
+        padding: 10px 20px;
         border-radius: 30px;
         font-family: 'Courier New', monospace;
         font-weight: bold;
-        word-break: break-word;
-        font-size: 15px;
+        font-size: 1.1rem;
+        display: inline-block;
+        border: 1px solid #dde3ed;
     }
 
     .contact-link {
         margin-top: 25px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .contact-link p {
+        margin: 0;
         font-size: 1.1rem;
+        color: #2d3a4c;
     }
 
     .contact-link a {
@@ -106,26 +117,29 @@
     <h4>🏦 Blengo Account Details</h4>
 
     <div class="warning-note">
-        ⚠️ <strong>This website is the ONLY official source for Blengo account details</strong> We will never send you an email or message requesting payment to a different account. If you receive such a message, it is a scam. Please ignore it and contact us immediately.
+        ⚠️ <strong>This website is the ONLY official source for Blengo account details.</strong> We will never send you an email or message requesting payment to a different account. If you receive such a message, it is a scam. Please ignore it and contact us immediately.
     </div>
 
     <div class="account-details">
-        <p>
-            <span class="detail-label">Account number:</span>
-            <span class="detail-value">5601668588</span>
-        </p>
-        <p>
-            <span class="detail-label">Bank name:</span>
-            <span class="detail-value">Fidelity Bank</span>
-        </p>
-        <p>
-            <span class="detail-label">Account name:</span>
-            <span class="detail-value">Blengo Bee Enterprise</span>
-        </p>
+        <div class="detail-item">
+            <div class="detail-label">Account number:</div>
+            <div class="detail-value">5601668588</div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label">Bank name:</div>
+            <div class="detail-value">Fidelity Bank</div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label">Account name:</div>
+            <div class="detail-value">Blengo Bee Enterprise</div>
+        </div>
     </div>
 
     <div class="contact-link">
-        <p>📧 Any enquiries ??</p><a href="{% url 'contact' %}">contact us</a>
+        <p>📧 Any enquiries?</p>
+        <a href="{% url 'contact' %}">Contact us</a>
     </div>
 
     <small>Always verify details on this official page only.</small>
