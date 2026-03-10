@@ -250,10 +250,12 @@
         align-items: center;
         gap: 8px;
     }
-.status-confirmed {
-    background: rgba(76, 175, 80, 0.9);
-    color: white;
-}
+    
+    .status-confirmed {
+        background: rgba(76, 175, 80, 0.9);
+        color: white;
+    }
+    
     .upload-title i {
         font-size: 1.1rem;
     }
@@ -324,6 +326,27 @@
         opacity: 0.7;
         cursor: not-allowed;
         transform: none;
+    }
+
+    /* Selected file name display */
+    .selected-file {
+        margin-top: 10px;
+        padding: 8px 12px;
+        background: rgba(0, 119, 255, 0.05);
+        border-radius: 8px;
+        font-size: 0.8rem;
+        color: var(--accent-blue);
+        display: none;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .selected-file i {
+        font-size: 0.9rem;
+    }
+    
+    .selected-file.show {
+        display: flex;
     }
 
     /* Deleted Image Placeholder */
@@ -672,13 +695,19 @@
             <form method="POST" enctype="multipart/form-data" id="uploadForm" action="{% url 'purchase_detail' purchase.purchase_id %}">
                 {% csrf_token %}
                 
-                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                <div class="upload-area" id="uploadArea">
                     <i class="fas fa-cloud-upload-alt"></i>
                     <h5>Click to upload</h5>
                     <p>PNG, JPG, JPEG (max 5MB)</p>
                 </div>
                 
-                <input type="file" id="fileInput" name="payment_image" class="file-input" accept="image/*" required>
+                <input type="file" id="fileInput" name="payment_image" class="file-input" accept="image/*">
+                
+                <!-- Selected file name display -->
+                <div class="selected-file" id="selectedFile">
+                    <i class="fas fa-check-circle"></i>
+                    <span id="fileName"></span>
+                </div>
                 
                 <div style="display: flex; justify-content: flex-end;">
                     <button type="submit" class="upload-btn" id="submitBtn">
@@ -690,44 +719,43 @@
         {% endif %}
 
         <!-- Uploaded Images -->
-        <!-- Uploaded Images -->
-{% if purchase.payment_images.all %}
-<div>
-    <h5 class="images-title">
-        <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
-        Uploaded proofs ({{ purchase.payment_images.count }})
-    </h5>
-    
-    <div class="images-grid">
-        {% for image in purchase.payment_images.all %}
-        <div class="image-item">
-            {% if image.image %}
-                <img src="{{ image.image.url }}" alt="Payment proof" onclick="openImageModal('{{ image.image.url }}')">
-            {% else %}
-                <div class="deleted-image-placeholder">
-                    <i class="fas fa-thumbs-up" style="color: #4CAF50; font-size: 2.5rem;"></i>
-                    <span style="color: #4CAF50; font-weight: 600;">Confirmed</span>
-                </div>
-            {% endif %}
+        {% if purchase.payment_images.all %}
+        <div>
+            <h5 class="images-title">
+                <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                Uploaded proofs ({{ purchase.payment_images.count }})
+            </h5>
             
-            <div class="image-status 
-                {% if not image.image %}status-confirmed
-                {% elif image.is_approved %}status-approved
-                {% else %}status-pending{% endif %}">
-                
-                {% if not image.image %}
-                    <i class="fas fa-thumbs-up"></i> Confirmed
-                {% elif image.is_approved %}
-                    <i class="fas fa-check-circle"></i> Approved
-                {% else %}
-                    <i class="fas fa-clock"></i> Pending
-                {% endif %}
+            <div class="images-grid">
+                {% for image in purchase.payment_images.all %}
+                <div class="image-item">
+                    {% if image.image %}
+                        <img src="{{ image.image.url }}" alt="Payment proof" onclick="openImageModal('{{ image.image.url }}')">
+                    {% else %}
+                        <div class="deleted-image-placeholder">
+                            <i class="fas fa-thumbs-up" style="color: #4CAF50; font-size: 2.5rem;"></i>
+                            <span style="color: #4CAF50; font-weight: 600;">Confirmed</span>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="image-status 
+                        {% if not image.image %}status-confirmed
+                        {% elif image.is_approved %}status-approved
+                        {% else %}status-pending{% endif %}">
+                        
+                        {% if not image.image %}
+                            <i class="fas fa-thumbs-up"></i> Confirmed
+                        {% elif image.is_approved %}
+                            <i class="fas fa-check-circle"></i> Approved
+                        {% else %}
+                            <i class="fas fa-clock"></i> Pending
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
             </div>
         </div>
-        {% endfor %}
-    </div>
-</div>
-{% endif %}
+        {% endif %}
 
         <!-- Plan Requirements -->
         <div class="requirements-list">
@@ -786,23 +814,63 @@
         const form = document.getElementById('uploadForm');
         const submitBtn = document.getElementById('submitBtn');
         const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const selectedFileDiv = document.getElementById('selectedFile');
+        const fileNameSpan = document.getElementById('fileName');
         
-        // FIXED: Prevent duplicate submissions and page refresh resubmission
-        if (form) {
-            // Prevent default form submission on page refresh/back button
-            if (window.performance) {
-                if (performance.navigation.type === 1 || performance.getEntriesByType('navigation')[0]?.type === 'reload') {
-                    console.log('Page was refreshed - clearing form state');
-                    form.reset();
-                    formSubmitted = false;
-                    if (submitBtn) {
-                        submitBtn.innerHTML = '<i class="fas fa-upload"></i> Upload';
-                        submitBtn.disabled = false;
+        // Handle upload area click - trigger file input
+        if (uploadArea && fileInput) {
+            uploadArea.addEventListener('click', function(e) {
+                e.preventDefault();
+                fileInput.click();
+            });
+        }
+        
+        // Handle file selection
+        if (fileInput) {
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files.length > 0) {
+                    const file = this.files[0];
+                    console.log('Selected:', file.name);
+                    
+                    // Validate file size (max 5MB)
+                    const fileSize = file.size / 1024 / 1024;
+                    if (fileSize > 5) {
+                        alert('File size exceeds 5MB limit. Please choose a smaller file.');
+                        this.value = ''; // Clear the input
+                        if (selectedFileDiv) {
+                            selectedFileDiv.classList.remove('show');
+                        }
+                        return;
+                    }
+                    
+                    // Validate file type
+                    const fileType = file.type;
+                    if (!['image/jpeg', 'image/png', 'image/jpg'].includes(fileType)) {
+                        alert('Please select a valid image file (PNG, JPG, JPEG).');
+                        this.value = ''; // Clear the input
+                        if (selectedFileDiv) {
+                            selectedFileDiv.classList.remove('show');
+                        }
+                        return;
+                    }
+                    
+                    // Show selected file name
+                    if (selectedFileDiv && fileNameSpan) {
+                        fileNameSpan.textContent = file.name;
+                        selectedFileDiv.classList.add('show');
+                    }
+                } else {
+                    // No file selected
+                    if (selectedFileDiv) {
+                        selectedFileDiv.classList.remove('show');
                     }
                 }
-            }
-            
-            // FIXED: Use POST/Redirect/GET pattern to prevent duplicate submissions
+            });
+        }
+        
+        // Handle form submission
+        if (form) {
             form.addEventListener('submit', function(e) {
                 // Prevent double submission
                 if (formSubmitted) {
@@ -812,25 +880,33 @@
                 }
                 
                 // Check if file is selected
-                if (!fileInput.files.length) {
+                if (!fileInput || !fileInput.files.length) {
                     e.preventDefault();
                     alert('Please select an image to upload.');
                     return false;
                 }
                 
-                // Validate file size (max 5MB)
-                const fileSize = fileInput.files[0].size / 1024 / 1024; // in MB
+                // Double-check file validation before submission
+                const file = fileInput.files[0];
+                const fileSize = file.size / 1024 / 1024;
                 if (fileSize > 5) {
                     e.preventDefault();
                     alert('File size exceeds 5MB limit. Please choose a smaller file.');
+                    fileInput.value = ''; // Clear the input
+                    if (selectedFileDiv) {
+                        selectedFileDiv.classList.remove('show');
+                    }
                     return false;
                 }
                 
-                // Validate file type
-                const fileType = fileInput.files[0].type;
+                const fileType = file.type;
                 if (!['image/jpeg', 'image/png', 'image/jpg'].includes(fileType)) {
                     e.preventDefault();
                     alert('Please select a valid image file (PNG, JPG, JPEG).');
+                    fileInput.value = ''; // Clear the input
+                    if (selectedFileDiv) {
+                        selectedFileDiv.classList.remove('show');
+                    }
                     return false;
                 }
                 
@@ -838,40 +914,20 @@
                 formSubmitted = true;
                 
                 // Disable button and show loading state
-                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" style="width: 0.8rem; height: 0.8rem;"></span> Uploading...';
-                submitBtn.disabled = true;
-                
-                // FIXED: Clear the file input to prevent re-upload on refresh
-                // We do this after setting the flag but before form submission
-                setTimeout(function() {
-                    if (fileInput) {
-                        fileInput.value = ''; // Clear the file input
-                    }
-                }, 100);
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" style="width: 0.8rem; height: 0.8rem;"></span> Uploading...';
+                    submitBtn.disabled = true;
+                }
                 
                 // Allow form to submit normally
                 return true;
             });
         }
         
-        if (fileInput) {
-            fileInput.addEventListener('change', function() {
-                if (this.files.length) {
-                    console.log('Selected:', this.files[0].name);
-                    // Validate file size on select
-                    const fileSize = this.files[0].size / 1024 / 1024;
-                    if (fileSize > 5) {
-                        alert('File size exceeds 5MB limit. Please choose a smaller file.');
-                        this.value = ''; // Clear the input
-                    }
-                }
-            });
-        }
-        
-        // FIXED: Handle page navigation and back button
+        // Handle page navigation and back button
         window.addEventListener('pageshow', function(event) {
             // Check if the page is loaded from cache (back/forward navigation)
-            if (event.persisted || (window.performance && performance.navigation.type === 2)) {
+            if (event.persisted) {
                 console.log('Page loaded from cache - resetting form state');
                 formSubmitted = false;
                 if (form) {
@@ -884,12 +940,14 @@
                 if (fileInput) {
                     fileInput.value = '';
                 }
+                if (selectedFileDiv) {
+                    selectedFileDiv.classList.remove('show');
+                }
             }
         });
         
-        // FIXED: Handle beforeunload to clean up
+        // Handle beforeunload to clean up
         window.addEventListener('beforeunload', function() {
-            // Reset the submitted flag when leaving the page
             formSubmitted = false;
         });
     });
