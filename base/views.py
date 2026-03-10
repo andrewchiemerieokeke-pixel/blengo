@@ -924,45 +924,39 @@ def my_purchases(request):
 import io
 
 from PIL import Image
+
 ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif']
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
+
 def validate_payment_image(file):
-    """Simple but effective file validation using PIL"""
+    """Robust image validator for screenshots and camera photos"""
     
-    # 1. CHECK FILE SIZE
+    # 1. Check file size
     if file.size > MAX_FILE_SIZE:
-        raise ValidationError(f'File too large. Max size: {MAX_FILE_SIZE // (1024 * 1024)}MB')
+        raise ValidationError(f"File too large. Max size: {MAX_FILE_SIZE // (1024*1024)}MB")
     
-    # 2. CHECK FILE EXTENSION
+    # 2. Check extension
     ext = os.path.splitext(file.name)[1].lower()
     if ext not in ALLOWED_EXTENSIONS:
-        raise ValidationError(f'Invalid file type. Allowed: {", ".join(ALLOWED_EXTENSIONS)}')
+        raise ValidationError(f"Invalid file type. Allowed: {', '.join(ALLOWED_EXTENSIONS)}")
     
-    # 3. CHECK IF ACTUALLY AN IMAGE USING PILLOW
+    # 3. Check if actually an image using PIL
     try:
-        # Save current position
-        current_position = file.tell()
-        file.seek(0)
+        img = Image.open(file)
         
-        # Read and verify
-        img = Image.open(io.BytesIO(file.read()))
-        img.verify()  # Verify it's a valid image
+        # Convert screenshots with alpha channel to RGB
+        if img.mode not in ("RGB", "L"):
+            img = img.convert("RGB")
         
-        # Restore file pointer to beginning
+        img.load()  # Actually load the image, safer than verify()
+        file.seek(0)  # Reset file pointer for Cloudinary
+    except Exception:
         file.seek(0)
-    except Exception as e:
-        # Restore file pointer even on error
-        file.seek(0)
-        raise ValidationError('File is not a valid image')
-    
-    # 4. PREVENT DOUBLE EXTENSIONS
-    if file.name.count('.') > 1:
-        raise ValidationError('Invalid filename format')
+        raise ValidationError("File is not a valid image")
     
     return True
 
-from django.utils import timezone
-from datetime import timedelta
+
 @login_required(login_url='sign-in')
 def purchase_detail(request, purchase_id):
     """Display specific purchase and allow payment image uploads"""
@@ -973,11 +967,8 @@ def purchase_detail(request, purchase_id):
         user=request.user
     )
     
-    # ========== 🎯 ADD PAYOUT DATE CALCULATION ==========
     # Calculate payout date (365 days after purchase)
     purchase.payout_date = purchase.purchased_at + timedelta(days=365)
-    
-    # You can also calculate additional useful dates
     today = timezone.now()
     days_until_payout = (purchase.payout_date - today).days if purchase.payout_date > today else 0
     is_eligible_for_payout = today >= purchase.payout_date
@@ -986,17 +977,16 @@ def purchase_detail(request, purchase_id):
         
         image = request.FILES['payment_image']
         
-        # ========== 🔐 CRITICAL SECURITY CHECK ==========
+        # ========= Validate the uploaded image =========
         try:
             validate_payment_image(image)
         except ValidationError as e:
             messages.error(request, str(e))
             return redirect("purchase_detail", purchase_id=purchase.purchase_id)
         
-        # Check max uploads
+        # Check max allowed images for this purchase
         current_images = purchase.payment_images.count()
         max_images = purchase.thrift.max_images if hasattr(purchase, 'thrift') else 5
-        
         if current_images >= max_images:
             messages.error(
                 request,
@@ -1004,17 +994,17 @@ def purchase_detail(request, purchase_id):
             )
             return redirect("purchase_detail", purchase_id=purchase.purchase_id)
         
+        # ========= Save image to Cloudinary =========
         try:
-            # IMPORTANT: Reset file pointer to beginning before saving
+            # Ensure file pointer is at start
             image.seek(0)
             
-            # Save image to Cloudinary
             payment_image = PaymentImage.objects.create(
                 purchase=purchase,
-                image=image  # CloudinaryField handles the upload automatically
+                image=image  # CloudinaryField handles the upload
             )
             
-            # Update status if needed
+            # Update purchase status if needed
             if purchase.plan_type == 'max' and current_images == 0:
                 purchase.status = 'awaiting_approval'
                 purchase.save()
@@ -1027,9 +1017,8 @@ def purchase_detail(request, purchase_id):
                     request,
                     f"Payment proof uploaded! {current_images + 1}/{max_images} images uploaded."
                 )
-                
+            
         except Exception as e:
-            # Log the error for debugging
             import logging
             logger = logging.getLogger(__name__)
             logger.error(f"Cloudinary upload failed for user {request.user.id}: {str(e)}")
@@ -1044,7 +1033,6 @@ def purchase_detail(request, purchase_id):
     
     return render(request, "purchase-detail.html", {
         "purchase": purchase,
-        # ========== 🎯 PASS PAYOUT INFO TO TEMPLATE ==========
         "payout_date": purchase.payout_date,
         "days_until_payout": days_until_payout,
         "is_eligible_for_payout": is_eligible_for_payout,
