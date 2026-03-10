@@ -940,11 +940,19 @@ def validate_payment_image(file):
     
     # 3. CHECK IF ACTUALLY AN IMAGE USING PILLOW
     try:
+        # Save current position
+        current_position = file.tell()
         file.seek(0)
+        
+        # Read and verify
         img = Image.open(io.BytesIO(file.read()))
         img.verify()  # Verify it's a valid image
+        
+        # Restore file pointer to beginning
         file.seek(0)
-    except Exception:
+    except Exception as e:
+        # Restore file pointer even on error
+        file.seek(0)
         raise ValidationError('File is not a valid image')
     
     # 4. PREVENT DOUBLE EXTENSIONS
@@ -955,7 +963,6 @@ def validate_payment_image(file):
 
 from django.utils import timezone
 from datetime import timedelta
-
 @login_required(login_url='sign-in')
 def purchase_detail(request, purchase_id):
     """Display specific purchase and allow payment image uploads"""
@@ -997,25 +1004,41 @@ def purchase_detail(request, purchase_id):
             )
             return redirect("purchase_detail", purchase_id=purchase.purchase_id)
         
-        # Save image - YOUR MODEL HANDLES FILENAME
-        payment_image = PaymentImage.objects.create(
-            purchase=purchase,
-            image=image
-        )
-        
-        # Update status if needed
-        if purchase.plan_type == 'max' and current_images == 0:
-            purchase.status = 'awaiting_approval'
-            purchase.save()
-            messages.success(
-                request,
-                "Payment proof uploaded successfully! Awaiting approval."
+        try:
+            # IMPORTANT: Reset file pointer to beginning before saving
+            image.seek(0)
+            
+            # Save image to Cloudinary
+            payment_image = PaymentImage.objects.create(
+                purchase=purchase,
+                image=image  # CloudinaryField handles the upload automatically
             )
-        else:
-            messages.success(
+            
+            # Update status if needed
+            if purchase.plan_type == 'max' and current_images == 0:
+                purchase.status = 'awaiting_approval'
+                purchase.save()
+                messages.success(
+                    request,
+                    "Payment proof uploaded successfully! Awaiting approval."
+                )
+            else:
+                messages.success(
+                    request,
+                    f"Payment proof uploaded! {current_images + 1}/{max_images} images uploaded."
+                )
+                
+        except Exception as e:
+            # Log the error for debugging
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Cloudinary upload failed for user {request.user.id}: {str(e)}")
+            
+            messages.error(
                 request,
-                f"Payment proof uploaded! {current_images + 1}/{max_images} images uploaded."
+                "Upload failed. Please try again with a different file."
             )
+            return redirect("purchase_detail", purchase_id=purchase.purchase_id)
         
         return redirect("purchase_detail", purchase_id=purchase.purchase_id)
     
