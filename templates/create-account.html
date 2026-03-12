@@ -4,31 +4,31 @@
 {% block title %}Sign In - Blengos{% endblock %}
 
 {% block content %}
-<div class="min-vh-100 d-flex align-items-center justify-content-center py-3 py-sm-5">
-    <div class="container px-3 px-sm-4">
-        <div class="row justify-content-center">
+<div class="min-vh-100 d-flex justify-content-center" style="margin-top:20px;">
+    <div class="container px-3 px-sm-4" style="margin-top:0;">
+        <div class="row justify-content-center" style="margin-top:0;">
             <div class="col-12 col-sm-10 col-md-8 col-lg-5">
                 <!-- Main Card -->
                 <div class="card border-0 shadow-lg rounded-4 overflow-hidden mx-2 mx-sm-0">
+                    
                     <!-- Google Logo Section -->
-                    <div class="text-center pt-4 pt-sm-5 pb-3 pb-sm-4 bg-white">
-                        <!-- Large Google Logo - Responsive sizing -->
-                        <div class="mb-3 mb-sm-4">
-                            <svg width="60" height="60" viewBox="0 0 48 48" class="mw-100" style="width: auto; max-height: 70px;" xmlns="http://www.w3.org/2000/svg">
-                                <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" />
-                                <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z" />
-                                <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z" />
-                                <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z" />
+                    <div class="text-center py-3 bg-white">
+                        <div class="mb-2">
+                            <!-- Google Logo -->
+                            <svg width="60" height="60" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+                                <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                                <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+                                <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
                             </svg>
                         </div>
-                        
-                        <h2 class="h5 h4-sm fw-bold text-dark px-3">Welcome to Blengos</h2>
-                        <p class="text-muted small px-3">Sign in with your Google account</p>
+                        <h2 class="h5 fw-bold text-dark">Welcome to Blengos</h2>
+                        <p class="text-muted small">Sign in with your Google account</p>
                     </div>
 
                     <!-- Sign In Section -->
-                    <div class="card-body px-4 px-sm-5 py-4 bg-light">
-                        <!-- Messages/Errors - Mobile optimized -->
+                    <div class="card-body px-4 px-sm-5 py-3 bg-light">
+                        <!-- Messages -->
                         {% if messages %}
                             {% for message in messages %}
                                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-3 small py-2" role="alert">
@@ -37,7 +37,6 @@
                                 </div>
                             {% endfor %}
                         {% endif %}
-
                         {% if form.errors %}
                             <div class="alert alert-danger alert-dismissible fade show rounded-3 small py-2" role="alert">
                                 <i class="bi bi-exclamation-triangle-fill me-2"></i>
@@ -46,76 +45,61 @@
                             </div>
                         {% endif %}
 
-                        <!-- Google Sign In Button - Disabled until terms accepted -->
-                        <div class="text-center">
+                        <!-- Google Sign In Button -->
+                        <div class="text-center mb-3">
                             <button id="googleSignInBtn"
-                                    class="btn btn-light border-0 shadow-sm w-100 py-3 py-sm-3 rounded-3 d-flex align-items-center justify-content-center"
-                                    style="background: white; transition: all 0.3s ease; border: 1px solid #ddd !important; min-height: 56px; opacity: 0.6; cursor: not-allowed;"
+                                    class="btn btn-light border-0 shadow-sm w-100 py-3 rounded-3 d-flex align-items-center justify-content-center"
+                                    style="background:white; min-height:56px; opacity:0.6; cursor:not-allowed;"
                                     disabled>
-                                <!-- Google G Logo -->
                                 <svg width="24" height="24" viewBox="0 0 24 24" class="me-3 flex-shrink-0">
-                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                                 </svg>
                                 <span class="fw-semibold text-dark">Sign in with Google</span>
                             </button>
-                            
-                            <!-- Hidden actual link that gets enabled -->
                             <a id="googleSignInLink" href="{% provider_login_url 'google' %}?next=/" class="d-none"></a>
                         </div>
 
                         <!-- Terms message -->
-                        <div id="termsMessage" class="text-center mt-2 mb-3">
+                        <div id="termsMessage" class="text-center mb-3">
                             <small class="text-danger"><i class="bi bi-info-circle"></i> Please accept the Terms of Service and Privacy Policy to continue</small>
                         </div>
 
                         <!-- Divider -->
-                        <div class="position-relative my-4">
+                        <div class="position-relative my-3">
                             <hr class="bg-secondary opacity-25">
-                            <span class="position-absolute top-50 start-50 translate-middle px-3 bg-light text-muted small fw-medium">Secure & Fast</span>
+                            <span class="position-absolute top-50 start-50 translate-middle px-2 bg-light text-muted small fw-medium">Secure & Fast</span>
                         </div>
 
-                        <!-- Terms and Conditions Section - Mobile optimized -->
-                        <div class="terms-section bg-white p-3 p-sm-4 rounded-3 mb-4 border">
-                            <label class="terms-group d-flex align-items-start gap-3 mb-0" style="cursor: pointer;">
-                                <input type="checkbox" 
-                                       id="terms" 
-                                       name="terms" 
-                                       class="terms-input mt-1"
-                                       style="width: 20px; height: 20px; flex-shrink: 0; cursor: pointer;">
+                        <!-- Terms and Conditions -->
+                        <div class="terms-section bg-white p-3 rounded-3 mb-3 border">
+                            <label class="d-flex align-items-center gap-2 mb-0" style="cursor:pointer;">
+                                <input type="checkbox" id="terms" name="terms" class="terms-input" style="width:20px;height:20px;cursor:pointer;">
                                 <span class="terms-label small text-secondary lh-sm">
                                     I agree to the 
                                     <a href="{% url 'terms-and-conditions' %}" class="text-decoration-none fw-medium" target="_blank">Terms of Service</a> and 
-                                    <a href="{% url 'privacy-policy' %}" class="text-decoration-none fw-medium">Privacy Policy</a>
+                                    <a href="{% url 'privacy-policy' %}" class="text-decoration-none fw-medium" target="_blank">Privacy Policy</a>
                                 </span>
                             </label>
                         </div>
 
                         <!-- Info Text -->
-                        <div class="text-center small">
-                            <p class="text-muted mb-0 d-flex align-items-center justify-content-center flex-wrap">
-                                <i class="bi bi-shield-check me-1"></i>
-                                <span>Only your email address and name will be shared</span>
-                            </p>
+                        <div class="text-center small mb-2">
+                            
                         </div>
                     </div>
 
                     <!-- Footer -->
-                    <div class="card-footer bg-white border-0 text-center py-4 px-3">
-                        <p class="text-muted small mb-2">
-                            Not your device? Use a private browsing window.
-                        </p>
-                        <p class="text-muted small mb-0">
-                            <i class="bi bi-lock me-1"></i>
-                            Secure login powered by Google
-                        </p>
+                    <div class="card-footer bg-white border-0 text-center py-2">
+                        <p class="text-muted small mb-1">Not your device? Use a private browsing window.</p>
+                        <p class="text-muted small mb-0"><i class="bi bi-lock me-1"></i>Secure login powered by Google</p>
                     </div>
                 </div>
 
-                <!-- Back to Home Link - Mobile friendly touch target -->
-                <div class="text-center mt-4">
+                <!-- Back to Home -->
+                <div class="text-center mt-2">
                     <a href="{% url 'home' %}" class="text-white text-decoration-none opacity-75 hover-opacity-100 d-inline-flex align-items-center py-2 px-3">
                         <i class="bi bi-arrow-left me-2"></i>Back to Home
                     </a>
@@ -125,200 +109,46 @@
     </div>
 </div>
 
-<!-- JavaScript to handle terms checkbox -->
+<!-- JS and CSS remain same as before -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const termsCheckbox = document.getElementById('terms');
     const googleBtn = document.getElementById('googleSignInBtn');
     const googleLink = document.getElementById('googleSignInLink');
     const termsMessage = document.getElementById('termsMessage');
-    
+
     function updateButtonState() {
         if (termsCheckbox.checked) {
-            // Enable button
             googleBtn.disabled = false;
             googleBtn.style.opacity = '1';
             googleBtn.style.cursor = 'pointer';
-            googleBtn.style.pointerEvents = 'auto';
-            
-            // Update button click behavior
-            googleBtn.onclick = function(e) {
-                e.preventDefault();
-                window.location.href = googleLink.href;
-            };
-            
-            // Hide terms message
+            googleBtn.onclick = function(e) { e.preventDefault(); window.location.href = googleLink.href; };
             termsMessage.style.display = 'none';
         } else {
-            // Disable button
             googleBtn.disabled = true;
             googleBtn.style.opacity = '0.6';
             googleBtn.style.cursor = 'not-allowed';
-            googleBtn.style.pointerEvents = 'auto'; // Keep it clickable for the message
-            
-            // Show message when clicking disabled button
             googleBtn.onclick = function(e) {
                 e.preventDefault();
                 termsMessage.style.display = 'block';
                 termsMessage.innerHTML = '<small class="text-danger"><i class="bi bi-exclamation-triangle-fill"></i> Please accept the Terms of Service and Privacy Policy first</small>';
-                
-                // Highlight the terms section
                 document.querySelector('.terms-section').style.borderColor = '#dc3545';
-                setTimeout(function() {
-                    document.querySelector('.terms-section').style.borderColor = '';
-                }, 2000);
+                setTimeout(() => { document.querySelector('.terms-section').style.borderColor = ''; }, 2000);
             };
-            
-            // Show terms message
             termsMessage.style.display = 'block';
-            termsMessage.innerHTML = '<small class="text-danger"><i class="bi bi-info-circle"></i>read and accept the Terms of Service and Privacy Policy to continue</small>';
         }
     }
-    
-    // Initial state
+
     updateButtonState();
-    
-    // Listen for checkbox changes
     termsCheckbox.addEventListener('change', updateButtonState);
 });
 </script>
 
-<!-- Custom CSS for mobile optimization -->
 <style>
-    /* Inherit background color from home page */
-    .min-vh-100 {
-        background-color: inherit; /* This will use the home page background */
-    }
-    
-    /* Mobile-first responsive adjustments */
-    @media (max-width: 576px) {
-        .card-body {
-            padding-left: 1.25rem !important;
-            padding-right: 1.25rem !important;
-        }
-        
-        h2 {
-            font-size: 1.25rem;
-        }
-        
-        .btn {
-            font-size: 1rem;
-        }
-        
-        /* Better touch targets for mobile */
-        .terms-section {
-            margin-left: -0.5rem;
-            margin-right: -0.5rem;
-            border-radius: 12px !important;
-        }
-        
-        .terms-group {
-            padding: 0.25rem 0;
-        }
-        
-        /* Increase tap target size */
-        a, button {
-            min-height: 44px;
-            display: inline-flex;
-            align-items: center;
-        }
-        
-        .btn {
-            min-height: 56px;
-        }
-        
-        /* Better spacing for mobile */
-        .py-4 {
-            padding-top: 1.25rem !important;
-            padding-bottom: 1.25rem !important;
-        }
-    }
-
-    /* Hover effects for desktop only */
-    @media (min-width: 768px) {
-        .btn-light:hover:not(:disabled) {
-            background: #f8f9fa !important;
-            transform: translateY(-2px);
-            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
-            border-color: #2196F3 !important;
-        }
-        
-        .hover-opacity-100:hover {
-            opacity: 1 !important;
-        }
-        
-        .terms-section:hover {
-            border-color: #2196F3 !important;
-            transition: border-color 0.2s ease;
-        }
-    }
-
-    /* Bootstrap Icons CDN */
-    @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
-    
-    /* Fix for very small devices */
-    @media (max-width: 360px) {
-        .card-body {
-            padding-left: 1rem !important;
-            padding-right: 1rem !important;
-        }
-        
-        .btn span {
-            font-size: 0.95rem;
-        }
-        
-        .terms-label {
-            font-size: 0.85rem !important;
-        }
-    }
-    
-    /* Ensure the checkbox is properly aligned on all devices */
-    .terms-input {
-        accent-color: #2196F3;
-    }
-    
-    /* Smooth transitions */
-    .btn, .card, .terms-section {
-        transition: all 0.3s ease;
-    }
-    
-    /* Card shadow adjustment for mobile */
-    .card {
-        box-shadow: 0 10px 40px rgba(0,0,0,0.2) !important;
-    }
-    
-    /* Add some decorative elements */
-    .card {
-        position: relative;
-        z-index: 1;
-    }
-    
-    /* Optional: Add a subtle pattern overlay */
-    .min-vh-100::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-image: radial-gradient(circle at 10% 20%, rgba(255,255,255,0.05) 0%, transparent 20%);
-        pointer-events: none;
-    }
-    
-    /* Disabled button styling */
-    .btn:disabled {
-        pointer-events: auto !important; /* Allows click even when disabled to show message */
-    }
-    
-    /* Terms section highlight animation */
-    @keyframes highlight {
-        0% { border-color: #dc3545; }
-        50% { border-color: #dc3545; background-color: rgba(220, 53, 69, 0.05); }
-        100% { border-color: #dee2e6; }
-    }
-    
-    .terms-section.highlight {
-        animation: highlight 1s ease;
-    }
+.min-vh-100 { background-color: inherit; margin-top:0; padding-top:0; }
+.btn, .card, .terms-section { transition: all 0.3s ease; }
+.card { box-shadow: 0 10px 40px rgba(0,0,0,0.2); border-radius:1rem; }
+.terms-input { accent-color: #2196F3; }
+.btn:disabled { pointer-events: auto !important; }
 </style>
 {% endblock %}

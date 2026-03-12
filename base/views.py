@@ -956,7 +956,6 @@ def validate_payment_image(file):
     
     return True
 
-
 @login_required(login_url='sign-in')
 def purchase_detail(request, purchase_id):
     """Display specific purchase and allow payment image uploads"""
@@ -1038,7 +1037,6 @@ def purchase_detail(request, purchase_id):
         "is_eligible_for_payout": is_eligible_for_payout,
         "today": today,
     })
-
 
 @login_required(login_url='sign-in')
 def purchased_thrifts(request):

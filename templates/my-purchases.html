@@ -30,6 +30,18 @@
         font-weight: 500;
     }
 
+    .payment-link {
+        color: var(--neon-blue);
+        text-decoration: none;
+        font-weight: 600;
+        border-bottom: 1px dashed var(--neon-blue);
+    }
+
+    .payment-link:hover {
+        color: var(--accent-purple);
+        border-bottom-color: var(--accent-purple);
+    }
+
     .purchases-list {
         display: flex;
         flex-direction: column;
@@ -49,7 +61,6 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        text-decoration: none;
         color: inherit;
     }
 
@@ -200,6 +211,68 @@
         border: 0.5px solid rgba(108, 117, 125, 0.2);
     }
 
+    /* Action Buttons */
+    .card-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 12px;
+        margin-left: 20px;
+    }
+
+    .payment-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: linear-gradient(135deg, var(--neon-blue), var(--accent-purple));
+        color: white;
+        padding: 10px 20px;
+        border-radius: 40px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.8rem;
+        transition: all 0.25s ease;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 4px 12px rgba(0, 119, 255, 0.2);
+        white-space: nowrap;
+    }
+
+    .payment-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 119, 255, 0.3);
+        color: white;
+    }
+
+    .payment-btn i {
+        font-size: 0.75rem;
+    }
+
+    .view-details-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--text-medium);
+        text-decoration: none;
+        font-size: 0.7rem;
+        font-weight: 500;
+        padding: 6px 12px;
+        border-radius: 30px;
+        background: rgba(0, 119, 255, 0.04);
+        border: 1px solid rgba(0, 119, 255, 0.1);
+        transition: all 0.2s ease;
+    }
+
+    .view-details-btn:hover {
+        background: rgba(0, 119, 255, 0.08);
+        color: var(--neon-blue);
+        border-color: rgba(0, 119, 255, 0.2);
+    }
+
+    .view-details-btn i {
+        font-size: 0.65rem;
+    }
+
     /* Active Plan Message */
     .active-message {
         background: linear-gradient(135deg, rgba(15, 157, 88, 0.08), rgba(76, 175, 80, 0.08));
@@ -232,19 +305,7 @@
         font-weight: 700;
     }
 
-    .arrow-icon {
-        font-size: 1.1rem;
-        color: var(--accent-blue);
-        margin-left: 16px;
-        opacity: 0.6;
-        transition: opacity 0.2s ease, transform 0.2s ease;
-    }
-
-    .purchase-card:hover .arrow-icon {
-        opacity: 1;
-        transform: translateX(4px);
-    }
-
+    /* Empty State */
     .empty-state {
         text-align: center;
         padding: 50px 20px;
@@ -318,6 +379,7 @@
     .purchase-card:nth-child(4) { animation-delay: 0.2s; }
     .purchase-card:nth-child(5) { animation-delay: 0.25s; }
 
+    /* Responsive Design */
     @media (max-width: 768px) {
         .purchases-container {
             padding: 0 12px;
@@ -326,7 +388,7 @@
         .purchase-card {
             flex-direction: column;
             align-items: flex-start;
-            gap: 12px;
+            gap: 16px;
             padding: 18px;
         }
         
@@ -340,9 +402,17 @@
             gap: 8px;
         }
         
-        .arrow-icon {
-            align-self: flex-end;
+        .card-actions {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
             margin-left: 0;
+        }
+        
+        .payment-btn {
+            padding: 8px 16px;
+            font-size: 0.75rem;
         }
     }
 
@@ -369,23 +439,42 @@
             align-items: flex-start;
             gap: 8px;
         }
+        
+        .card-actions {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
+        }
+        
+        .payment-btn, .view-details-btn {
+            width: 100%;
+            justify-content: center;
+        }
     }
 </style>
 
 <div class="purchases-container">
     <div class="purchases-header">
         <h1 class="purchases-title">My Purchased Thrifts</h1>
-        <p class="purchases-subtitle">Select a package to upload payment confirmation</p>
+        <p class="purchases-subtitle">
+            Select a package to upload payment confirmation
+        </p>
     </div>
+    
     <div class="purchases-header">
         <h1 class="purchases-title"></h1>
-        <p class="purchases-subtitle">pay into the account details <a href="{% url 'Blengo-Account-Details' %}">blengo account details</a></p>
+        <p class="purchases-subtitle">
+            Pay into the account details 
+            <a href="{% url 'Blengo-Account-Details' %}" class="payment-link">
+                <i class="fas fa-external-link-alt"></i> blengo account details
+            </a>
+        </p>
     </div>
 
     {% if purchases %}
         <div class="purchases-list">
             {% for purchase in purchases %}
-            <a href="{% url 'purchase_detail' purchase.purchase_id %}" class="purchase-card">
+            <div class="purchase-card">
                 <div class="purchase-info">
                     <span class="purchase-id-badge">
                         <i class="fas fa-receipt"></i> #{{ purchase.purchase_id }}
@@ -437,7 +526,23 @@
                     {% endif %}
                 </div>
                 
-                <div style="display: flex; align-items: center; gap: 16px;">
+                <div class="card-actions">
+                    <!-- Complete Payment Button - Takes user to specific purchase detail page -->
+                    <a href="{% url 'purchase_detail' purchase.purchase_id %}" class="payment-btn">
+                        <i class="fas fa-credit-card"></i> 
+                        {% if purchase.status == 'pending' or purchase.status == 'awaiting_approval' %}
+                            Complete Payment
+                        {% else %}
+                            View Details
+                        {% endif %}
+                    </a>
+                    
+                    <!-- Optional secondary action -->
+                    <a href="{% url 'purchase_detail' purchase.purchase_id %}" class="view-details-btn">
+                        <i class="fas fa-info-circle"></i> Details
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                    
                     <span class="status-badge status-{{ purchase.status }}">
                         <i class="fas 
                             {% if purchase.status == 'pending' %}fa-clock
@@ -449,11 +554,8 @@
                         </i>
                         {{ purchase.get_status_display|default:purchase.status|title }}
                     </span>
-                    <span class="arrow-icon">
-                        <i class="fas fa-chevron-right"></i>
-                    </span>
                 </div>
-            </a>
+            </div>
             {% endfor %}
         </div>
     {% else %}

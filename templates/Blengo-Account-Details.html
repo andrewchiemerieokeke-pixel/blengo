@@ -1,147 +1,253 @@
 {% extends 'home.html' %}
 
 {% block content %}
+
 <style>
-    .account-container {
-        max-width: 600px;
-        margin: 40px auto;
-        padding: 10px 15px;
-        background-color: #f9faff;
-        border-radius: 16px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-        font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-        border: 1px solid #e0e7f0;
-    }
 
-    h4 {
-        color: #1a2b4c;
-        font-weight: 600;
-        font-size: 1.3rem;
-        margin-top: 0;
-        margin-bottom: 20px;
-        border-bottom: 3px solid ;
-        padding-bottom: 10px;
-        display: inline-block;
-    }
+.account-wrapper{
+    max-width:650px;
+    margin:50px auto;
+    padding:20px;
+    font-family:'Segoe UI',Roboto,system-ui;
+}
 
-    .warning-note {
-        background-color: #fff9e6;
-        border-left: 5px solid #e6a700;
-        padding: 18px 20px;
-        border-radius: 12px;
-        margin: 25px 0;
-        font-size: 1.0rem;
-        color: #2d3a4c;
-        line-height: 1.5;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-    }
+/* Title */
 
-    .account-details {
-        background: white;
-        padding: 22px 25px;
-        border-radius: 14px;
-        border: 1px solid #dde3ed;
-        margin: 25px 0;
-    }
+.account-header{
+    text-align:center;
+    margin-bottom:30px;
+}
 
-    .detail-item {
-        margin-bottom: 20px;
-    }
+.account-title{
+    font-size:1.8rem;
+    font-weight:700;
+    background:linear-gradient(90deg,var(--neon-blue),var(--accent-purple));
+    -webkit-background-clip:text;
+    color:transparent;
+}
 
-    .detail-item:last-child {
-        margin-bottom: 0;
-    }
+.account-subtitle{
+    color:#6b7a90;
+    font-size:0.9rem;
+}
 
-    .detail-label {
-        font-weight: 600;
-        color: #1e3a5f;
-        font-size: 0.95rem;
-        margin-bottom: 6px;
-        display: block;
-    }
 
-    .detail-value {
-        color: #0b1c2f;
-        background: #f2f5fb;
-        padding: 10px 20px;
-        border-radius: 30px;
-        font-family: 'Courier New', monospace;
-        font-weight: bold;
-        font-size: 1.1rem;
-        display: inline-block;
-        border: 1px solid #dde3ed;
-    }
+/* Warning */
 
-    .contact-link {
-        margin-top: 25px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
+.warning-box{
+    background:#fff8e1;
+    border-left:4px solid #ffb300;
+    padding:18px;
+    border-radius:12px;
+    font-size:.9rem;
+    color:#3d3d3d;
+    margin-bottom:25px;
+}
 
-    .contact-link p {
-        margin: 0;
-        font-size: 1.1rem;
-        color: #2d3a4c;
-    }
+/* Bank Card */
 
-    .contact-link a {
-        color: #1a4c7a;
-        background-color: #e4edf7;
-        padding: 8px 20px;
-        border-radius: 40px;
-        text-decoration: none;
-        font-weight: 500;
-        transition: all 0.2s;
-        display: inline-block;
-        border: 1px solid #bdd3e8;
-    }
+.bank-card{
+    background:linear-gradient(135deg,#0f2c54,#1b4f8c);
+    color:white;
+    padding:28px;
+    border-radius:18px;
+    box-shadow:0 12px 25px rgba(0,0,0,0.15);
+    position:relative;
+    overflow:hidden;
+}
 
-    .contact-link a:hover {
-        background-color: #1a4c7a;
-        color: white;
-        border-color: #1a4c7a;
-    }
+.bank-card::after{
+    content:'';
+    position:absolute;
+    top:-60px;
+    right:-60px;
+    width:180px;
+    height:180px;
+    background:rgba(255,255,255,0.05);
+    border-radius:50%;
+}
 
-    small {
-        display: block;
-        margin-top: 20px;
-        color: #667c99;
-        font-size: 0.9rem;
-        text-align: center;
-    }
+.bank-name{
+    font-size:.9rem;
+    opacity:.8;
+}
+
+.account-number{
+    font-size:1.8rem;
+    letter-spacing:3px;
+    font-weight:700;
+    margin:10px 0;
+    font-family:monospace;
+}
+
+.account-holder{
+    font-size:1rem;
+    opacity:.9;
+}
+
+/* Copy Button */
+
+.copy-btn{
+    margin-top:14px;
+    padding:8px 16px;
+    border:none;
+    border-radius:25px;
+    background:white;
+    color:#1b4f8c;
+    font-weight:600;
+    cursor:pointer;
+    font-size:.8rem;
+}
+
+.copy-btn:hover{
+    background:#e7f0ff;
+}
+
+
+/* Detail Box */
+
+.details-box{
+    margin-top:25px;
+    background:white;
+    border-radius:14px;
+    padding:20px;
+    border:1px solid #e2e8f0;
+}
+
+.detail-row{
+    display:flex;
+    justify-content:space-between;
+    padding:12px 0;
+    border-bottom:1px solid #edf2f7;
+}
+
+.detail-row:last-child{
+    border:none;
+}
+
+.detail-label{
+    color:#6b7a90;
+    font-size:.9rem;
+}
+
+.detail-value{
+    font-weight:600;
+}
+
+
+/* Contact */
+
+.contact-section{
+    margin-top:25px;
+    text-align:center;
+}
+
+.contact-btn{
+    display:inline-block;
+    margin-top:10px;
+    padding:10px 22px;
+    border-radius:30px;
+    background:linear-gradient(135deg,var(--neon-blue),var(--accent-purple));
+    color:white;
+    text-decoration:none;
+    font-weight:600;
+    font-size:.85rem;
+}
+.account-container { max-width: 600px; margin: 40px auto; padding: 10px 15px; background-color: #f9faff; border-radius: 16px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); font-family: 'Segoe UI', Roboto, system-ui, sans-serif; border: 1px solid #e0e7f0; } h4 { color: #1a2b4c; font-weight: 600; font-size: 1.3rem; margin-top: 0; margin-bottom: 20px; border-bottom: 3px solid ; padding-bottom: 10px; display: inline-block; } .warning-note { background-color: #fff9e6; border-left: 5px solid #e6a700; padding: 18px 20px; border-radius: 12px; margin: 25px 0; font-size: 1.0rem; color: #2d3a4c; line-height: 1.5; box-shadow: 0 2px 5px rgba(0,0,0,0.02); } .account-details { background: white; padding: 22px 25px; border-radius: 14px; border: 1px solid #dde3ed; margin: 25px 0; } .detail-item { margin-bottom: 20px; } .detail-item:last-child { margin-bottom: 0; } .detail-label { font-weight: 600; color: #1e3a5f; font-size: 0.95rem; margin-bottom: 6px; display: block; } .detail-value { color: #0b1c2f; background: #f2f5fb; padding: 10px 20px; border-radius: 30px; font-family: 'Courier New', monospace; font-weight: bold; font-size: 1.1rem; display: inline-block; border: 1px solid #dde3ed; } .contact-link { margin-top: 25px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; } .contact-link p { margin: 0; font-size: 1.1rem; color: #2d3a4c; } .contact-link a { color: #1a4c7a; background-color: #e4edf7; padding: 8px 20px; border-radius: 40px; text-decoration: none; font-weight: 500; transition: all 0.2s; display: inline-block; border: 1px solid #bdd3e8; } .contact-link a:hover { background-color: #1a4c7a; color: white; border-color: #1a4c7a; } small { display: block; margin-top: 20px; color: #667c99; font-size: 0.9rem; text-align: center; }
+
+.contact-btn:hover{
+    opacity:.9;
+}
+
+
+/* Mobile */
+
+@media(max-width:500px){
+
+.account-number{
+font-size:1.5rem;
+}
+
+}
+
+
 </style>
 
-<div class="account-container">
-    <h4>🏦 Blengo Account Details</h4>
 
-    <div class="warning-note">
-        ⚠️ <strong>This website is the ONLY official source for Blengo account details.</strong> We will never send you an email or message requesting payment to a different account. If you receive such a message, it is a scam. Please ignore it and contact us immediately.
-    </div>
+<div class="account-wrapper">
 
-    <div class="account-details">
-        <div class="detail-item">
-            <div class="detail-label">Account number:</div>
-            <div class="detail-value">5601668588</div>
-        </div>
-        
-        <div class="detail-item">
-            <div class="detail-label">Bank name:</div>
-            <div class="detail-value">Fidelity Bank</div>
-        </div>
-        
-        <div class="detail-item">
-            <div class="detail-label">Account name:</div>
-            <div class="detail-value">Blengo Bee Enterprise</div>
-        </div>
-    </div>
+<div class="account-header">
 
-    <div class="contact-link">
-        <p>📧 Any enquiries?</p>
-        <a href="{% url 'contact' %}">Contact us</a>
-    </div>
+<h1 class="account-title">Blengo Account Details</h1>
 
-    <small>Always verify details on this official page only.</small>
+<p class="account-subtitle">
+Transfer your payments to the official account below
+</p>
+
 </div>
+
+
+<div class="warning-box">
+
+⚠️ <strong>Important Security Notice</strong><br>
+
+This page is the ONLY official source of Blengo payment details.  
+Blengo will never send you a different account number by email or message.
+
+If you receive such a message, please ignore it and contact support immediately.
+
+</div>
+
+
+<div class="bank-card">
+
+<div class="bank-name" style="font-weight: bold;">
+Fidelity Bank
+</div>
+
+<div class="account-number" id="accountNumber">
+5601668588
+</div>
+
+<div class="account-holder" style="">
+Blengo Bee Enterprise
+</div>
+
+
+
+</div>
+
+<div class="account-details"> <div class="detail-item"> <div class="detail-label">Account number:</div> <div class="detail-value">5601668588</div> </div> <div class="detail-item"> <div class="detail-label">Bank name:</div> <div class="detail-value">Fidelity Bank</div> </div> <div class="detail-item"> <div class="detail-label">Account name:</div> <div class="detail-value">Blengo Bee Enterprise</div> </div> </div>
+
+
+<div class="contact-section">
+
+<p>
+Need help or have questions?
+</p>
+
+<a href="{% url 'contact' %}" class="contact-btn">
+Contact Support
+</a>
+
+</div>
+
+</div>
+
+
+<script>
+
+function copyAccount(){
+
+const account = document.getElementById("accountNumber").innerText;
+
+navigator.clipboard.writeText(account);
+
+alert("Account number copied");
+
+}
+
+</script>
+
+
 {% endblock %}
